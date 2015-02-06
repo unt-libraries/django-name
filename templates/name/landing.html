@@ -1,0 +1,90 @@
+{% extends "name/base.html" %}
+{% block title %}UNT Name App{% endblock %}
+{% load get_value from name_extras %}
+{% load humanize %}
+{% block content %}
+
+    <!-- STATISTICS -->
+    {% if q_type == "Personal" or q_type == "Organization" or q_type == "Event" or q_type == "Software" and q == None %}
+
+    {% else %}
+
+
+        <p id="about" class="help">The <em class="unt">UNT Name App</em> is for reference, disambiguation and storage of name records used by the UNT Digital Collections.</p>
+
+
+        <div class="row-fluid" id="pretty">
+
+
+            <div class="span5 offset7">
+                <table class="table" id="statsTable">
+                    <caption>Total Record Count</caption>
+                    {% if personal_entries.count > 0 %}
+                    <tr>
+                        <th>Personal Names:</th>
+                            <td>
+                                <a href="{{ SITE_URL }}search/?q_type=Personal&amp;q=">
+                                    {{ personal_entries.count|intcomma }}
+                                </a>
+                            </td>
+                    </tr>
+                    {% endif %}
+                    {% if organization_entries.count > 0 %}
+                    <tr>
+                        <th>
+                            Organization Names:</th>
+                            <td>
+                                <a href="{{ SITE_URL }}search/?q_type=Organization&amp;q">
+                                    {{ organization_entries.count|intcomma }}
+                                </a>
+                            </td>
+                    </tr>
+                    {% endif %}
+                    {% if event_entries.count > 0 %}
+                    <tr>
+                        <th>
+                            Event Names:</th>
+                            <td>
+                                <a href="{{ SITE_URL }}search/?q_type=Event&amp;q=">
+                                    {{ event_entries.count|intcomma }}
+                                </a>
+                            </td>
+                    </tr>
+                    {% endif %}
+                    {% if software_entries.count > 0 %}
+                    <tr>
+                        <th>
+                            Software Names:</th>
+                            <td>
+                                <a href="{{ SITE_URL }}search/?q_type=Software&amp;q=">
+                                    {{ software_entries.count|intcomma }}
+                                </a>
+                            </td>
+                    </tr>
+                    {% endif %}
+                    {% if building_entries.count > 0 %}
+                    <tr>
+                        <th>
+                            Building Names:</th>
+                            <td>
+                                <a href="{{ SITE_URL }}search/?q_type=Building&amp;q=">
+                                    {{ building_entries.count|intcomma }}
+                                </a>
+                            </td>
+                    </tr>
+                    {% endif %}
+                    <tr class="last">
+                        <th>
+                            Total Names:</th>
+                            <td>
+                                {{ total_entries.count|intcomma }}
+                            </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

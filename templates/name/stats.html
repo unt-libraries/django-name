@@ -1,0 +1,211 @@
+{% extends "name/name.html" %}
+
+{% block title %}Statistics{% endblock %}
+{% load humanize %}
+{% block head-extra %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+      google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+</script>
+    <script type="text/javascript">
+        google.setOnLoadCallback(drawContributionChart);
+
+        function drawContributionChart() {
+
+            // Create and populate the data table.
+            var data = google.visualization.arrayToDataTable([
+                ['type', 'num names'],
+                ['personal', {{ name_type_counts.personal }}],
+                ['organization', {{ name_type_counts.organization }}],
+                ['event', {{ name_type_counts.event }}],
+                ['software', {{ name_type_counts.software }}],
+            ]);
+
+            // Create and draw the visualization.
+            var piechart = new google.visualization.PieChart(document.getElementById('piechart'));
+                piechart.draw(data,
+                    {
+                        title: 'Name distribution by Type',
+                        legend: {position: 'none'},
+                    });
+        }
+    </script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart", "controls"]});
+    google.setOnLoadCallback(drawFreqChart);
+
+    function drawFreqChart() {
+        var dashboard = new google.visualization.Dashboard(
+           document.getElementById('dashboard')
+        );
+
+        var control = new google.visualization.ControlWrapper({
+            'controlType': 'ChartRangeFilter',
+            'containerId': 'control',
+            'options': {
+                // Filter by the date axis.
+                'filterColumnIndex': 0,
+                'ui': {
+                    'chartType': 'LineChart',
+                    'chartOptions': {
+                        'chartArea': {'width': '90%'},
+                        'hAxis': {'baselineColor': 'none'},
+                    },
+                    'chartView': {
+                        'columns': [0, 1],
+                    },
+                    // 1 day in milliseconds = 24 * 60 * 60 * 1000 = 86,400,000
+                    'minRangeSize': 86400000,
+                },
+            },
+            // Initial range
+            'state': {
+                'range': {
+                    'start': new Date(2004, 11, 1),
+                    'end': new Date(),
+                },
+            },
+        });
+
+        var chart = new google.visualization.ChartWrapper({
+            'chartType': 'LineChart',
+            'containerId': 'chart',
+            'options': {
+            // Use the same chart area width as the control for axis alignment.
+                'chartArea': {'height': '80%', 'width': '90%'},
+                'hAxis': {
+                    'slantedText': false,
+                },
+                'vAxis': {
+                    'gridlines': {count: 10},
+                    'textStyle': {color: 'black', fontName: 'arial', fontSize: 11}
+                },
+                'legend': {'position': 'none'}
+            },
+            // Convert the first column from 'date' to 'string'.
+            'view': {
+                'columns': [
+                    {
+                        'calc': function(dataTable, rowIndex) {
+                            return dataTable.getFormattedValue(rowIndex, 0).toString().substring(7,12) + ' ' + dataTable.getFormattedValue(rowIndex, 0).toString().substring(0,3);
+                        },
+                        'type': 'string',
+                    },
+                    1,
+                ]
+            }
+        });
+
+        // MONTHLY CREATED
+        var creation_monthly = new google.visualization.DataTable();
+        creation_monthly.addColumn('date', 'Date');
+        creation_monthly.addColumn('number', 'Names Created');
+        {% for k, v in name_line_graph_data.creation_monthly %}
+        var date = new Date({{ k.year }}, {{ k.month }});
+        creation_monthly.addRow([date, {{ v }}]);
+        {% endfor %}
+
+        // RUNNING CREATED
+        var creation_running = new google.visualization.DataTable();
+        creation_running.addColumn('date', 'Date');
+        creation_running.addColumn('number', 'Names Created');
+        {% for k, v in name_line_graph_data.creation_running %}
+        var date = new Date({{ k.year }}, {{ k.month }});
+        creation_running.addRow([date, {{ v }}]);
+        {% endfor %}
+
+        // MONTHLY EDITED
+        var edited_monthly = new google.visualization.DataTable();
+        edited_monthly.addColumn('date', 'Date');
+        edited_monthly.addColumn('number', 'Names Edited');
+        {% for k, v in name_line_graph_data.edited_monthly %}
+        var date = new Date({{ k.year }}, {{ k.month }});
+        edited_monthly.addRow([date, {{ v }}]);
+        {% endfor %}
+
+        // RUNNING EDITED
+        var edited_running = new google.visualization.DataTable();
+        edited_running.addColumn('date', 'Date');
+        edited_running.addColumn('number', 'Names Edited');
+        {% for k, v in name_line_graph_data.edited_running %}
+        var date = new Date({{ k.year }}, {{ k.month }});
+        edited_running.addRow([date, {{ v }}]);
+        {% endfor %}
+
+        var data = [];
+        data[0] = creation_monthly;
+        data[1] = creation_running;
+        data[2] = edited_monthly;
+        data[3] = edited_running;
+        var button0 = document.getElementById('b0');
+        var button1 = document.getElementById('b1');
+        var button2 = document.getElementById('b2');
+        var button3 = document.getElementById('b3');
+        var current = 0;
+
+        button0.onclick = function() {
+            current = 0;
+            drawDashboard();
+        }
+        button1.onclick = function() {
+            current = 1;
+            drawDashboard();
+        }
+        button2.onclick = function() {
+            current = 2;
+            drawDashboard();
+        }
+        button3.onclick = function() {
+            current = 3;
+            drawDashboard();
+        }
+
+        function drawDashboard() {
+            // Disabling the button while the chart is drawing.
+            button0.disabled = true;
+            button1.disabled = true;
+            button2.disabled = true;
+            button3.disabled = true;
+            google.visualization.events.addListener(chart, 'ready',
+                function() {
+                    button0.disabled = false;
+                    button1.disabled = false;
+                    button2.disabled = false;
+                    button3.disabled = false;
+                    if (current == 0) {
+                        button0.disabled = true;
+                    }
+                    if (current == 1) {
+                        button1.disabled = true;
+                    }
+                    if (current == 2) {
+                        button2.disabled = true;
+                    }
+                    if (current == 3) {
+                        button3.disabled = true;
+                    }
+                });
+            dashboard.bind(control, chart);
+            dashboard.draw(data[current]);
+        }
+        drawDashboard();
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+    <button class="btn btn-large disabled btn-block"><h1>There are {{ total_names|intcomma }} total names in the UNT Name App.<br>There are {{ total_links|intcomma }} total links attached to Name records.</h1></button><br>
+    <div class="container text-center" id="dashboard">
+        <div class="btn-toolbar pagination-centered">
+            <div class="btn-group">
+                <input class="btn btn-info" id="b0" value="Names Created per Month" type='button'></input>
+                <input class="btn btn-info" id="b1" value="Running Created Names Total" type='button'></input>
+                <input class="btn btn-info" id="b2" value="Names Edited per Month" type='button'></input>
+                <input class="btn btn-info" id="b3" value="Running Edited Names Total" type='button'></input>
+            </div>
+        </div>
+        <div id="chart" style='width: auto; height: 300px;'></div>
+        <div id="control" style='width: auto; height: 50px;'></div>
+        <div id="piechart" style='width: 400px; height: 400px;'></div>
+    </div>
+{% endblock %}
