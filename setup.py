@@ -12,17 +12,17 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name="django-name",
-    version="1.0.0",
+    version="pre-release",
     packages=find_packages(),
     include_package_data=True,
 
     license="BSD",
-    description="A Django application for inviting users to a site.",
+    description="Name Authority App for Django.",
     # long_description=README,
-    keywords="django invite invitation",
+    keywords="django name citation",
     author="University of North Texas Libraries",
     # cmdclass={'test': PyTest},
-    url="https://github.com/unt-libraries/django-invite",
+    url="https://github.com/unt-libraries/django-name",
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Django",
