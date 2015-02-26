@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
 
@@ -10,15 +11,15 @@
     {% endif %}
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{{ MEDIA_URL }}name/css/site_base.css">
-    <link rel="stylesheet" href="{{ MEDIA_URL }}name/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="{{ MEDIA_URL }}name/bootstrap/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="{% static "name/css/site_base.css" %}">
+    <link rel="stylesheet" href="{% static "name/bootstrap/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "name/bootstrap/css/bootstrap-responsive.css" %}">
     <link rel="search" type="application/opensearchdescription+xml" title="Name App Search" href="{% url 'name_opensearch' %}">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <style type="text/css"> body { padding-top: 60px; }</style>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}name/js/ajax-form.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}name/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static "name/js/ajax-form.js" %}"></script>
+    <script type="text/javascript" src="{% static "name/bootstrap/js/bootstrap.min.js" %}"></script>
     <link
         rel="stylesheet"
         href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"
@@ -48,7 +49,7 @@
                     <li><a href="{% url 'name_about' %}">About</a></li>
                     <li>
                         <a href="/name/feed/">
-                            <img alt="feed-icon" src="{{ MEDIA_URL }}name/icons/feed-icon-14x14.png">
+                            <img alt="feed-icon" src="{% static "name/icons/feed-icon-14x14.png" %}">
                         </a>
                     </li>
                     <li class="divider-vertical"></li>
