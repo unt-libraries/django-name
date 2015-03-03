@@ -153,8 +153,14 @@ class Variant(models.Model):
 
 
 class TicketingManager(models.Manager):
+    """Custom manager for the BaseTicketing model."""
 
     def create(self, *args, **kwargs):
+        """Override the create method.
+
+        Create or get the single object. If one already exists,
+        delete it and create a new one so we auto-increment the id.
+        """
         obj, created = self.get_or_create(stub=self.model.STUB_DEFAULT)
         if not created:
             with transaction.atomic():
