@@ -193,35 +193,36 @@ class BaseTicketing(models.Model):
         return u'nm%07d' % self.ticket
 
 
+def validate_merged_with(value):
+    """
+    Custom validator for the merged with CharField.
+    We don't want to allow users to do an infinite redirect loop b/c of
+    merging a record that is already merged with the current record
+    """
+
+    try:
+        # attempt to set the variables to their values
+        to_be_merged = 'nm%07d' % value
+        current = str(Name.objects.get(name_id=to_be_merged).merged_with)
+        current_merged = str(Name.objects.get(name_id=current).merged_with)
+    except Exception, e:
+        # make the comparison variables different to ensure test failure
+        current_merged = '1'
+        to_be_merged = '2'
+
+    # test if they are looped
+    if current_merged == to_be_merged:
+        raise ValidationError(
+            u'can\'t merge a record into an infinite redirect loop'
+        )
+
+
 class Name(models.Model):
     """
     The record model defines the information stored by the name app
     Each record has a unique name identifier associated with it which is
     implemented as UUID.
     """
-
-    def validate_merged_with(value):
-        """
-        Custom validator for the merged with CharField.
-        We don't want to allow users to do an infinite redirect loop b/c of
-        merging a record that is already merged with the current record
-        """
-
-        try:
-            # attempt to set the variables to their values
-            to_be_merged = 'nm%07d' % value
-            current = str(Name.objects.get(name_id=to_be_merged).merged_with)
-            current_merged = str(Name.objects.get(name_id=current).merged_with)
-        except Exception, e:
-            # make the comparison variables different to ensure test failure
-            current_merged = '1'
-            to_be_merged = '2'
-
-        # test if they are looped
-        if current_merged == to_be_merged:
-            raise ValidationError(
-                u'can\'t merge a record into an infinite redirect loop'
-            )
 
     # only one name per record
     name = models.CharField(
