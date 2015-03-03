@@ -153,21 +153,14 @@ class Variant(models.Model):
 
 
 class TicketingManager(models.Manager):
+    def create(self, *args, **kwargs):
 
-    def create(self):
-
-        # create the connection to the DB
-        cursor = connections[self.db].cursor()
-
-        # update and replace the stub (should autoincrement id)
-        sql = "REPLACE INTO `%s` " % (self.model._meta.db_table)
-        sql += "(`stub`) VALUES (%s)"
-
-        result = cursor.execute(sql, [self.model.STUB_DEFAULT])
-        transaction.commit_unless_managed(using=self.db)
-
-        # return id (last row value) to the BaseTicketing model
-        return self.model(id=cursor.lastrowid, stub=self.model.STUB_DEFAULT)
+        (obj, created) = self.get_or_create(stub=self.model.STUB_DEFAULT)
+        if not created:
+            with transaction.atomic():
+                obj.delete()
+                obj = self.create(stub=self.model.STUB_DEFAULT)
+        return obj
 
 
 class BaseTicketing(models.Model):
