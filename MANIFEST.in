@@ -1,0 +1,3 @@
+include LICENSE
+include *.txt *.md
+recursive-include name/templates * 
