@@ -153,9 +153,9 @@ class Variant(models.Model):
 
 
 class TicketingManager(models.Manager):
-    def create(self, *args, **kwargs):
 
-        (obj, created) = self.get_or_create(stub=self.model.STUB_DEFAULT)
+    def create(self, *args, **kwargs):
+        obj, created = self.get_or_create(stub=self.model.STUB_DEFAULT)
         if not created:
             with transaction.atomic():
                 obj.delete()
