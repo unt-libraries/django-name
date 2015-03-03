@@ -41,7 +41,7 @@ TEMPLATE_DIRS = (
     local_path('templates'),
 )
 
-VOCAB_DOMAIN = 'http://localhost/',
+VOCAB_DOMAIN = 'http://localhost/'
 
 MAINTENANCE_MSG = None
 
