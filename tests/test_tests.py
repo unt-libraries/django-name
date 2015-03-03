@@ -10,10 +10,10 @@ except ImportError: import json
 class NameCase(unittest.TestCase):
 
     def setUp(self):
-        Name(name='test person', name_type=0, begin='2012-01-12', name_id='3490').save()
-        Name(name='test organization', name_type=1, begin='2000-01-12', name_id="4jdf").save()
-        Name(name='test event', name_type=2, begin='2500-01-12', name_id="j9jfs").save()
-        Name(name='test building', name_type=4, begin='2000-01-12', name_id="dfjie3").save()
+        Name(name='test person', name_type=0, begin='2012-01-12', name_id='nm0000001').save()
+        Name(name='test organization', name_type=1, begin='2000-01-12', name_id="nm0000002").save()
+        Name(name='test event', name_type=2, begin='2500-01-12', name_id="nm0000003").save()
+        Name(name='test building', name_type=4, begin='2000-01-12', name_id="nm0000004").save()
         self.c = Client()
         self.routes_to_test = [
             'about/',
