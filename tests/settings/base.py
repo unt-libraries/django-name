@@ -5,18 +5,10 @@ local_path = lambda path: os.path.join(os.path.dirname(__file__), path)
 APP_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..'))
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
-        'TEST_NAME': ':memory:'
-    }
-}
-
 DEBUG = True
 
 SECRET_KEY = 'not-so-secret-for-tests'
+
 SITE_ID = 1
 
 INSTALLED_APPS = [
@@ -27,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'debug_toolbar',
     'markdown_deux',
     'name',
     'tests']
@@ -48,7 +41,6 @@ TEMPLATE_DIRS = (
     local_path('templates'),
 )
 
-
 VOCAB_DOMAIN = 'http://localhost/',
 
 MAINTENANCE_MSG = None
@@ -56,7 +48,5 @@ MAINTENANCE_MSG = None
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (local_path('static'),)
 
 MEDIA_ROOT = local_path('media')
