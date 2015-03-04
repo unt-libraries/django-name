@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.humanize',
-    'debug_toolbar',
     'markdown_deux',
     'name',
     'tests']
@@ -41,7 +40,7 @@ TEMPLATE_DIRS = (
     local_path('templates'),
 )
 
-VOCAB_DOMAIN = 'http://localhost/',
+VOCAB_DOMAIN = 'http://localhost/'
 
 MAINTENANCE_MSG = None
 

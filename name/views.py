@@ -279,7 +279,7 @@ def opensearch(request):
 
     # export the element tree to a string and send to httpresponse
     t = ElementTree.tostring(root)
-    return HttpResponse(t, mimetype='text/xml')
+    return HttpResponse(t, content_type='text/xml')
 
 
 def about(request):
@@ -343,12 +343,12 @@ def calc_total_by_month(**kwargs):
     if kwargs['created']:
         # get the daily Name totals
         daily_counts = Name.objects.extra(
-            select={'day': 'date(date_created)'}
+            select={'day': 'date_created'}
         ).values('day').annotate(num=Count('date_created'))
     elif kwargs['edited']:
         # get the daily Name totals
         daily_counts = Name.objects.extra(
-            select={'day': 'date(last_modified)'}
+            select={'day': 'last_modified'}
         ).values('day').annotate(num=Count('last_modified'))
     # make current total events count
     current_total = 0
@@ -497,7 +497,7 @@ def get_names(request):
                 name_json['begin_date'] = n.end
             results.append(name_json)
     response = HttpResponse(
-        mimetype='application/json'
+        content_type='application/json'
     )
     # attached CORS headers
     for hk, hv in cors_headers:
@@ -705,7 +705,7 @@ def name_json(request, name_id):
     jsonDict['identifier'] = request.build_absolute_uri()[:-5]
 
     # dump the dict to as an HttpResponse
-    response = HttpResponse(mimetype='application/json')
+    response = HttpResponse(content_type='application/json')
 
     json.dump(
         jsonDict,
@@ -874,4 +874,4 @@ def mads_serialize(request, name_id):
 
     mads_xml = ElementTree.tostring(root)
 
-    return HttpResponse(mads_xml, mimetype="application/xml")
+    return HttpResponse(mads_xml, content_type="application/xml")
