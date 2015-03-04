@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.humanize',
-    'debug_toolbar',
     'markdown_deux',
     'name',
     'tests']
