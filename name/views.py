@@ -343,12 +343,12 @@ def calc_total_by_month(**kwargs):
     if kwargs['created']:
         # get the daily Name totals
         daily_counts = Name.objects.extra(
-            select={'day': 'date(date_created)'}
+            select={'day': 'date_created'}
         ).values('day').annotate(num=Count('date_created'))
     elif kwargs['edited']:
         # get the daily Name totals
         daily_counts = Name.objects.extra(
-            select={'day': 'date(last_modified)'}
+            select={'day': 'last_modified'}
         ).values('day').annotate(num=Count('last_modified'))
     # make current total events count
     current_total = 0
