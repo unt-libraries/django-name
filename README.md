@@ -23,7 +23,6 @@ Contributors:
 - [Damon Kelley](https://github.com/damonkelley)
 - [Lauren Ko](https://github.com/ldko)
 - [Mark Phillips](https://github.com/vphill)
-- 
 
 
  **TODO**: Add a section on contributing and running tests.
