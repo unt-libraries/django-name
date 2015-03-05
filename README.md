@@ -15,7 +15,7 @@ See LICENSE.
 
 ## Acknowlegments
 
-Invite was developed at the UNT Libraries.
+django-name was developed at the UNT Libraries.
 
 Contributors:
 
@@ -25,5 +25,5 @@ Contributors:
 - [Mark Phillips](https://github.com/vphill)
 
 
- **TODO**: Add a section on contributing and running tests.
+**TODO**: Add a section on contributing and running tests.
 
