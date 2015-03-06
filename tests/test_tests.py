@@ -1,19 +1,19 @@
 import unittest
+
 import pytest
-from name.models import Name
-from django.test import Client
+from name.models import Name, BaseTicketing
+from django.test import Client, TestCase
 try: import simplejson as json
 except ImportError: import json
 
 
-@pytest.mark.django_db(transaction=True)
 class NameCase(unittest.TestCase):
 
     def setUp(self):
-        Name(name='test person', name_type=0, begin='2012-01-12', name_id='nm0000001').save()
-        Name(name='test organization', name_type=1, begin='2000-01-12', name_id="nm0000002").save()
-        Name(name='test event', name_type=2, begin='2500-01-12', name_id="nm0000003").save()
-        Name(name='test building', name_type=4, begin='2000-01-12', name_id="nm0000004").save()
+        Name(name='test person', name_type=0, begin='2012-01-12').save()
+        Name(name='test organization', name_type=1, begin='2000-01-12').save()
+        Name(name='test event', name_type=2, begin='2500-01-12').save()
+        Name(name='test building', name_type=4, begin='2000-01-12').save()
         self.c = Client()
         self.routes_to_test = [
             'about/',
@@ -22,8 +22,8 @@ class NameCase(unittest.TestCase):
             'feed/',
         ]
 
-    # def tearDown(self):
-    #     Name.objects.all().delete()
+    def tearDown(self):
+        Name.objects.all().delete()
 
 @pytest.mark.django_db(transaction=True)
 class NameTestCase(NameCase):
