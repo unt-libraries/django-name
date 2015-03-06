@@ -2,3 +2,4 @@
 -r requirements/requirements-dev.txt
 -r requirements/requirements-codestyle.txt
 -r requirements/requirements-test.txt
+-r requirements/requirements-common.txt
