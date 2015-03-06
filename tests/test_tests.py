@@ -7,7 +7,7 @@ try: import simplejson as json
 except ImportError: import json
 
 
-class NameCase(unittest.TestCase):
+class NameCase(TestCase):
 
     def setUp(self):
         Name(name='test person', name_type=0, begin='2012-01-12').save()
@@ -21,9 +21,6 @@ class NameCase(unittest.TestCase):
             'map/',
             'feed/',
         ]
-
-    def tearDown(self):
-        Name.objects.all().delete()
 
 @pytest.mark.django_db(transaction=True)
 class NameTestCase(NameCase):
