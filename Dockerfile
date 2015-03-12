@@ -2,7 +2,7 @@
 
 FROM python:2.7
 ENV PYTHONUNBUFFERED 1
-RUN apt-get update -qq && apt-get install -y python-mysqldb mysql-client
+RUN apt-get update -qq && apt-get install -y python3 python-mysqldb mysql-client
 RUN mkdir /app
 WORKDIR /app
 ADD requirements/ /app/requirements/
