@@ -1,5 +1,5 @@
-from django.db import models, connections, transaction
-from NACO import normalizeSimplified
+from django.db import models, transaction
+from .NACO import normalizeSimplified
 from django.core.exceptions import ValidationError
 import requests
 try:
@@ -204,7 +204,7 @@ def validate_merged_with(value):
         to_be_merged = 'nm%07d' % value
         current = str(Name.objects.get(name_id=to_be_merged).merged_with)
         current_merged = str(Name.objects.get(name_id=current).merged_with)
-    except Exception, e:
+    except Exception:
         # make the comparison variables different to ensure test failure
         current_merged = '1'
         to_be_merged = '2'
@@ -321,10 +321,11 @@ class Name(models.Model):
             url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true' % self.normalized_name
             search_json = json.loads(requests.get(url).content)
             if search_json['status'] == 'OK' and len(search_json['results']) == 1:
+                geo_location = search_json['results'][0]['geometry']['location']
                 Location.objects.create(
                     belong_to_name=self,
-                    latitude=search_json['results'][0]['geometry']['location']['lat'],
-                    longitude=search_json['results'][0]['geometry']['location']['lng'],
+                    latitude=geo_location['lat'],
+                    longitude=geo_location['lng']
                 )
 
     def __unicode__(self):
@@ -340,17 +341,30 @@ class Location(models.Model):
         max_digits=13,
         decimal_places=10,
         help_text="""
-        <strong><a target="_blank" href="http://itouchmap.com/latlong.html">iTouchMap</a>: this service might be useful for filling in the lat/long data</strong>
+        <strong>
+            <a target="_blank" href="http://itouchmap.com/latlong.html">
+                iTouchMap
+            </a>
+            : this service might be useful for filling in the lat/long data
+        </strong>
         """,
     )
     longitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
         help_text="""
-        <strong><a target="_blank" href="http://itouchmap.com/latlong.html">iTouchMap</a>: this service might be useful for filling in the lat/long data</strong>
+        <strong>
+            <a target="_blank" href="http://itouchmap.com/latlong.html">
+                iTouchMap
+            </a>
+            : this service might be useful for filling in the lat/long data
+        </strong>
         """,
     )
-    status = models.IntegerField(max_length=2, choices=LOCATION_STATUS_CHOICES, default=0)
+    status = models.IntegerField(
+        max_length=2,
+        choices=LOCATION_STATUS_CHOICES,
+        default=0)
 
     class Meta:
         ordering = ["status"]
@@ -364,7 +378,8 @@ class Location(models.Model):
         # if we change this location to the current location, all other
         # locations that belong to the same name should be changed to former.
         if self.status == 0:
-            former_locs = Location.objects.filter(belong_to_name=self.belong_to_name).exclude(pk=self.pk)
+            former_locs = Location.objects.filter(
+                belong_to_name=self.belong_to_name).exclude(pk=self.pk)
             for l in former_locs:
                 l.status = 1
                 l.save()
