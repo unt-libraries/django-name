@@ -75,7 +75,6 @@ def get_query(query_string, search_fields):
     query = None
     terms = normalize_query(query_string)
     for term in terms:
-
         # Query to search for a given term in each field
         or_query = None
         for field_name in search_fields:
@@ -95,7 +94,6 @@ def label(request, name_value):
     """
     Returns 302 or 404 if normalized value exists or not
     """
-
     # grab name value from URL pattern
     if name_value:
         # naco normalize it
