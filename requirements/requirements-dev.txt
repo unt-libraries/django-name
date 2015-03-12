@@ -1,3 +1,2 @@
 django-debug-toolbar==1.2.2
 ipython==2.4.0
-MySQL-python==1.2.5
