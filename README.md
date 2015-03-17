@@ -13,7 +13,7 @@ The Name App is a tool for originally developed for documenting names used by th
 
 See LICENSE.
 
-## Acknowlegments
+## Acknowledgements
 
 django-name was developed at the UNT Libraries.
 
