@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 from django.contrib import admin
 from django.conf import settings
 from name.views import AtomSiteNewsFeed
@@ -8,7 +8,6 @@ urlpatterns = patterns(
     '',
     url(r'stats/$', 'name.views.stats', name='name_stats'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
-    #url(r'admin/', include(admin.site.urls)),
     url(r'feed/$', AtomSiteNewsFeed()),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
     url(r'map/$', 'name.views.map', name='name_map'),

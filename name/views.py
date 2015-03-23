@@ -1,16 +1,6 @@
 import re
 import csv
 import copy
-try:
-    # the json module was included in the stdlib in python 2.6
-    # http://docs.python.org/library/json.html
-    import json
-except ImportError:
-    # simplejson 2.0.9 is available for python 2.4+
-    # http://pypi.python.org/pypi/simplejson/2.0.9
-    # simplejson 1.7.3 is available for python 2.3+
-    # http://pypi.python.org/pypi/simplejson/1.7.3
-    import simplejson as json
 import requests
 import uuid
 import hashlib
@@ -18,15 +8,14 @@ from xml.etree import ElementTree
 from django.http import HttpResponse, HttpResponseGone, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.db.models import Q, Avg, Count, Max, Min, Sum
+from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import resolve
 from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
 from dateutil import rrule
-from datetime import datetime, timedelta
-from NACO import normalizeSimplified
+from datetime import datetime
+from .NACO import normalizeSimplified
 from name.decorators import jsonp
 from name.models import (
     Name,
@@ -38,8 +27,20 @@ from name.models import (
     DATE_DISPLAY_LABELS,
 )
 
+try:
+    # the json module was included in the stdlib in python 2.6
+    # http://docs.python.org/library/json.html
+    import json
+except ImportError:
+    # simplejson 2.0.9 is available for python 2.4+
+    # http://pypi.python.org/pypi/simplejson/2.0.9
+    # simplejson 1.7.3 is available for python 2.3+
+    # http://pypi.python.org/pypi/simplejson/1.7.3
+    import simplejson as json
+
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 MAINTENANCE_MSG = settings.MAINTENANCE_MSG
+
 
 # these next two functions were nabbed for the most part from this blog post:
 # julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -65,15 +66,15 @@ def normalize_query(query_string,
 
 def get_query(query_string, search_fields):
     """
-    Returns a query, that is a combination of Q objects. That combination
-    aims to search keywords within a model by testing the given search fields.
+    Returns a query, that is a combination of Q objects. That
+    combination aims to search keywords within a model by testing the
+    given search fields.
     """
 
     # Query to search for every search term
     query = None
     terms = normalize_query(query_string)
     for term in terms:
-
         # Query to search for a given term in each field
         or_query = None
         for field_name in search_fields:
@@ -93,7 +94,6 @@ def label(request, name_value):
     """
     Returns 302 or 404 if normalized value exists or not
     """
-
     # grab name value from URL pattern
     if name_value:
         # naco normalize it
@@ -111,8 +111,8 @@ def label(request, name_value):
                 """ % normalized_value, status=404
             )
         except:
-            # we need a catch for the possibility of multiple names having the
-            # same normalized value
+            # we need a catch for the possibility of multiple names
+            # having the same normalized value
             return HttpResponse(
                 """
                 There are multiple Name objects with the same name: '%s'.
@@ -140,9 +140,10 @@ class AtomSiteNewsFeed(Feed):
 
     def item_location(self, item):
         """
-        Returns an extra keyword arguments dictionary that is used with the
-        `add_item` call of the feed generator. Add the 'content' field of the
-        'Entry' item, to be used by the custom feed generator.
+        Returns an extra keyword arguments dictionary that is used
+        with the `add_item` call of the feed generator. Add the
+        'content' field of the 'Entry' item, to be used by the custom
+        feed generator.
         """
         location_set = []
         for l in Location.objects.filter(belong_to_name=item):
@@ -186,20 +187,23 @@ def entry_detail(request, name_id):
     else:
         if requested_user.name_type == 4:
             try:
-                locations = Location.objects.filter(belong_to_name=requested_user)
-                current_location = Location.objects.get(belong_to_name=requested_user, status=0)
+                locations = Location.objects.filter(
+                    belong_to_name=requested_user)
+                current_location = Location.objects.get(
+                    belong_to_name=requested_user, status=0)
             except:
                 locations = None
                 current_location = None
         else:
             current_location = None
             locations = None
+
+        date_display = DATE_DISPLAY_LABELS[requested_user.name_type]
+
         # render back with a dict of details
         return render_to_response(
             'name/name_detail.html',
             {
-                'date_display_begin': DATE_DISPLAY_LABELS[requested_user.name_type]['begin'],
-                'date_display_end': DATE_DISPLAY_LABELS[requested_user.name_type]['end'],
                 'total_entries': total_entries,
                 'requested_user': requested_user,
                 'current_location': current_location,
@@ -208,6 +212,8 @@ def entry_detail(request, name_id):
                 'ordered_link_set': ordered_link_set,
                 'types': dict(NAME_TYPE_CHOICES),
                 'maintenance_message': MAINTENANCE_MSG,
+                'date_display_begin': date_display['begin'],
+                'date_display_end': date_display['end'],
             },
             context_instance=RequestContext(request)
         )
@@ -224,7 +230,8 @@ def export(request):
 
     writer = csv.writer(response, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
 
-    # write a row for each name object (non merged, suppressed, deleted, etc)
+    # write a row for each name object
+    # (non merged, suppressed, deleted, etc)
     for n in Name.objects.filter(record_status=0).filter(merged_with=None):
 
         # get type, name, and url
@@ -246,7 +253,6 @@ def opensearch(request):
     # create XML root element
     root = ElementTree.Element('OpenSearchDescription')
     root.set('xmlns', 'http://a9.com/-/spec/opensearch/1.1/')
-    current_url = resolve(request.path_info).url_name
 
     # define the children to root and their parameters
     shortname = ElementTree.SubElement(root, 'ShortName')
@@ -299,8 +305,9 @@ def about(request):
 
 def prepare_graph_date_range():
     """
-    Several functions use the same code to prepare the dates and values for
-    the graphing of event data, so we can make a function for it. DRY 4 LYPHE
+    Several functions use the same code to prepare the dates and values
+    for the graphing of event data, so we can make a function for it.
+    DRY 4 LYPHE
 
     returns list of lists
     """
@@ -308,17 +315,18 @@ def prepare_graph_date_range():
     name_objects = Name.objects.all()
     # grab the dates for the bounds of the graphs
     if name_objects.count() > 0:
-        dates = Name.objects.all().aggregate(Min("date_created"), Max('date_created'))
+        dates = Name.objects.all().aggregate(
+            Min("date_created"), Max('date_created'))
         system_start_date = dates['date_created__min']
         system_end_date = dates['date_created__max']
+
         # setup list for month call data
         daily_edit_counts = []
-        # we need to first fill in the first month, becuase it wont grab that when
-        # the for loop iterates to a new month.
+        # we need to first fill in the first month, because it won't
+        # grab that when the for loop iterates to a new month.
         month = system_start_date.strftime('%Y-%m')
         daily_edit_counts.append([datetime.strptime(month, '%Y-%m'), 0])
         # start with a zero count and reset this as we cross a month
-        monthly_count = 0
         for dt in rrule.rrule(
             rrule.DAILY,
             dtstart=system_start_date,
@@ -327,8 +335,9 @@ def prepare_graph_date_range():
             # if we change months
             if month != dt.strftime('%Y-%m'):
                 month = dt.strftime('%Y-%m')
-                #make the year and drop in if i doenst exist
-                daily_edit_counts.append([datetime.strptime(month, '%Y-%m'), 0])
+                # make the year and drop in if i doenst exist
+                daily_edit_counts.append(
+                    [datetime.strptime(month, '%Y-%m'), 0])
         return daily_edit_counts
     else:
         raise Exception('no name objects to construct graph')
@@ -355,8 +364,11 @@ def calc_total_by_month(**kwargs):
     month_skeleton = copy.deepcopy(prepare_graph_date_range())
     # fill in totals
     for u in month_skeleton:
-        # replace existing value of zero with sum of nums in certain month
-        current_month_counts = [e for e in daily_counts if datetime.strftime(e['day'], '%Y-%m') == datetime.strftime(u[0], '%Y-%m')]
+        # replace existing value of zero with sum of nums in certain
+        # month
+        current_month_counts = [e for e in daily_counts if datetime.strftime(
+            e['day'], '%Y-%m') == datetime.strftime(u[0], '%Y-%m')]
+
         for n in current_month_counts:
             current_total += n['num']
         u[1] = current_total
@@ -377,10 +389,14 @@ def stats(request):
         'software': Name.objects.filter(name_type=3).count(),
     }
     name_line_graph_data = {
-        'creation_running': calc_total_by_month(created=True, edited=False, running=True),
-        'creation_monthly': calc_total_by_month(created=True, edited=False, running=False),
-        'edited_running': calc_total_by_month(created=False, edited=True, running=True),
-        'edited_monthly': calc_total_by_month(created=False, edited=True, running=False),
+        'creation_running': calc_total_by_month(created=True,
+                                                edited=False, running=True),
+        'creation_monthly': calc_total_by_month(created=True,
+                                                edited=False, running=False),
+        'edited_running': calc_total_by_month(created=False,
+                                              edited=True, running=True),
+        'edited_monthly': calc_total_by_month(created=False,
+                                              edited=True, running=False),
     }
     return render_to_response(
         'name/stats.html',
@@ -420,7 +436,7 @@ def resolve_type(request):
         if ',' in query_named_type:
             query_named_type = query_named_type.split(',')
         else:
-            query_named_type = [query_named_type,]
+            query_named_type = [query_named_type]
         for k, v in NAME_TYPE_CHOICES:
             for q_type in query_named_type:
                 if q_type == v:
@@ -432,13 +448,15 @@ def filter_names(q, name_types):
     """
     Return the set of filtered name objects
     """
-    # we definitely don't want to serve up hidden/merged/deleted records.
+    # we definitely don't want to serve up hidden/merged/deleted
+    # records.
     names = Name.objects.filter(record_status=0).filter(merged_with=None)
     # we get passed a type - include that in the filter
     if name_types:
         names = names.filter(name_type__in=name_types)
 
-    # clean and normalize the query for the filter, searching name and bio
+    # clean and normalize the query for the filter,
+    #  searching name and bio
     if q is '':
         pass
     elif q:
@@ -572,7 +590,8 @@ def landing(request):
 def get_unique_user_id():
     '''returns a unique user id hash'''
 
-    mac = ''.join(['{:02x}'.format((uuid.getnode() >> i) & 0xff) for i in range(0,8*6,8)][::-1])
+    mac = ''.join(['{:02x}'.format(
+        (uuid.getnode() >> i) & 0xff) for i in range(0, 8 * 6, 8)][::-1])
     mac = ''.join([x.upper() for x in mac])
     m = hashlib.sha1()
     m.update(mac)
@@ -583,13 +602,14 @@ def map(request):
     """
     Renders the results of a search back to the user
     """
-
+    url_template = 'http://auth.cloudmade.com/token/cbe612faccbe49d88b45420ed320aca7?userid=%s'
     user_id = get_unique_user_id()
     # render the view with the dict of results
     return render_to_response(
         'name/map.html',
+
         {
-            'token': requests.post('http://auth.cloudmade.com/token/cbe612faccbe49d88b45420ed320aca7?userid=%s' % user_id),
+            'token': requests.post(url_template % user_id),
             'types': dict(NAME_TYPE_CHOICES),
             'locations': Location.objects.all(),
         },
@@ -804,7 +824,7 @@ def mads_serialize(request, name_id):
             variant_name_pt = ElementTree.SubElement(variant_name, 'namePart')
             variant_name_pt.text = elem.variant
 
-    #record info must come after variants
+    # record info must come after variants
     record_info = ElementTree.SubElement(root, 'recordInfo')
     record_creation_date = ElementTree.SubElement(
         record_info,

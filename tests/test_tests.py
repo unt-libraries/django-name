@@ -20,7 +20,7 @@ def name_fixtures(db, scope="module"):
 @pytest.mark.django_db
 class TestViews:
     def test_response_codes(self, client, name_fixtures):
-        routes_to_test = [ 'about/', 'stats/', 'map/', 'feed/']
+        routes_to_test = ['about/', 'stats/', 'map/', 'feed/']
         for test_route in routes_to_test:
             response = client.get('/name/%s' % test_route)
             assert response.status_code is 200

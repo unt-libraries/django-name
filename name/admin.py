@@ -1,8 +1,15 @@
 from django.contrib import admin
-from name.models import Name, Variant, Note, Identifier, Identifier_Type, Location
-from django.contrib import messages
 from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
+
+from name.models import (
+    Name,
+    Variant,
+    Note,
+    Identifier,
+    Identifier_Type,
+    Location
+)
 
 
 # we need this custom filter for the boolean sidebar merged_with toggle
@@ -60,7 +67,6 @@ class MergedWithInline(admin.TabularInline):
     fields = ('name',)
     extra = 0
     can_delete = False
-    #has_add_permission = False
 
 
 class IdentifierInline(admin.TabularInline):
@@ -140,9 +146,6 @@ class NameAdmin(admin.ModelAdmin):
     def get_inline_instances(self, request, obj=None):
         inline_instances = []
 
-        # if not obj == None and obj.merged_with != None and obj.name_type != 4:
-        #     inlines = self.inlines
-        # else:
         inlines = self.no_merged_inlines
         for inline_class in inlines:
             inline = inline_class(self.model, self.admin_site)
@@ -182,10 +185,7 @@ class NameAdmin(admin.ModelAdmin):
             'fields': [
                 'record_status',
                 'merged_with',
-            ],
-            'classes': [
-                #'collapse'
-            ],
+            ]
         }),
     ]
 
