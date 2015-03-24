@@ -5,3 +5,4 @@
 .tox
 db.sqlite3
 tests/__pycache__
+.coverage
