@@ -144,7 +144,6 @@ class Variant(models.Model):
     )
 
     def save(self):
-
         self.normalized_variant = normalizeSimplified(self.variant)
         super(Variant, self).save()
 
@@ -369,9 +368,8 @@ class Location(models.Model):
     class Meta:
         ordering = ["status"]
 
-    @property
     def geo_point(self):
-        return "%s, %s" (str(self.latitude), str(self.longitude))
+        return "%s, %s" % (self.latitude, self.longitude)
 
     def save(self, **kwargs):
         super(Location, self).save()
@@ -383,3 +381,6 @@ class Location(models.Model):
             for l in former_locs:
                 l.status = 1
                 l.save()
+
+    def __unicode__(self):
+        return self.geo_point()
