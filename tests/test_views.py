@@ -115,6 +115,12 @@ def test_opensearch(client):
     assert 200 == response.status_code
 
 
+@pytest.mark.django_db
+def test_feed(client):
+    response = client.get(reverse('name_feed'))
+    assert 200 == response.status_code
+
+
 def test_about(client):
     response = client.get(reverse('name_about'))
     assert 200 == response.status_code
