@@ -8,7 +8,7 @@ urlpatterns = patterns(
     '',
     url(r'stats/$', 'name.views.stats', name='name_stats'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
-    url(r'feed/$', AtomSiteNewsFeed()),
+    url(r'feed/$', AtomSiteNewsFeed(), name='name_feed'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
     url(r'map/$', 'name.views.map', name='name_map'),
     url(r'^$', 'name.views.landing', name='name_landing'),
