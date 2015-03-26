@@ -437,6 +437,9 @@ def resolve_type(request):
 def filter_names(q, name_types):
     """
     Return the set of filtered name objects
+
+    q: Query string
+    name_types: List of name_type ids. List of integers.
     """
     # we definitely don't want to serve up hidden/merged/deleted
     # records.
