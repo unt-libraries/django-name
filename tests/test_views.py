@@ -195,9 +195,6 @@ def test_name_json_handles_unknown_name(client):
     assert 404 == response.status_code
 
 
-# TODO: Use multiple name fixtures because an empty search
-# query will result in all names being returned
-@pytest.mark.xfail
 @pytest.mark.django_db
 def test_search_with_q(client, twenty_name_fixtures):
     name = twenty_name_fixtures.first()
