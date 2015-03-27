@@ -1,23 +1,11 @@
 import pytest
 import json
 
-from name.models import Name
 from django.core.urlresolvers import reverse
 
 # All test need access to the database in this file.
 pytestmark = pytest.mark.django
 
-
-@pytest.fixture
-def name_fixtures(db, scope="module"):
-    Name.objects.create(name='test person',
-                        name_type=0, begin='2012-01-12')
-    Name.objects.create(name='test organization',
-                        name_type=1, begin='2000-01-12')
-    Name.objects.create(name='test event',
-                        name_type=2, begin='2500-01-12')
-    Name.objects.create(name='test building',
-                        name_type=4, begin='2000-01-12')
 
 query_template = '?q_type={0}&q={1}'
 
@@ -52,3 +40,21 @@ def test_can_search_multiple_name_types(client, name_fixtures):
         reverse('name_search') + query)
 
     assert response.status_code is 200
+
+
+def test_search_with_q(client, twenty_name_fixtures):
+    '''Search with q only. No name_types provided'''
+    name = twenty_name_fixtures.first()
+    url = reverse('name_search') + "?q={}".format(name.name)
+    response = client.get(url)
+    assert name.name in response.content
+
+
+@pytest.mark.xfail(reason="No Test")
+def test_search_with_q_type(client, twenty_name_fixtures):
+    assert False
+
+
+@pytest.mark.xfail(reason="No Test")
+def test_search_without_query(client):
+    assert False

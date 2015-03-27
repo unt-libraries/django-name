@@ -1,39 +1,23 @@
 import pytest
-from name import models, views
+from name import views
 
 
-@pytest.fixture
-def search_names(db, scope='module'):
-    for x in range(1, 5):
-        models.Name.objects.create(
-            name="Personal {}".format(x), name_type=0)
-        models.Name.objects.create(
-            name="Organization {}".format(x), name_type=1)
-        models.Name.objects.create(
-            name="Event {}".format(x), name_type=2)
-        models.Name.objects.create(
-            name="Software {}".format(x), name_type=3)
-        models.Name.objects.create(
-            name="Building {}".format(x), name_type=4)
-    return models.Name.objects.all()
-
-
-# TODO: Find out if this is suppose to return the same id
-#       consecutively.
-@pytest.mark.xfail
 def test_get_unique_user_id():
-    uids = [eval(views.get_unique_user_id()) for i in range(1000)]
-    assert len(uids) == len(set(uids))
+    '''This should always return the same ID for a
+    single host
+    '''
+    uids = [views.get_unique_user_id for i in range(1000)]
+    assert 1 == len(set(uids))
 
 
 @pytest.mark.django_db
-def test_filter_names_with_empty_query(search_names):
+def test_filter_names_with_empty_query(search_fixtures):
     names = views.filter_names('', None)
-    assert names.count() == search_names.count()
+    assert names.count() == search_fixtures.count()
 
 
 @pytest.mark.django_db
-def test_filter_names_with_query(search_names):
+def test_filter_names_with_query(search_fixtures):
     names = views.filter_names('1', None)
     assert names.count() == 5
 
@@ -45,7 +29,8 @@ def test_filter_names_with_query(search_names):
     ([0, 1, 2], 3),
     ([0, 1, 2, 3, 4], 5)
 ])
-def test_filter_names_with_query_and_name_types(types, expected, search_names):
+def test_filter_names_with_query_and_name_types(types,
+                                                expected, search_fixtures):
     names = views.filter_names('1', types)
     assert names.count() == expected
 
@@ -58,7 +43,7 @@ def test_filter_names_with_query_and_name_types(types, expected, search_names):
     ([0, 1, 2, 3, 4], 20)
 ])
 def test_filter_names_with_no_query_and_name_types(types,
-                                                   expected, search_names):
+                                                   expected, search_fixtures):
     names = views.filter_names('', types)
     assert names.count() == expected
 
@@ -91,7 +76,7 @@ def test_resolve_q_returns_empty_string(rf):
     assert '' == q
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason='No Test')
 def test_get_query():
     assert False
 
@@ -107,11 +92,11 @@ def test_normalize_query(query, expected):
     assert len(normalized) == expected
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason='No Test')
 def test_calc_total_by_month():
     assert False
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason='No Test')
 def test_prepare_graph_date_range():
     assert False

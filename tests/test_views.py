@@ -1,36 +1,7 @@
 import pytest
 import json
-import random
 
 from django.core.urlresolvers import reverse
-from name import models
-
-
-@pytest.fixture
-def name_fixture(db, scope="module"):
-    return models.Name.objects.create(
-        name='test person',
-        name_type=0,
-        begin='2012-01-12')
-
-
-@pytest.fixture
-def merged_name_fixtures(db, scope="module"):
-    name1 = models.Name.objects.create(name='test person 1', name_type=0)
-    name2 = models.Name.objects.create(name='test person 2', name_type=0)
-    name1.merged_with = name2
-    name1.save()
-    return (name1, name2)
-
-
-@pytest.fixture
-def twenty_name_fixtures(db, scope="module"):
-    for x in range(21):
-        models.Name.objects.create(
-            name="Name {}".format(x),
-            name_type=random.randint(0, 4),
-            begin='2012-01-12')
-    return models.Name.objects.all()
 
 
 @pytest.mark.django_db
@@ -132,7 +103,7 @@ def test_stats_returns_ok(client, name_fixture):
     assert 200 == response.status_code
 
 
-# TODO: This should not throw a 500
+# FIXME: This should not throw a 500
 @pytest.mark.xfail
 @pytest.mark.django_db
 def test_stats_returns_ok_with_no_names(client):
@@ -146,8 +117,6 @@ def test_get_names_returns_ok(client):
     assert 200 == response.status_code
 
 
-# TODO: Look at ways that we can confirm that the
-# requests was received as an Ajax call
 @pytest.mark.django_db
 def test_get_names_xhr_returns_ok(client):
     response = client.get(
@@ -187,30 +156,9 @@ def test_name_json_returns_ok(client, name_fixture):
     assert 200 == response.status_code
 
 
-# TODO: This should not return a 500
+# FIXME: This should not return a 500
 @pytest.mark.xfail
 @pytest.mark.django_db
 def test_name_json_handles_unknown_name(client):
     response = client.get(reverse('name_json', args=[0]))
     assert 404 == response.status_code
-
-
-# TODO: Move this to test_search.py
-@pytest.mark.django_db
-def test_search_with_q(client, twenty_name_fixtures):
-    name = twenty_name_fixtures.first()
-    url = reverse('name_search') + "?q={}".format(name.name)
-    response = client.get(url)
-    assert name.name in response.content
-
-
-# TODO: Move this to test_search.py
-@pytest.mark.xfail
-def test_search_with_q_type(client, name_fixture):
-    assert False
-
-
-# TODO: Move this to test_search.py
-@pytest.mark.xfail
-def test_search_without_query(client):
-    assert False
