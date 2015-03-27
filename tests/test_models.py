@@ -79,7 +79,6 @@ class TestName:
         assert name_id == unicode(name)
 
 
-
 class TestLocation:
     def test_has_unicode_method(self):
         lat_lng = 239
@@ -113,7 +112,7 @@ class TestLocation:
         return loc1.id, loc2.id, loc3.id
 
     @pytest.mark.django_db
-    def test_save_updates_current_location(self, location_fixture):
+    def test_save_updates_current_location_on_create(self, location_fixture):
         loc1, loc2, loc3 = location_fixture
 
         location1 = models.Location.objects.get(id=loc1)
@@ -126,7 +125,7 @@ class TestLocation:
         assert location3.status == models.RECORD_STATUS_CHOICES[0][0]
 
     @pytest.mark.django_db
-    def test_save_updates_current_location_2(self, location_fixture):
+    def test_save_updates_current_location_on_save(self, location_fixture):
         loc1, loc2, loc3 = location_fixture
 
         location1 = models.Location.objects.get(id=loc1)
@@ -135,7 +134,7 @@ class TestLocation:
         location1.status = 0
         location1.save()
 
-        # Refresh the objects to get the updated statuses.
+        # Refresh/Get the objects to get the updated statuses.
         location1 = models.Location.objects.get(id=loc1)
         location2 = models.Location.objects.get(id=loc2)
         location3 = models.Location.objects.get(id=loc3)
