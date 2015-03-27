@@ -195,6 +195,7 @@ def test_name_json_handles_unknown_name(client):
     assert 404 == response.status_code
 
 
+# TODO: Move this to test_search.py
 @pytest.mark.django_db
 def test_search_with_q(client, twenty_name_fixtures):
     name = twenty_name_fixtures.first()
@@ -203,11 +204,13 @@ def test_search_with_q(client, twenty_name_fixtures):
     assert name.name in response.content
 
 
+# TODO: Move this to test_search.py
 @pytest.mark.xfail
 def test_search_with_q_type(client, name_fixture):
     assert False
 
 
+# TODO: Move this to test_search.py
 @pytest.mark.xfail
 def test_search_without_query(client):
     assert False
