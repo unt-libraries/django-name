@@ -1,5 +1,4 @@
 import pytest
-from django.test.client import RequestFactory
 from name import models, views
 
 
@@ -64,6 +63,7 @@ def test_filter_names_with_no_query_and_name_types(types,
     assert names.count() == expected
 
 
+# rf is a pytest-django fixture
 @pytest.mark.parametrize('query,expected', [
     ('Personal', 1),
     ('Personal,Building,Organization', 3),
@@ -75,21 +75,18 @@ def test_filter_names_with_no_query_and_name_types(types,
     ('Unknown,Types', 0),
     ('Unknown,Types', 0)
 ])
-def test_resolve_type(query, expected):
-    rf = RequestFactory()
+def test_resolve_type(rf, query, expected):
     request = rf.get('/', {'q_type': query})
     types = views.resolve_type(request)
     assert len(types) == expected
 
 
-def test_resolve_q_returns_value():
-    rf = RequestFactory()
+def test_resolve_q_returns_value(rf):
     q = views.resolve_q(rf.get('/', {'q': 'value'}))
     assert q == 'value'
 
 
-def test_resolve_q_returns_empty_string():
-    rf = RequestFactory()
+def test_resolve_q_returns_empty_string(rf):
     q = views.resolve_q(rf.get('/'))
     assert '' == q
 
