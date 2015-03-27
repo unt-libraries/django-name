@@ -5,6 +5,7 @@ from name import models
 
 @pytest.fixture
 def name_fixture(db, scope="module"):
+    '''Single Name object of type Person'''
     return models.Name.objects.create(
         name='test person',
         name_type=0,
@@ -13,6 +14,7 @@ def name_fixture(db, scope="module"):
 
 @pytest.fixture
 def name_fixtures(db, scope="module"):
+    '''5 Name objects, one for each type.'''
     models.Name.objects.create(name='test person',
                                name_type=0, begin='2012-01-12')
     models.Name.objects.create(name='test organization',
@@ -25,6 +27,13 @@ def name_fixtures(db, scope="module"):
 
 @pytest.fixture
 def twenty_name_fixtures(db, scope="session"):
+    '''Twenty Name objects.
+
+    The name type for each object is randomly determined.
+    This fixture is good for testing search functionality, or
+    any occasion where you need a large amount of Names and
+    the type of those Names is arbitrary.
+    '''
     for x in range(21):
         models.Name.objects.create(
             name="Name {}".format(x),
@@ -35,6 +44,7 @@ def twenty_name_fixtures(db, scope="session"):
 
 @pytest.fixture
 def merged_name_fixtures(db, scope="module"):
+    '''Fixture that is preconfigured for testing Name merging.'''
     name1 = models.Name.objects.create(name='test person 1', name_type=0)
     name2 = models.Name.objects.create(name='test person 2', name_type=0)
     name1.merged_with = name2
@@ -44,6 +54,12 @@ def merged_name_fixtures(db, scope="module"):
 
 @pytest.fixture
 def search_fixtures(db, scope='module'):
+    '''Name fixtures for search.
+
+    This fixture provide 20 name fixtures with, 4 of each name type.
+    This fixture is good for testing search functionality, or
+    any occasion where you need a large amount of Names.
+    '''
     for x in range(1, 5):
         models.Name.objects.create(
             name="Personal {}".format(x), name_type=0)
