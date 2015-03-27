@@ -3,7 +3,6 @@ from name import models
 
 
 class TestIdentifier_Type:
-
     def test_has_unicode_method(self):
         label = "Test Label"
         identifer = models.Identifier_Type(label=label)
@@ -50,8 +49,9 @@ class TestName:
         assert second_id == first_id + 1
 
     # TODO: This is an unreliable test because is relies on
-    # the Google Maps API to return a single result. If second result
-    # is added for the name it will fail. Fixit.
+    #       the Google Maps API to return a single result. If second result
+    #       is added for the name it will fail. Fixit.
+    @pytest.mark.xfail
     @pytest.mark.django_db
     def test_saving_name_creates_location(self):
         name = models.Name.objects.create(name="University of North Texas",
@@ -79,12 +79,67 @@ class TestName:
         assert name_id == unicode(name)
 
 
+
 class TestLocation:
     def test_has_unicode_method(self):
         lat_lng = 239
         location = models.Location(latitude=lat_lng, longitude=lat_lng)
         assert location.geo_point() == unicode(location)
 
-    @pytest.mark.xfail
-    def test_save(self):
-        pass
+    @pytest.fixture
+    def location_fixture(self, db, scope="class"):
+        name = models.Name.objects.create(name="Event", name_type=3)
+        loc1 = models.Location.objects.create(
+            status=0,
+            latitude=33.210241,
+            longitude=-97.148857,
+            belong_to_name=name)
+
+        loc2 = models.Location.objects.create(
+            status=0,
+            latitude=33.210241,
+            longitude=-97.148857,
+            belong_to_name=name)
+
+        loc3 = models.Location.objects.create(
+            status=0,
+            latitude=33.210241,
+            longitude=-97.148857,
+            belong_to_name=name)
+
+        # Only return the ids, because the tests will
+        # need to instantiate a new object to get the correct
+        # statuses.
+        return loc1.id, loc2.id, loc3.id
+
+    @pytest.mark.django_db
+    def test_save_updates_current_location(self, location_fixture):
+        loc1, loc2, loc3 = location_fixture
+
+        location1 = models.Location.objects.get(id=loc1)
+        location2 = models.Location.objects.get(id=loc2)
+        location3 = models.Location.objects.get(id=loc3)
+
+        # The active location should be the last one that was created
+        assert location1.status == models.RECORD_STATUS_CHOICES[1][0]
+        assert location2.status == models.RECORD_STATUS_CHOICES[1][0]
+        assert location3.status == models.RECORD_STATUS_CHOICES[0][0]
+
+    @pytest.mark.django_db
+    def test_save_updates_current_location_2(self, location_fixture):
+        loc1, loc2, loc3 = location_fixture
+
+        location1 = models.Location.objects.get(id=loc1)
+
+        # Saving this location should make it the Active location.
+        location1.status = 0
+        location1.save()
+
+        # Refresh the objects to get the updated statuses.
+        location1 = models.Location.objects.get(id=loc1)
+        location2 = models.Location.objects.get(id=loc2)
+        location3 = models.Location.objects.get(id=loc3)
+
+        assert location1.status == models.RECORD_STATUS_CHOICES[0][0]
+        assert location2.status == models.RECORD_STATUS_CHOICES[1][0]
+        assert location3.status == models.RECORD_STATUS_CHOICES[1][0]
