@@ -134,14 +134,12 @@ def test_get_names_xhr_returns_only_10_names(client, twenty_name_fixtures):
     assert len(names) == 10
 
 
-# TODO: Take another look at this. We might not need
-#       Allow-Headers on every request, perhaps only ajax
-# TODO: Find a way to test that the origin header is set to '*'
 @pytest.mark.django_db
 def test_get_names_has_cors_headers(client):
     response = client.get(reverse('name_names'))
     assert response.has_header('Access-Control-Allow-Origin')
     assert response.has_header('Access-Control-Allow-Headers')
+    assert response['Access-Control-Allow-Origin'] == '*'
 
 
 @pytest.mark.django_db
