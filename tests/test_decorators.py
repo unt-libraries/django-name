@@ -45,6 +45,7 @@ def test_jsonp_request_does_not_have_callback():
     f.__name__ = 'Wrapped View'
 
     request = MagicMock()
+    # No query strings are added.
     request.GET = dict()
 
     json = {"id": 1, "status": 200}
