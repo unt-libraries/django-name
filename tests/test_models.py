@@ -1,4 +1,6 @@
 import pytest
+import json
+from mock import patch, Mock
 from name import models
 
 
@@ -48,16 +50,38 @@ class TestName:
         second_id = models.BaseTicketing.objects.all().last().id
         assert second_id == first_id + 1
 
-    # TODO: This is an unreliable test because is relies on
-    #       the Google Maps API to return a single result. If second result
-    #       is added for the name it will fail. Fixit.
-    @pytest.mark.xfail
     @pytest.mark.django_db
     def test_saving_name_creates_location(self):
-        name = models.Name.objects.create(name="University of North Texas",
-                                          name_type=4)
-        assert 0 < (models.Location.objects.all()
-                    .filter(belong_to_name=name).count())
+        lat, lng = 33.210241, -97.148857
+        with patch('name.models.requests') as mock_requests:
+            mock_requests.get.return_value = mock_response = Mock()
+            mock_response.status_code = 200
+
+            # The json payload from map.googleapis.com is expected to
+            # look something like this.
+            mock_response.content = json.dumps(
+                {
+                    'status': "OK",
+                    'results': [{
+                        'geometry': {
+                            'location': {'lat': lat, 'lng': lng}
+                        }
+                    }]
+                }
+            )
+
+            name = models.Name.objects.create(
+                name="Test Location",
+                name_type=4)
+
+            locations = (models.Location.objects.all()
+                         .filter(belong_to_name=name))
+
+            assert 1 == locations.count()
+            # Assert the location matches the data from the json
+            # payload.
+            assert lng == float(locations.first().longitude)
+            assert lat == float(locations.first().latitude.normalize())
 
     @pytest.mark.django_db
     def test_has_geocode(self):
