@@ -81,12 +81,11 @@ class TestName:
             # Assert the location matches the data from the json
             # payload.
             assert lng == float(locations.first().longitude)
-            assert lat == float(locations.first().latitude.normalize())
+            assert lat == float(locations.first().latitude)
 
     @pytest.mark.django_db
     def test_has_geocode(self):
-        lat = 33.210241
-        lng = -97.148857
+        lat, lng = 33.210241, -97.148857
         name = models.Name.objects.create(name="Test Name", name_type=4)
         models.Location.objects.create(belong_to_name=name, longitude=lng,
                                        latitude=lat)
