@@ -50,11 +50,17 @@ def test_search_with_q(client, twenty_name_fixtures):
     assert name.name in response.content
 
 
+# FIXME: Currently, there is not a reliable way to test for the amount of
+#       of names, or of which type they are. After some template updates
+#       this may be possible.
 @pytest.mark.xfail(reason="No Test")
-def test_search_with_q_type(client, twenty_name_fixtures):
+def test_search_with_q_type(rf, twenty_name_fixtures):
     assert False
 
 
+# FIXME: Currently, there is not a reliable way to test for the amount of
+#       of names, or of which type they are. After some template updates
+#       this may be possible.
 @pytest.mark.xfail(reason="No Test")
 def test_search_without_query(client):
     assert False
