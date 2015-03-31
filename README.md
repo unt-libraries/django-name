@@ -27,7 +27,7 @@ Contributors:
 
 ## Developing
 
-To take advantage of the dev environment that is already configured, you need to have Docker and Docker Compose installed.
+To take advantage of the dev environment that is already configured, you need to have [Docker](https://docs.docker.com/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
 Clone the repository.
 ```sh
