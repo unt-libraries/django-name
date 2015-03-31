@@ -45,7 +45,7 @@ def test_can_search_multiple_name_types(client, name_fixtures):
 def test_search_with_q(client, twenty_name_fixtures):
     '''Search with q only. No name_types provided'''
     name = twenty_name_fixtures.first()
-    url = reverse('name_search') + "?q={}".format(name.name)
+    url = reverse('name_search') + "?q={0}".format(name.name)
     response = client.get(url)
     assert name.name in response.content
 

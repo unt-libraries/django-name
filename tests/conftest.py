@@ -36,7 +36,7 @@ def twenty_name_fixtures(db, scope="session"):
     '''
     for x in range(21):
         models.Name.objects.create(
-            name="Name {}".format(x),
+            name="Name {0}".format(x),
             name_type=random.randint(0, 4),
             begin='2012-01-12')
     return models.Name.objects.all()
@@ -62,13 +62,13 @@ def search_fixtures(db, scope='module'):
     '''
     for x in range(1, 5):
         models.Name.objects.create(
-            name="Personal {}".format(x), name_type=0)
+            name="Personal {0}".format(x), name_type=0)
         models.Name.objects.create(
-            name="Organization {}".format(x), name_type=1)
+            name="Organization {0}".format(x), name_type=1)
         models.Name.objects.create(
-            name="Event {}".format(x), name_type=2)
+            name="Event {0}".format(x), name_type=2)
         models.Name.objects.create(
-            name="Software {}".format(x), name_type=3)
+            name="Software {0}".format(x), name_type=3)
         models.Name.objects.create(
-            name="Building {}".format(x), name_type=4)
+            name="Building {0}".format(x), name_type=4)
     return models.Name.objects.all()
