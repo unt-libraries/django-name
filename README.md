@@ -27,7 +27,14 @@ Contributors:
 
 ## Developing
 
-To take advantage of the dev environment that is already configured, you need to have [Docker](https://docs.docker.com/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+To take advantage of the dev environment that is already configured, you need to have Docker(>= 1.3) and Docker Compose installed.
+
+Install [Docker](https://docs.docker.com/installation/)
+
+Install Docker Compose
+```sh
+$ pip install docker-compose
+```
 
 Clone the repository.
 ```sh
