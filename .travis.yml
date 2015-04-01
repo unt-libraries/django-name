@@ -1,0 +1,20 @@
+language: python
+sudo: false
+python: 2.7
+services: mysql
+env:
+    global:
+        - DB_HOST=localhost
+        - DB_USER=travis
+        - DB_PASSWORD=''
+    matrix:
+        - TOX_ENV=py27-django16
+        - TOX_ENV=py27-django17
+        - TOX_ENV=py27-django18beta
+        - TOX_ENV=flake8
+install:
+    - pip install tox
+before_script:
+    - mysql -e 'create database name_test;'
+script:
+    - tox -e $TOX_ENV

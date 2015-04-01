@@ -1,17 +1,8 @@
+import json
+import requests
 from django.db import models, transaction
 from .NACO import normalizeSimplified
 from django.core.exceptions import ValidationError
-import requests
-try:
-    # the json module was included in the stdlib in python 2.6
-    # http://docs.python.org/library/json.html
-    import json
-except ImportError:
-    # simplejson 2.0.9 is available for python 2.4+
-    # http://pypi.python.org/pypi/simplejson/2.0.9
-    # simplejson 1.7.3 is available for python 2.3+
-    # http://pypi.python.org/pypi/simplejson/1.7.3
-    import simplejson as json
 
 NOTE_TYPE_CHOICES = (
     (0, 'Biographical/Historical'),
@@ -144,7 +135,6 @@ class Variant(models.Model):
     )
 
     def save(self):
-
         self.normalized_variant = normalizeSimplified(self.variant)
         super(Variant, self).save()
 
@@ -369,9 +359,8 @@ class Location(models.Model):
     class Meta:
         ordering = ["status"]
 
-    @property
     def geo_point(self):
-        return "%s, %s" (str(self.latitude), str(self.longitude))
+        return "%s, %s" % (self.latitude, self.longitude)
 
     def save(self, **kwargs):
         super(Location, self).save()
@@ -383,3 +372,6 @@ class Location(models.Model):
             for l in former_locs:
                 l.status = 1
                 l.save()
+
+    def __unicode__(self):
+        return self.geo_point()

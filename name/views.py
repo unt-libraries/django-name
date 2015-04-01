@@ -1,6 +1,7 @@
 import re
 import csv
 import copy
+import json
 import requests
 import uuid
 import hashlib
@@ -26,17 +27,6 @@ from name.models import (
     NOTE_TYPE_CHOICES,
     DATE_DISPLAY_LABELS,
 )
-
-try:
-    # the json module was included in the stdlib in python 2.6
-    # http://docs.python.org/library/json.html
-    import json
-except ImportError:
-    # simplejson 2.0.9 is available for python 2.4+
-    # http://pypi.python.org/pypi/simplejson/2.0.9
-    # simplejson 1.7.3 is available for python 2.3+
-    # http://pypi.python.org/pypi/simplejson/1.7.3
-    import simplejson as json
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 MAINTENANCE_MSG = settings.MAINTENANCE_MSG
@@ -447,6 +437,9 @@ def resolve_type(request):
 def filter_names(q, name_types):
     """
     Return the set of filtered name objects
+
+    q: Query string
+    name_types: List of name_type ids. List of integers.
     """
     # we definitely don't want to serve up hidden/merged/deleted
     # records.
