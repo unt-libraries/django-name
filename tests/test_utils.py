@@ -4,7 +4,7 @@ from name import views
 
 def test_get_unique_user_id():
     '''Test get_unique_user_id.
-    
+
     Should always return the same ID for a single host.
     '''
     uids = [views.get_unique_user_id for i in range(1000)]

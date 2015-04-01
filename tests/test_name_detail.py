@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 def test_person_itemprops(client):
     """Verify the correct item properties are included in
     the rendered page.
-    
+
     A Person should have:
         - Name
         - URL
@@ -29,7 +29,7 @@ def test_person_itemprops(client):
 def test_building_itemprops(client):
     """Verify the correct item properties are included in
     the rendered page.
-    
+
     A Building should have:
         - Name
         - URL
@@ -48,7 +48,7 @@ def test_building_itemprops(client):
 def test_organization_itemprops(client):
     """Verify the correct item properties are included in
     the rendered page.
-    
+
     A Organization should have:
         - Name
         - URL
@@ -67,7 +67,7 @@ def test_organization_itemprops(client):
 def test_event_itemprops(client):
     """Verify the correct item properties are included in
     the rendered page.
-    
+
     A Event should have:
         - Name
         - URL
