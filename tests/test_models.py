@@ -42,6 +42,9 @@ class TestBaseTicketing:
 class TestName:
     @pytest.mark.django_db
     def test_saving_name_increments_base_ticketing_id(self):
+        """Test that the BaseTicketing ID is properly incremented
+        when a Name object is saved to the database.
+        """
         # Create an initial Name so we can be confident that
         # a BaseTicketing Object will exist
         models.Name.objects.create(name="Test Name", name_type=1)
@@ -52,6 +55,10 @@ class TestName:
 
     @pytest.mark.django_db
     def test_saving_name_creates_location(self):
+        """Test that a Location is created when the Name object
+        is a location (4) and does not have any associated Location
+        objects.
+        """
         lat, lng = 33.210241, -97.148857
         with patch('name.models.requests') as mock_requests:
             mock_requests.get.return_value = mock_response = Mock()
@@ -85,6 +92,8 @@ class TestName:
 
     @pytest.mark.django_db
     def test_has_geocode(self):
+        """Test that has_geocode returns True."""
+
         lat, lng = 33.210241, -97.148857
         name = models.Name.objects.create(name="Test Name", name_type=4)
         models.Location.objects.create(belong_to_name=name, longitude=lng,
@@ -93,6 +102,7 @@ class TestName:
 
     @pytest.mark.django_db
     def test_does_not_have_geocode(self):
+        """Test that has_geocode returns False."""
         name = models.Name.objects.create(name="Test Name", name_type=4)
         assert not name.has_geocode()
 
@@ -110,6 +120,7 @@ class TestLocation:
 
     @pytest.fixture
     def location_fixture(self, db, scope="class"):
+        """Class level fixture of multiple Location objects."""
         name = models.Name.objects.create(name="Event", name_type=3)
         loc1 = models.Location.objects.create(
             status=0,
@@ -136,6 +147,12 @@ class TestLocation:
 
     @pytest.mark.django_db
     def test_save_updates_current_location_on_create(self, location_fixture):
+        """Test that the Location status is properly updated during
+        when calling the create method.
+
+        The expected outcome here is that the last Location created
+        will be designated as the current Location.
+        """
         loc1, loc2, loc3 = location_fixture
 
         location1 = models.Location.objects.get(id=loc1)
@@ -149,6 +166,12 @@ class TestLocation:
 
     @pytest.mark.django_db
     def test_save_updates_current_location_on_save(self, location_fixture):
+        """Test that the Location status is properly updated during
+        when calling the save method.
+
+        The expected outcome here is that a when a Location is saved,
+        the 'saved' location automatically becomes the current Location.
+        """
         loc1, loc2, loc3 = location_fixture
 
         location1 = models.Location.objects.get(id=loc1)

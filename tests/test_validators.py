@@ -4,7 +4,8 @@ from django.core.exceptions import ValidationError
 
 
 @pytest.fixture
-def merge_candidates(db, scope='module'):
+def merge_candidates(db):
+    """Fixture setup to for testing merged validators."""
     primary = Name.objects.create(name='Primary', name_type=0)
     secondary = Name.objects.create(name='Secondary', name_type=0)
     return (primary, secondary)
@@ -20,8 +21,12 @@ def test_validate_merged_with_passes(merge_candidates):
 
 
 @pytest.mark.django_db
-def test_validate_merged_cannot_be_merged(merge_candidates):
-    '''Tests the validation failure'''
+def test_validate_merged_with_fails(merge_candidates):
+    """Tests validate_merged_with_fails.
+
+    This should fail when attempting to circularly merge Names.
+    Example: Name1 -> Name2, Name2 -> Name1.
+    """
     primary, secondary = merge_candidates
 
     secondary.merged_with = primary

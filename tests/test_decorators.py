@@ -3,6 +3,8 @@ from mock import MagicMock
 
 
 def test_jsonp_returns_without_status_code_200():
+    """Test jsonp returns correctly when the response does
+    not have status code 200."""
     # Setup the mock view.
     f = MagicMock()
     f.__name__ = 'Wrapped View'
@@ -19,7 +21,7 @@ def test_jsonp_returns_without_status_code_200():
     assert decorated_f(1)
 
 
-def test_jsonp_returns_has_callback():
+def test_jsonp_returns_with_callback():
     f = MagicMock()
     f.__name__ = 'Wrapped View'
 
@@ -41,6 +43,9 @@ def test_jsonp_returns_has_callback():
 
 
 def test_jsonp_request_does_not_have_callback():
+    """Test the outcome when the input request does not contain a
+    callback.
+    """
     f = MagicMock()
     f.__name__ = 'Wrapped View'
 

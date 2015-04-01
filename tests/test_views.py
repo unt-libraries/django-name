@@ -61,6 +61,11 @@ def test_label_returns_redirected(client, name_fixture):
 
 @pytest.mark.django_db
 def test_label_returns_not_found_without_query(client):
+    """Test label returns Not Found without a query.
+
+    This will fail if label does not return with a status
+    code of 404.
+    """
     response = client.get(
         reverse('name_label', args=['']))
     assert 404 == response.status_code
@@ -69,6 +74,12 @@ def test_label_returns_not_found_without_query(client):
 
 @pytest.mark.django_db
 def test_label_returns_not_found_with_query(client):
+    """Test label returns Not Found with a query that does not
+    match anything.
+
+    This will fail if label does not return with a status
+    code of 404.
+    """
     response = client.get(
         reverse('name_label', args=['&&&&&&&&']))
     assert 404 == response.status_code

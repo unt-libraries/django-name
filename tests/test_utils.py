@@ -3,8 +3,9 @@ from name import views
 
 
 def test_get_unique_user_id():
-    '''This should always return the same ID for a
-    single host
+    '''Test get_unique_user_id.
+    
+    Should always return the same ID for a single host.
     '''
     uids = [views.get_unique_user_id for i in range(1000)]
     assert 1 == len(set(uids))
@@ -24,10 +25,10 @@ def test_filter_names_with_query(search_fixtures):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('types,expected', [
-    ([0], 1),
-    ([0, 1], 2),
-    ([0, 1, 2], 3),
-    ([0, 1, 2, 3, 4], 5)
+    ([0], 1),             # Personal
+    ([0, 1], 2),          # Personal, Organization
+    ([0, 1, 2], 3),       # Personal, Organization, Event
+    ([0, 1, 2, 3, 4], 5)  # All name types.
 ])
 def test_filter_names_with_query_and_name_types(types,
                                                 expected, search_fixtures):
@@ -37,10 +38,10 @@ def test_filter_names_with_query_and_name_types(types,
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('types,expected', [
-    ([0], 4),
-    ([0, 1], 8),
-    ([0, 1, 2], 12),
-    ([0, 1, 2, 3, 4], 20)
+    ([0], 4),              # Personal
+    ([0, 1], 8),           # Personal, Organization
+    ([0, 1, 2], 12),       # Personal, Organization, Event
+    ([0, 1, 2, 3, 4], 20)  # All name types.
 ])
 def test_filter_names_with_no_query_and_name_types(types,
                                                    expected, search_fixtures):
