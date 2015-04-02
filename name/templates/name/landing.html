@@ -23,7 +23,7 @@
                     <tr>
                         <th>Personal Names:</th>
                             <td>
-                                <a href="{{ SITE_URL }}search/?q_type=Personal&amp;q=">
+                                <a href="{% url "name_search" %}?q_type=Personal&amp;q=">
                                     {{ personal_entries.count|intcomma }}
                                 </a>
                             </td>
@@ -34,7 +34,7 @@
                         <th>
                             Organization Names:</th>
                             <td>
-                                <a href="{{ SITE_URL }}search/?q_type=Organization&amp;q">
+                                <a href="{% url "name_search" %}?q_type=Organization&amp;q">
                                     {{ organization_entries.count|intcomma }}
                                 </a>
                             </td>
@@ -45,7 +45,7 @@
                         <th>
                             Event Names:</th>
                             <td>
-                                <a href="{{ SITE_URL }}search/?q_type=Event&amp;q=">
+                                <a href="{% url "name_search" %}?q_type=Event&amp;q=">
                                     {{ event_entries.count|intcomma }}
                                 </a>
                             </td>
@@ -56,7 +56,7 @@
                         <th>
                             Software Names:</th>
                             <td>
-                                <a href="{{ SITE_URL }}search/?q_type=Software&amp;q=">
+                                <a href="{% url "name_search" %}?q_type=Software&amp;q=">
                                     {{ software_entries.count|intcomma }}
                                 </a>
                             </td>
@@ -67,7 +67,7 @@
                         <th>
                             Building Names:</th>
                             <td>
-                                <a href="{{ SITE_URL }}search/?q_type=Building&amp;q=">
+                                <a href="{% url "name_search" %}?q_type=Building&amp;q=">
                                     {{ building_entries.count|intcomma }}
                                 </a>
                             </td>
@@ -75,7 +75,8 @@
                     {% endif %}
                     <tr class="last">
                         <th>
-                            Total Names:</th>
+                            Total Names:
+                        </th>
                             <td>
                                 {{ total_entries.count|intcomma }}
                             </td>
