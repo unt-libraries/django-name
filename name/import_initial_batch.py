@@ -11,6 +11,7 @@ for line in f:
     line = line.split('\t')
     naco = normalizeSimplified(line[1])
     host = 'libdigital2test.library.unt.edu'
+    # FIXME: Remove hardcoded URL
     path = '/name/label/' + naco
     try:
         conn = urllib2.urlopen('http://%s%s' % (host, urllib2.quote(path)))
