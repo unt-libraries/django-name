@@ -6,11 +6,6 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    {# FIXME: Remove hardcoded url #}
-    {% if request.build_absolute_uri != '{{ BASE_URL }}/name/nm0000001/' %}
-    {# FIXME: Remove hardcoded url #}
-	<link rel="canonical" href="{{ BASE_URL }}/name/nm000001/">
-    {% endif %}
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "name/css/site_base.css" %}">
