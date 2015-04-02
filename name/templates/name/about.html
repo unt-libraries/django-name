@@ -1,4 +1,5 @@
 {% extends "name/name.html" %}
+{% load name_extras %}
 {% block title %}About{% endblock %}
 
 {% block content %}
@@ -10,7 +11,7 @@
 
 
 <h3>Two search modes are available.</h3>
-    Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existance lookup of the authorized name. The user should request "{{ BASE_URL }}/name/label/(name_string_here)". The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.<br>
+    Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existance lookup of the authorized name. The user should request "{% absolute_url "name_label" "(name_string_here)" %}". The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.<br>
     This page will first address the 'traditional' search API, then the label API.
 </div>
 <div class='container-fluid'>
@@ -19,70 +20,70 @@
 
     <!--BEGIN CODE MARKUP-->
     <div id="highlight-python"><pre>
-    $ curl "{{ BASE_URL }}/name/search.json?q=joey+liechty"
+    $ curl "{% absolute_url "name_names" %}?q=joey+liechty"
     [
         {
-            "URL": "{{ BASE_URL }}/name/nm0051457/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0051457" %}",
             "id": "nm0051457",
             "name": "joey liechty",
             "type": "Personal"
         }
     ]
 
-    $ curl "{{ BASE_URL }}/name/search.json?q=abc&amp;q_type=Organization&amp;callback=foo"
+    $ curl "{% absolute_url "name_names" %}?q=abc&amp;q_type=Organization&amp;callback=foo"
     foo([
         {
-            "URL": "{{ BASE_URL }}/name/nm0000063/",
+            "URL": "{% url "name_entry_detail" "nm0000063" %}",
             "id": "nm0000063",
             "name": "ABC Shop",
             "type": "Organization"
         }
     ])
 
-    $ curl "{{ BASE_URL }}/name/search.json?q_type=Software"
+    $ curl "{% absolute_url "name_names" %}?q_type=Software"
     [
         {
-            "URL": "{{ BASE_URL }}/name/nm0051455/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0051455" %}",
             "id": "nm0051455",
             "name": "Watson",
             "type": "Software"
         },
         {
-            "URL": "{{ BASE_URL }}/name/nm0012345/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0012345" %}",
             "id": "nm0012345",
             "name": "Software Foo",
             "type": "Software"
         },
         {
-            "URL": "{{ BASE_URL }}/name/nm0043212/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0043212" %}",
             "id": "nm0043212",
             "name": "123 SoftCom",
             "type": "Software"
         },
     ]
 
-    $ curl "{{ BASE_URL }}/name/search.json?q_type=Software,Organization"
+    $ curl "{% absolute_url "name_names" %}?q_type=Software,Organization"
     [
         {
-            "URL": "{{ BASE_URL }}/name/nm0051455/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0051455" %}",
             "id": "nm0051455",
             "name": "Watson",
             "type": "Software"
         },
         {
-            "URL": "{{ BASE_URL }}/name/nm0012345/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0012345" %}",
             "id": "nm0012345",
             "name": "Software Foo",
             "type": "Software"
         },
         {
-            "URL": "{{ BASE_URL }}/name/nm0043212/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0043212" %}",
             "id": "nm0043212",
             "name": "123 SoftCom",
             "type": "Software"
         },
         {
-            "URL": "{{ BASE_URL }}/name/nm0000063/",
+            "URL": "{% absolute_url "name_entry_detail" "nm0000063" %}",
             "id": "nm0000063",
             "name": "ABC Shop",
             "type": "Organization"
@@ -114,15 +115,15 @@
     <h3>Label API</h3>
     The second method of searching is with the 'label' API. The label API is essentially a quick way to determine if an authorized name exists in the name app. The only two responses to this API are a 404 Not Found or a 302 Redirect.
     <pre>
-    $ curl "{{ BASE_URL }}/name/label/joey-not-here"
+    $ curl "{% absolute_url "name_label" "joey-not-here" %}"
     No matching term found - authoritative, or variant - for "joey-not-here"
 
-    $ curl -I "{{ BASE_URL }}/name/label/thisrecordisforsureinthedatabase"
+    $ curl -I "{% absolute_url "name_label" "thisrecordisforsureinthedatabase" %}"
     HTTP/1.0 302 FOUND
     Date: Mon, 25 Feb 2013 22:33:19 GMT
     Server: WSGIServer/0.1 Python/2.7.3
     Content-Type: text/html; charset=utf-8
-    Location: {{ BASE_URL }}/name/nm0000085/
+    Location: {% absolute_url "name_entry_detail" "nm0000085" %}
     </pre>
 
     <h3>Label return codes</h3>
