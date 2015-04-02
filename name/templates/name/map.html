@@ -20,6 +20,7 @@
     var addressPoints = [
     {% for l in locations %}
         {% if l.status == 0 %}
+                                                                            {# FIXME: Remove hardcoded url #}
         [{{ l.latitude }}, {{ l.longitude }}, "<i class='icon-building'></i> <a href='/name/{{ l.belong_to_name.name_id }}'>{{ l.belong_to_name.name }}</a>"],
         {% endif %}
     {% endfor %}
