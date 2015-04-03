@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
@@ -90,7 +91,10 @@ def label(request, name_value):
         normalized_value = normalizeSimplified(name_value)
         try:
             user = Name.objects.get(normalized_name=normalized_value)
-            return HttpResponseRedirect('/name/' + user.name_id + '/')
+
+            return HttpResponseRedirect(
+                reverse('name_entry_detail', args=[user.name_id]))
+
         except Name.DoesNotExist:
             # return 404 for an non existent naco form
             return HttpResponse(
@@ -154,33 +158,33 @@ def entry_detail(request, name_id):
     Renders the requested user detailed info page
     """
 
-    # define the requested user from the passed id
-    total_entries = Name.objects.all()
-    requested_user = get_object_or_404(Name, name_id=name_id)
-    ordered_link_set = requested_user.identifier_set.order_by('order')
-    note_set = requested_user.note_set.exclude(note_type=2)
-    # check if user is merged with any other user
-    if requested_user.merged_with:
-        # set requested_user to the merged user
-        requested_user = get_object_or_404(
-            Name,
-            name_id=requested_user.merged_with,
-        )
-        # and redirect
-        return HttpResponseRedirect('/name/' + requested_user.name_id + '/')
+    # define the name_entry from the passed id
+    name_entry = get_object_or_404(Name, name_id=name_id)
+
+    # If the user is merged with any other user, set the
+    # name_entry to the merged user and redirect.
+    if name_entry.merged_with:
+        name_entry = (
+            get_object_or_404(Name, name_id=name_entry.merged_with))
+
+        return HttpResponseRedirect(
+            reverse('name_entry_detail', args=[name_entry.name_id]))
+
     # if suppressed record, return 'not found' code 404
-    elif requested_user.record_status == 2:
+    elif name_entry.record_status == 2:
         return HttpResponse(status=404)
+
     # if deleted record, return 'gone' code 410
-    elif requested_user.record_status == 1:
+    elif name_entry.record_status == 1:
         return HttpResponseGone('The requested record has been deleted!')
+
     else:
-        if requested_user.name_type == 4:
+        if name_entry.name_type == 4:
             try:
                 locations = Location.objects.filter(
-                    belong_to_name=requested_user)
+                    belong_to_name=name_entry)
                 current_location = Location.objects.get(
-                    belong_to_name=requested_user, status=0)
+                    belong_to_name=name_entry, status=0)
             except:
                 locations = None
                 current_location = None
@@ -188,14 +192,16 @@ def entry_detail(request, name_id):
             current_location = None
             locations = None
 
-        date_display = DATE_DISPLAY_LABELS[requested_user.name_type]
+        date_display = DATE_DISPLAY_LABELS[name_entry.name_type]
+        total_entries = Name.objects.all()
+        ordered_link_set = name_entry.identifier_set.order_by('order')
+        note_set = name_entry.note_set.exclude(note_type=2)
 
-        # render back with a dict of details
         return render_to_response(
             'name/name_detail.html',
             {
                 'total_entries': total_entries,
-                'requested_user': requested_user,
+                'requested_user': name_entry,
                 'current_location': current_location,
                 'locations': locations,
                 'note_set': note_set,
@@ -210,34 +216,33 @@ def entry_detail(request, name_id):
 
 
 def export(request):
-    """
-    exports tsv file
-    """
-
-    # create a csv response
+    """Exports Names as TSV file."""
+    # Create a CSV response.
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.tsv"'
 
     writer = csv.writer(response, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
 
-    # write a row for each name object
+    # Write a row of [name_type, name, url] for each name object.
     # (non merged, suppressed, deleted, etc)
     for n in Name.objects.filter(record_status=0).filter(merged_with=None):
-
-        # get type, name, and url
-        type = NAME_TYPE_CHOICES[n.name_type][1].lower()
+        # Get the string form of the Name Type.
+        name_type = NAME_TYPE_CHOICES[n.name_type][1].lower()
         name = n.name.encode('utf-8')
-        url = request.get_host() + '/name/' + n.name_id + '/'
 
-        # write to the next row
-        writer.writerow([type, name, url])
+        url = request.build_absolute_uri(
+            reverse('name_entry_detail', args=[n.name_id]))
+
+        # Write the row.
+        writer.writerow([name_type, name, url])
 
     return response
 
 
 def opensearch(request):
-    """
-    returns opensearch xml file
+    """Opensearch
+
+    Returns Opensearch XML file.
     """
 
     # create XML root element
@@ -261,16 +266,16 @@ def opensearch(request):
     url.set('type', 'text/html')
     url.set(
         'template',
-        request.get_host() +
-        '/name/search/?q_type=Personal&q={searchTerms}'
+        "{url}?q_type=Personal&q={{searchTerms}}".format(
+            url=request.build_absolute_uri(reverse('name_search')))
     )
 
     auto_suggest = ElementTree.SubElement(root, 'Url')
     auto_suggest.set('type', 'application/x-suggestions+json')
     auto_suggest.set(
         'template',
-        request.get_host() +
-        '/name/search.json?q={searchTerms}'
+        "{url}?q={{searchTerms}}".format(
+            url=request.build_absolute_uri(reverse('name_names')))
     )
 
     # export the element tree to a string and send to httpresponse
@@ -499,9 +504,11 @@ def get_names(request):
             }
             if n.disambiguation:
                 name_json['disambiguation'] = n.disambiguation
+
             name_json['name'] = n.name
-            name_json['URL'] = 'http://%s/name/%s/' % \
-                (request.get_host(), n.name_id)
+            name_json['URL'] = request.build_absolute_uri(
+                reverse('name_entry_detail', args=[n.name_id]))
+
             if n.begin:
                 name_json['begin_date'] = n.begin
             if n.end:

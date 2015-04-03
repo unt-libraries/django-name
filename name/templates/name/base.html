@@ -6,9 +6,6 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    {% if request.build_absolute_uri != '{{ BASE_URL }}/name/nm0000001/' %}
-	<link rel="canonical" href="{{ BASE_URL }}/name/nm000001/">
-    {% endif %}
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "name/css/site_base.css" %}">
@@ -34,7 +31,7 @@
         <div class="navbar-inner">
             <div class="container-fluid" style="padding-left: 40px;">
                 <ul class="nav">
-                    <li><a class="brand" href="/name/">UNT Name App</a></li>
+                    <li><a class="brand" href="{% url "name_landing" %}">UNT Name App</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Menu
@@ -42,13 +39,13 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="nav-header">Name</li>
-                            <li><a href="/name/stats/">Statistics</a></li>
-                            <li><a href="/name/map/">Map</a></li>
+                            <li><a href="{% url "name_stats" %}">Statistics</a></li>
+                            <li><a href="{% url "name_map" %}">Map</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'name_about' %}">About</a></li>
+                    <li><a href="{% url "name_about" %}">About</a></li>
                     <li>
-                        <a href="/name/feed/">
+                        <a href="{% url "name_feed" %}">
                             <img alt="feed-icon" src="{% static "name/icons/feed-icon-14x14.png" %}">
                         </a>
                     </li>
@@ -56,7 +53,7 @@
                 </ul>
                 <ul class="nav pull-right" style="padding-right: 10px;">
                     <li>
-                        <form class="navbar-form form-inline navbar-search pull-right" id="search" action='/name/search/'>
+                        <form class="navbar-form form-inline navbar-search pull-right" id="search" action="{% url "name_search" %}">
 
                             <!-- show current searched type as the default selection, if it exists -->
                             <div>

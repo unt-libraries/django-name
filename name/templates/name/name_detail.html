@@ -3,8 +3,8 @@
 {% load get_value from name_extras %}
 {% block title %}{{ requested_user.name }}{% endblock %}
 {% block head-extra %}
-<link rel="alternate" type="application/xml" href="/name/{{ requested_user }}.mads.xml">
-<link rel="alternate" type="application/json" href="/name/{{ requested_user }}.json">{% endblock %}
+<link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" requested_user %}">
+<link rel="alternate" type="application/json" href="{% url "name_json" requested_user %}">{% endblock %}
 {% block content %}
 {% if requested_user.name_type == 0 %}
 <div itemscope itemtype="http://schema.org/Person" class="container-fluid">
@@ -29,7 +29,7 @@
                     </div>
                     {% if user.is_authenticated %}
                     <div class="btn-group span1">
-                        <a class="btn" href="{{ BASE_URL }}/admin/name/name/{{ requested_user.id }}">
+                        <a class="btn" href="{% url "admin:name_name_change" requested_user.id %}">
                             <i class="icon-pencil"></i> Edit
                         </a>
                     </div>

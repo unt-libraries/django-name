@@ -8,7 +8,7 @@
             <div style="text-align: center">
                 <h1>Search the Name App</h1>
             </div>
-            <form class="form form-inline" style="text-align: center" id="large_search" action='/name/search/'>
+            <form class="form form-inline" style="text-align: center" id="large_search" action="{% url "name_search" %}">
 
                 <!-- show current searched type as the default selection, if it exists -->
                 <div>
@@ -103,7 +103,7 @@
 
                                         <!-- if user is authenticated, add edit button -->
                                         {% if user.is_authenticated %}
-                                            <a class="btn" href="{{ BASE_URL }}/admin/name/name/{{ entry.id }}">
+                                            <a class="btn" href="{% url "admin:name_name_change" entry.id %}">
                                                 <i class="icon-pencil"></i> Edit
                                             </a>
                                         {% endif %}
