@@ -17,7 +17,7 @@ from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
 from dateutil import rrule
 from datetime import datetime
-from .NACO import normalizeSimplified
+from pynaco.naco import normalizeSimplified
 from name.decorators import jsonp
 from name.models import (
     Name,

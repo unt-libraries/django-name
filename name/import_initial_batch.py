@@ -1,4 +1,4 @@
-from NACO import normalizeSimplified
+from pynaco.naco import normalizeSimplified
 import urllib2
 from name.models import Name
 
