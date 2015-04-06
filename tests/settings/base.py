@@ -9,11 +9,8 @@ DEBUG = True
 
 SECRET_KEY = 'not-so-secret-for-tests'
 
-SITE_ID = 1
-
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
-    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.auth',
