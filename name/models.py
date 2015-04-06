@@ -1,7 +1,7 @@
 import json
 import requests
 from django.db import models, transaction
-from .NACO import normalizeSimplified
+from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
 
 NOTE_TYPE_CHOICES = (
