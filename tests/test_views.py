@@ -165,8 +165,6 @@ def test_name_json_returns_ok(client, name_fixture):
     assert 200 == response.status_code
 
 
-# FIXME: This should not return a 500
-@pytest.mark.xfail
 @pytest.mark.django_db
 def test_name_json_handles_unknown_name(client):
     response = client.get(reverse('name_json', args=[0]))
