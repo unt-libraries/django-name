@@ -681,7 +681,8 @@ def name_json(request, name_id):
     """
 
     # define the requested user from the passed id
-    requested_user = Name.objects.get(name_id=name_id)
+    requested_user = get_object_or_404(Name, name_id=name_id)
+
     jsonDict = {}
     variant_list = []
     link_list = []
