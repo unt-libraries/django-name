@@ -53,6 +53,18 @@ def merged_name_fixtures(db, scope="module"):
 
 
 @pytest.fixture
+def status_name_fixtures(db, scope="module"):
+    '''Fixture that is preconfigured for testing Name merging.'''
+    for x in range(0, 5):
+        models.Name.objects.create(name='test 1', name_type=x,
+                                   record_status=0)
+        models.Name.objects.create(name='test 2', name_type=x,
+                                   record_status=1)
+        models.Name.objects.create(name='test 3', name_type=x,
+                                   record_status=2)
+
+
+@pytest.fixture
 def search_fixtures(db, scope='module'):
     '''Name fixtures for search.
 

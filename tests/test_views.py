@@ -160,6 +160,23 @@ def test_landing(client):
 
 
 @pytest.mark.django_db
+def test_landing_does_not_count_inactive_names(client, status_name_fixtures):
+    """Checks that only active names are counted.
+
+    The status_name_fixture supplies this test with 3 Name objects of each
+    Name type, where only one of each Name type is active.
+    """
+    response = client.get(reverse('name_landing'))
+    context = response.context[-1]['counts']
+    assert 1 == context['personal']
+    assert 1 == context['building']
+    assert 1 == context['event']
+    assert 1 == context['organization']
+    assert 1 == context['software']
+    assert 5 == context['total']
+
+
+@pytest.mark.django_db
 def test_name_json_returns_ok(client, name_fixture):
     response = client.get(reverse('name_json', args=[name_fixture]))
     assert 200 == response.status_code
