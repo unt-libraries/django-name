@@ -8,6 +8,7 @@ def test_validate_merged_with_fails_with_unknown_id():
     with pytest.raises(ValidationError):
         validate_merged_with(1)
 
+
 @pytest.mark.django_db
 def test_validate_merged_with_passes():
     primary = Name.objects.create(name='Primary', name_type=0)
