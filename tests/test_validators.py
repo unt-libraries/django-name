@@ -41,6 +41,20 @@ def test_validate_merged_with_fails():
 
 
 @pytest.mark.django_db
+def test_validate_merged_fails_when_name_merges_with_itself():
+    """Check that validate_merged_with fails when we try to merge
+    a name into itself.
+    """
+    name = Name.objects.create(name='Primary', name_type=0)
+
+    name.merged_with = name
+    name.save()
+
+    with pytest.raises(ValidationError):
+        validate_merged_with(name.id)
+
+
+@pytest.mark.django_db
 def test_validate_merged_with_fails_with_more_than_two_names():
     """Checks that a merge loop constisting of more than two name
     also fails validation.
