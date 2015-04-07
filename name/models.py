@@ -218,8 +218,7 @@ def validate_merged_with(id):
         if name in merged_list:
             raise ValidationError(u'The specified merge action completes ' +
                                   'a merge loop. Unable to complete merge.')
-        else:
-            merged_list.append(name)
+        merged_list.append(name)
 
 
 class Name(models.Model):
