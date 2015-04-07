@@ -229,7 +229,6 @@ class Name(models.Model):
     name_type = models.IntegerField(
         max_length=1,
         choices=NAME_TYPE_CHOICES,
-        help_text="Must be one of 4 types",
     )
 
     # date, month or year of birth or incorporation of the name
