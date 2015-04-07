@@ -558,31 +558,22 @@ def landing(request):
     Renders the results of a search back to the user
     """
 
-    # set up object sets for stats/totals display
-    total_entries = Name.objects.all()
-    deleted_entries = Name.objects.filter(record_status=1)
-    suppressed_entries = Name.objects.filter(record_status=2)
-    personal_entries = Name.objects.filter(name_type=0)
-    organization_entries = Name.objects.filter(name_type=1)
-    event_entries = Name.objects.filter(name_type=2)
-    software_entries = Name.objects.filter(name_type=3)
-    building_entries = Name.objects.filter(name_type=4)
+    # Get the active Names and create a context dictionary
+    # that contains the counts of each Name type.
+    active_names = Name.objects.all().filter(record_status=0)
 
-    # render the view with the dict of results
+    counts = {
+        'total': active_names.count(),
+        'personal': active_names.filter(name_type=0).count(),
+        'organization': active_names.filter(name_type=1).count(),
+        'event': active_names.filter(name_type=2).count(),
+        'software': active_names.filter(name_type=3).count(),
+        'building': active_names.filter(name_type=4).count()
+    }
+
     return render_to_response(
         'name/landing.html',
-        {
-            'types': dict(NAME_TYPE_CHOICES),
-            'total_entries': total_entries,
-            'deleted_entries': deleted_entries,
-            'suppressed_entries': suppressed_entries,
-            'personal_entries': personal_entries,
-            'organization_entries': organization_entries,
-            'event_entries': event_entries,
-            'software_entries': software_entries,
-            'building_entries': building_entries,
-            'maintenance_message': MAINTENANCE_MSG,
-        },
+        {'counts': counts},
         context_instance=RequestContext(request)
     )
 
