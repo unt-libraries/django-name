@@ -19,56 +19,56 @@
             <div class="span5 offset7">
                 <table class="table" id="statsTable">
                     <caption>Total Record Count</caption>
-                    {% if personal_entries.count > 0 %}
+                    {% if counts.personal > 0 %}
                     <tr>
                         <th>Personal Names:</th>
                             <td>
                                 <a href="{% url "name_search" %}?q_type=Personal&amp;q=">
-                                    {{ personal_entries.count|intcomma }}
+                                    {{ counts.personal|intcomma }}
                                 </a>
                             </td>
                     </tr>
                     {% endif %}
-                    {% if organization_entries.count > 0 %}
+                    {% if counts.organization > 0 %}
                     <tr>
                         <th>
                             Organization Names:</th>
                             <td>
                                 <a href="{% url "name_search" %}?q_type=Organization&amp;q">
-                                    {{ organization_entries.count|intcomma }}
+                                    {{ counts.organization|intcomma }}
                                 </a>
                             </td>
                     </tr>
                     {% endif %}
-                    {% if event_entries.count > 0 %}
+                    {% if counts.event > 0 %}
                     <tr>
                         <th>
                             Event Names:</th>
                             <td>
                                 <a href="{% url "name_search" %}?q_type=Event&amp;q=">
-                                    {{ event_entries.count|intcomma }}
+                                    {{ counts.event|intcomma }}
                                 </a>
                             </td>
                     </tr>
                     {% endif %}
-                    {% if software_entries.count > 0 %}
+                    {% if counts.software > 0 %}
                     <tr>
                         <th>
                             Software Names:</th>
                             <td>
                                 <a href="{% url "name_search" %}?q_type=Software&amp;q=">
-                                    {{ software_entries.count|intcomma }}
+                                    {{ counts.software|intcomma }}
                                 </a>
                             </td>
                     </tr>
                     {% endif %}
-                    {% if building_entries.count > 0 %}
+                    {% if counts.building > 0 %}
                     <tr>
                         <th>
                             Building Names:</th>
                             <td>
                                 <a href="{% url "name_search" %}?q_type=Building&amp;q=">
-                                    {{ building_entries.count|intcomma }}
+                                    {{ counts.building|intcomma }}
                                 </a>
                             </td>
                     </tr>
@@ -78,7 +78,7 @@
                             Total Names:
                         </th>
                             <td>
-                                {{ total_entries.count|intcomma }}
+                                {{ counts.total|intcomma }}
                             </td>
                     </tr>
                 </table>
