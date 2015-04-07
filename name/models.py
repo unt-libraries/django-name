@@ -182,7 +182,7 @@ class BaseTicketing(models.Model):
         return u'nm%07d' % self.ticket
 
 
-def validate_merged_with(value):
+def validate_merged_with(id):
     """
     Custom validator for the merged with CharField.
     We don't want to allow users to do an infinite redirect loop b/c of
@@ -190,20 +190,36 @@ def validate_merged_with(value):
     """
 
     try:
-        # attempt to set the variables to their values
-        to_be_merged = 'nm%07d' % value
-        current = str(Name.objects.get(name_id=to_be_merged).merged_with)
-        current_merged = str(Name.objects.get(name_id=current).merged_with)
-    except Exception:
-        # make the comparison variables different to ensure test failure
-        current_merged = '1'
-        to_be_merged = '2'
+        merge_target = Name.objects.get(id=id)
+    except Name.DoesNotExist:
+        raise ValidationError('The merge target must exist.')
 
-    # test if they are looped
-    if current_merged == to_be_merged:
-        raise ValidationError(
-            u'can\'t merge a record into an infinite redirect loop'
-        )
+    def follow_merged_into(name):
+        """A generator to get the merged_with relationship
+        of a Name object
+
+        This will return a Name object until it reaches a Name that
+        has no merged_with relationship.
+        """
+        while name:
+            merged_into = name.merged_with
+            if merged_into:
+                yield merged_into
+            name = merged_into
+
+    # Iterate through the generator and keep track of the return names.
+    # we will find a loop if the the return name is already in
+    # merged_list. If this happens we will raise a validation error.
+    # If we don't find duplicates, then no loop has been created and
+    # the generator will raise it's own StopIteration and we will implicitly
+    # return.
+    merged_list = list()
+    for name in follow_merged_into(merge_target):
+        if name in merged_list:
+            raise ValidationError(u'The specified merge action completes ' +
+                                  'a merge loop. Unable to complete merge.')
+        else:
+            merged_list.append(name)
 
 
 class Name(models.Model):
