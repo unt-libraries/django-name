@@ -186,7 +186,7 @@ def validate_merged_with(id):
     """Validator for the merged_with ForeignKey field.
 
     This will look prevent two scenarios from occurring.
-    1. Merging with a nonexistent Name object
+    1. Merging with a nonexistent Name object.
 
     2. Creating a loop of foreign key relationships.
         For example:
