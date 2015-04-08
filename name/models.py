@@ -182,28 +182,52 @@ class BaseTicketing(models.Model):
         return u'nm%07d' % self.ticket
 
 
-def validate_merged_with(value):
-    """
-    Custom validator for the merged with CharField.
-    We don't want to allow users to do an infinite redirect loop b/c of
-    merging a record that is already merged with the current record
+def validate_merged_with(id):
+    """Validator for the merged_with ForeignKey field.
+
+    This will prevent two scenarios from occurring.
+    1. Merging with a nonexistent Name object.
+
+    2. Creating a loop of foreign key relationships.
+        For example:
+            Name 1 -> Name 2 -> Name 3 -> Name 1
+
+        We need to prevent this because navigating to a name that has
+        been merged with another, will redirect you to the Name it has
+        been merged with. If a loop is created, we will also create
+        the opportunity for an HTTP redirect loop.
     """
 
     try:
-        # attempt to set the variables to their values
-        to_be_merged = 'nm%07d' % value
-        current = str(Name.objects.get(name_id=to_be_merged).merged_with)
-        current_merged = str(Name.objects.get(name_id=current).merged_with)
-    except Exception:
-        # make the comparison variables different to ensure test failure
-        current_merged = '1'
-        to_be_merged = '2'
+        merge_target = Name.objects.get(id=id)
+    except Name.DoesNotExist:
+        raise ValidationError(u'The merge target must exist.')
 
-    # test if they are looped
-    if current_merged == to_be_merged:
-        raise ValidationError(
-            u'can\'t merge a record into an infinite redirect loop'
-        )
+    def follow_merged_with(name):
+        """A generator to get the merged_with relationship
+        of a Name object.
+
+        This will return a Name object until it reaches a Name that
+        does not have a merged_with relationship.
+        """
+        while name:
+            merged_into = name.merged_with
+            if merged_into:
+                yield merged_into
+            name = merged_into
+
+    # Iterate through the generator and keep track of the return names.
+    # we will find a loop if the return name is already in
+    # merged_list. If this happens we will raise a validation error.
+    # If we don't find duplicates, then no loop has been created and
+    # the generator will raise it's own StopIteration and we will implicitly
+    # return.
+    merge_sequence = list()
+    for name in follow_merged_with(merge_target):
+        if name in merge_sequence:
+            raise ValidationError(u'The specified merge action completes '
+                                  'a merge loop. Unable to complete merge.')
+        merge_sequence.append(name)
 
 
 class Name(models.Model):
