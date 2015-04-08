@@ -201,7 +201,7 @@ def validate_merged_with(id):
     try:
         merge_target = Name.objects.get(id=id)
     except Name.DoesNotExist:
-        raise ValidationError('The merge target must exist.')
+        raise ValidationError(u'The merge target must exist.')
 
     def follow_merged_into(name):
         """A generator to get the merged_with relationship
