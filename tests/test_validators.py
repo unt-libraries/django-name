@@ -41,7 +41,7 @@ def test_validate_merged_with_fails():
 
 
 @pytest.mark.django_db
-def test_validate_merged_fails_when_name_merges_with_itself():
+def test_validate_merged_with_fails_when_name_merges_with_itself():
     """Check that validate_merged_with fails when we try to merge
     a name into itself.
     """
