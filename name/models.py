@@ -222,12 +222,12 @@ def validate_merged_with(id):
     # If we don't find duplicates, then no loop has been created and
     # the generator will raise it's own StopIteration and we will implicitly
     # return.
-    merged_list = list()
-    for name in follow_merged_into(merge_target):
-        if name in merged_list:
-            raise ValidationError(u'The specified merge action completes ' +
+    merge_sequence = list()
+    for name in follow_merged_with(merge_target):
+        if name in merge_sequence:
+            raise ValidationError(u'The specified merge action completes '
                                   'a merge loop. Unable to complete merge.')
-        merged_list.append(name)
+        merge_sequence.append(name)
 
 
 class Name(models.Model):
