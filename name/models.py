@@ -185,7 +185,7 @@ class BaseTicketing(models.Model):
 def validate_merged_with(id):
     """Validator for the merged_with ForeignKey field.
 
-    This will look prevent two scenarios from occurring.
+    This will prevent two scenarios from occurring.
     1. Merging with a nonexistent Name object.
 
     2. Creating a loop of foreign key relationships.
@@ -193,9 +193,9 @@ def validate_merged_with(id):
             Name 1 -> Name 2 -> Name 3 -> Name 1
 
         We need to prevent this because navigating to a name that has
-        been merge with another, will redirect you to the Name it has
-        been merged with. If a loop is created, we willl also create
-        the opportunity for a redirect loop.
+        been merged with another, will redirect you to the Name it has
+        been merged with. If a loop is created, we will also create
+        the opportunity for an HTTP redirect loop.
     """
 
     try:
@@ -208,7 +208,7 @@ def validate_merged_with(id):
         of a Name object.
 
         This will return a Name object until it reaches a Name that
-        has no merged_with relationship.
+        does not have a merged_with relationship.
         """
         while name:
             merged_into = name.merged_with
@@ -217,7 +217,7 @@ def validate_merged_with(id):
             name = merged_into
 
     # Iterate through the generator and keep track of the return names.
-    # we will find a loop if the the return name is already in
+    # we will find a loop if the return name is already in
     # merged_list. If this happens we will raise a validation error.
     # If we don't find duplicates, then no loop has been created and
     # the generator will raise it's own StopIteration and we will implicitly
