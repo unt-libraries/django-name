@@ -183,10 +183,19 @@ class BaseTicketing(models.Model):
 
 
 def validate_merged_with(id):
-    """
-    Custom validator for the merged with CharField.
-    We don't want to allow users to do an infinite redirect loop b/c of
-    merging a record that is already merged with the current record
+    """Validator for the merged_with ForeignKey field.
+
+    This will look prevent two scenarios from occurring.
+    1. Merging with a nonexistent Name object
+
+    2. Creating a loop of foreign key relationships.
+        For example:
+            Name 1 -> Name 2 -> Name 3 -> Name 1
+
+        We need to prevent this because navigating to a name that has
+        been merge with another, will redirect you to the Name it has
+        been merged with. If a loop is created, we willl also create
+        the opportunity for a redirect loop.
     """
 
     try:
