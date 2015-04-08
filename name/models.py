@@ -217,7 +217,7 @@ def validate_merged_with(id):
             name = merged_into
 
     # Iterate through the generator and keep track of the return names.
-    # we will find a loop if the return name is already in
+    # We will find a loop if the return name is already in
     # merged_list. If this happens we will raise a validation error.
     # If we don't find duplicates, then no loop has been created and
     # the generator will raise it's own StopIteration and we will implicitly
