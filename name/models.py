@@ -55,6 +55,7 @@ DATE_DISPLAY_LABELS = {
         'end': 'Died/Defunct Date'
     },
 }
+
 VARIANT_TYPE_CHOICES = (
     (0, 'Acronym'),
     (1, 'Abbreviation'),
@@ -66,6 +67,12 @@ LOCATION_STATUS_CHOICES = (
     (0, "current"),
     (1, "former"),
 )
+
+NAME_TYPE_SCHEMAS = {
+    0: 'http://schema.org/Person',
+    1: 'http://schema.org/Organization',
+    4: 'http://schema.org/Place',
+}
 
 
 class Identifier_Type(models.Model):
@@ -322,8 +329,19 @@ class Name(models.Model):
             return True
         else:
             return False
+
     # this enables icon display on the django admin rather than textual "T/F"
     has_geocode.boolean = True
+
+    def has_schema_url(self):
+        return self.get_schema_url() is not None
+
+    def get_schema_url(self):
+        return NAME_TYPE_SCHEMAS.get(self.name_type, None)
+
+    def get_name_type_label(self):
+        id, name_type = NAME_TYPE_CHOICES[self.name_type]
+        return name_type
 
     def save(self, **kwargs):
         if not self.name_id:
