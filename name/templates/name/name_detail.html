@@ -1,4 +1,5 @@
 {% extends "name/name.html" %}
+{% load staticfiles %}
 {% load markdown_deux_tags %}
 {% load get_value from name_extras %}
 
@@ -22,11 +23,8 @@
         <h2 class="named">{{ requested_user.name }}</h2>
 
         {% if user.is_authenticated %}
-            <div class="btn-group span1">
-                <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
-            </div>
+            <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
         {% endif %}
-
     </div>
 
     <table class="table table-striped">
@@ -43,7 +41,7 @@
             <td>{{ requested_user.get_name_type_label }}</td>
         </tr>
 
-        {# Current location #}
+        {# Locations #}
         {% for l in locations %}
             <tr>
                 <th>Location: <em><small>({% if l.status == 0 %}current{% else %}former{% endif %})</small></em></th>
@@ -69,62 +67,59 @@
 
         {# FIXME: There is a lot of nesting here #}
 
-        {% if requested_user.begin or requested_user.biography or requested_user.end %}
-
-            {% if requested_user.begin %}
-                <tr>
-                    <th>{{ date_display_begin }}: </th>
-                    <td>
-                        {% if requested_user.name_type == 0 %}
-                            <span itemprop="birthDate">{{ requested_user.begin }}</span>
-                        {% elif requested_user.name_type == 1 %}
-                                <span itemprop="foundingDate">{{ requested_user.begin }}</span>
-                        {% elif requested_user.name_type == 4 %}
-                            <span itemprop="erectedDate">{{ requested_user.begin }}</span>
-                        {% elif requested_user.name_type == 2 %}
-                            <span itemprop="startDate">{{ requested_user.begin }}</span>
-                        {% else %}
-                            {{ requested_user.begin }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if requested_user.end %}
-                <tr>
-                    <th>{{ date_display_end }}: </th>
-                    <td>
-                        {% if requested_user.name_type == 0 %}
-                            <span itemprop="deathDate">{{ requested_user.end }}</span>
-                        {% else %}
-                            {{ requested_user.end }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-
-            <!-- BIOGRAPHY -->
-            {% if requested_user.biography %}
-                <tr>
-                    <th>
-                        {% if requested_user.name_type == 0 %}
-                            Biographical Info:
-                        {% else %}
-                            History:
-                        {% endif %}
-                    </th>
-                    <td>
-                        {{ requested_user.biography|markdown }}
-                    </td>
-                </tr>
-            {% endif %}
+        {% if requested_user.begin %}
+            <tr>
+                <th>{{ date_display_begin }}: </th>
+                <td>
+                    {% if requested_user.name_type == 0 %}
+                        <span itemprop="birthDate">{{ requested_user.begin }}</span>
+                    {% elif requested_user.name_type == 1 %}
+                            <span itemprop="foundingDate">{{ requested_user.begin }}</span>
+                    {% elif requested_user.name_type == 4 %}
+                        <span itemprop="erectedDate">{{ requested_user.begin }}</span>
+                    {% elif requested_user.name_type == 2 %}
+                        <span itemprop="startDate">{{ requested_user.begin }}</span>
+                    {% else %}
+                        {{ requested_user.begin }}
+                    {% endif %}
+                </td>
+            </tr>
         {% endif %}
 
-            <!-- LINKS -->
+        {% if requested_user.end %}
+            <tr>
+                <th>{{ date_display_end }}: </th>
+                <td>
+                    {% if requested_user.name_type == 0 %}
+                        <span itemprop="deathDate">{{ requested_user.end }}</span>
+                    {% else %}
+                        {{ requested_user.end }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+
+        <!-- BIOGRAPHY -->
+        {% if requested_user.biography %}
+            <tr>
+                <th>
+                    {% if requested_user.name_type == 0 %}
+                        Biographical Info:
+                    {% else %}
+                        History:
+                    {% endif %}
+                </th>
+                <td>
+                    {{ requested_user.biography|markdown }}
+                </td>
+            </tr>
+        {% endif %}
+
+        <!-- LINKS -->
         <tr>
             <th>Links:</th>
             <td>
-                <ul>
+                <ul class="list-unstyled">
                     <li>
                         <img alt="library-icon" src="{{ MEDIA_URL }}aubrey_public/images/brand-digital-library/favicon.ico" style="max-width: 16px"> <strong>Internal: </strong>
                         <a href="{{ BASE_URL }}/search/?q=&quot;{{ requested_user.name|urlencode }}&quot;&amp;t=metadata">UNT Libraries Digital Collections</a>
@@ -135,9 +130,9 @@
                             {% if requested_user.record_status == 0 and link.visible %}
                                 <li>
                                     {% if link.type.icon_path %}
-                                        <img alt="icon" src="{{ MEDIA_URL }}{{ link.type.icon_path }}" style="max-width: 16px">
+                                        <img alt="icon" src="{% static link.type.icon_path %}" style="max-width: 16px">
                                     {% else %}
-                                        <i class="icon-leaf"></i>
+                                        <span class="fa fa-leaf"></span>
                                     {% endif %}
 
                                     {% if "http" in link|escape or ".edu" in link|escape or ".com" in link|escape %}
@@ -157,6 +152,7 @@
                 </ul>
             </td>
         </tr>
+
         <!-- VARIANTS -->
         {% if requested_user.variant_set.all %}
             <tr>
@@ -169,7 +165,7 @@
                 {% endif %}
 
                 <td>
-                    <ul>
+                    <ul class="list-unstyled">
                         {% for v in requested_user.variant_set.all %}
                             <li>
                                 {% if requested_user.name_type == 0 %}
@@ -193,6 +189,7 @@
         {% endif %}
     </table>
 
+    {# This will only display if the Name is a Building #}
     {% if current_location.status == 0 %}
         <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{requested_user}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
     {% endif %}
@@ -202,5 +199,4 @@
         <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.mads.xml">MADS/XML</a>
         <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.json">JSON</a>
     </div>
-</div>
 {% endblock content %}
