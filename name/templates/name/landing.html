@@ -2,90 +2,67 @@
 {% block title %}UNT Name App{% endblock %}
 {% load get_value from name_extras %}
 {% load humanize %}
+
 {% block content %}
-
-    <!-- STATISTICS -->
-    {% if q_type == "Personal" or q_type == "Organization" or q_type == "Event" or q_type == "Software" and q == None %}
-
-    {% else %}
-
-
-        <p id="about" class="help">The <em class="unt">UNT Name App</em> is for reference, disambiguation and storage of name records used by the UNT Digital Collections.</p>
-
-
-        <div class="row-fluid" id="pretty">
-
-
-            <div class="span5 offset7">
-                <table class="table" id="statsTable">
-                    <caption>Total Record Count</caption>
-                    {% if counts.personal > 0 %}
+    {# TODO: Remove reference to UNT #}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="jumbotron">
+                <h1>The Name App</h1>
+                <p>is for reference, disambiguation and storage of name records used by the UNT Digital Collections.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table">
+                <caption>Total Record Count</caption>
+                {% if counts.personal > 0 %}
                     <tr>
                         <th>Personal Names:</th>
-                            <td>
-                                <a href="{% url "name_search" %}?q_type=Personal&amp;q=">
-                                    {{ counts.personal|intcomma }}
-                                </a>
-                            </td>
+                        <td>
+                            <a href="{% url "name_search" %}?q_type=Personal&amp;q=">{{ counts.personal|intcomma }}</a>
+                        </td>
                     </tr>
-                    {% endif %}
-                    {% if counts.organization > 0 %}
+                {% endif %}
+                {% if counts.organization > 0 %}
                     <tr>
-                        <th>
-                            Organization Names:</th>
-                            <td>
-                                <a href="{% url "name_search" %}?q_type=Organization&amp;q">
-                                    {{ counts.organization|intcomma }}
-                                </a>
-                            </td>
+                        <th>Organization Names:</th>
+                        <td>
+                            <a href="{% url "name_search" %}?q_type=Organization&amp;q">{{ counts.organization|intcomma }}</a>
+                        </td>
                     </tr>
-                    {% endif %}
-                    {% if counts.event > 0 %}
+                {% endif %}
+                {% if counts.event > 0 %}
                     <tr>
-                        <th>
-                            Event Names:</th>
-                            <td>
-                                <a href="{% url "name_search" %}?q_type=Event&amp;q=">
-                                    {{ counts.event|intcomma }}
-                                </a>
-                            </td>
+                        <th>Event Names:</th>
+                        <td>
+                            <a href="{% url "name_search" %}?q_type=Event&amp;q=">{{ counts.event|intcomma }}</a>
+                        </td>
                     </tr>
-                    {% endif %}
-                    {% if counts.software > 0 %}
+                {% endif %}
+                {% if counts.software > 0 %}
                     <tr>
-                        <th>
-                            Software Names:</th>
-                            <td>
-                                <a href="{% url "name_search" %}?q_type=Software&amp;q=">
-                                    {{ counts.software|intcomma }}
-                                </a>
-                            </td>
+                        <th>Software Names:</th>
+                        <td>
+                            <a href="{% url "name_search" %}?q_type=Software&amp;q=">{{ counts.software|intcomma }}</a>
+                        </td>
                     </tr>
-                    {% endif %}
-                    {% if counts.building > 0 %}
+                {% endif %}
+                {% if counts.building > 0 %}
                     <tr>
-                        <th>
-                            Building Names:</th>
-                            <td>
-                                <a href="{% url "name_search" %}?q_type=Building&amp;q=">
-                                    {{ counts.building|intcomma }}
-                                </a>
-                            </td>
+                        <th>Building Names:</th>
+                        <td>
+                            <a href="{% url "name_search" %}?q_type=Building&amp;q=">{{ counts.building|intcomma }}</a>
+                        </td>
                     </tr>
-                    {% endif %}
-                    <tr class="last">
-                        <th>
-                            Total Names:
-                        </th>
-                            <td>
-                                {{ counts.total|intcomma }}
-                            </td>
-                    </tr>
-                </table>
-            </div>
-
+                {% endif %}
+                <tr>
+                    <th>Total Names:</th>
+                    <td>{{ counts.total|intcomma }}</td>
+                </tr>
+            </table>
         </div>
-
-    {% endif %}
+    </div>
 
 {% endblock %}
