@@ -3,7 +3,7 @@
         "pk": 13, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/academia_favicon.ico", 
+            "icon_path": "name\/icons\/academia_favicon.ico", 
             "homepage": "http:\/\/academia.edu\/", 
             "label": "Academia"
         }
@@ -12,7 +12,7 @@
         "pk": 3, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/facebook_favicon.ico", 
+            "icon_path": "name\/icons\/facebook_favicon.ico", 
             "homepage": "http:\/\/facebook.com\/", 
             "label": "Facebook"
         }
@@ -21,7 +21,7 @@
         "pk": 10, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/google_scholar_favicon.ico", 
+            "icon_path": "name\/icons\/google_scholar_favicon.ico", 
             "homepage": "http:\/\/scholar.google.com\/", 
             "label": "Google Scholar"
         }
@@ -39,7 +39,7 @@
         "pk": 14, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/linkedinfavicon.png", 
+            "icon_path": "name\/icons\/linkedinfavicon.png", 
             "homepage": "http:\/\/linkedin.com\/", 
             "label": "LinkedIn"
         }
@@ -48,7 +48,7 @@
         "pk": 4, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/loc_fav.ico", 
+            "icon_path": "name\/icons\/loc_fav.ico", 
             "homepage": "http:\/\/www.loc.gov\/index.html", 
             "label": "LOC"
         }
@@ -57,7 +57,7 @@
         "pk": 5, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/orcid_favicon.ico", 
+            "icon_path": "name\/icons\/orcid_favicon.ico", 
             "homepage": "http:\/\/about.orcid.org\/", 
             "label": "ORC ID"
         }
@@ -66,7 +66,7 @@
         "pk": 11, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/rg_favicon.ico", 
+            "icon_path": "name\/icons\/rg_favicon.ico", 
             "homepage": "http:\/\/researchgate.net\/", 
             "label": "ResearchGate"
         }
@@ -75,7 +75,7 @@
         "pk": 12, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/scopus_favicon.ico", 
+            "icon_path": "name\/icons\/scopus_favicon.ico", 
             "homepage": "http:\/\/www.scopus.com\/", 
             "label": "Scopus"
         }
@@ -84,7 +84,7 @@
         "pk": 1, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/tumblr_favicon.ico", 
+            "icon_path": "name\/icons\/tumblr_favicon.ico", 
             "homepage": "http:\/\/tumblr.com\/", 
             "label": "Tumblr"
         }
@@ -93,7 +93,7 @@
         "pk": 2, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/twitter_favicon.ico", 
+            "icon_path": "name\/icons\/twitter_favicon.ico", 
             "homepage": "http:\/\/twitter.com\/", 
             "label": "Twitter"
         }
@@ -102,7 +102,7 @@
         "pk": 6, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/unt-faculty_favicon.ico", 
+            "icon_path": "name\/icons\/unt-faculty_favicon.ico", 
             "homepage": "http:\/\/unt.edu\/", 
             "label": "UNT Faculty"
         }
@@ -111,7 +111,7 @@
         "pk": 8, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/viaf_favicon.ico", 
+            "icon_path": "name\/icons\/viaf_favicon.ico", 
             "homepage": "http:\/\/viaf.org\/", 
             "label": "VIAF"
         }
@@ -120,7 +120,7 @@
         "pk": 7, 
         "model": "name.identifier_type", 
         "fields": {
-            "icon_path": "\/name\/icons\/wikipedia_favicon.ico", 
+            "icon_path": "name\/icons\/wikipedia_favicon.ico", 
             "homepage": "http:\/\/wikipedia.org\/", 
             "label": "Wikipedia"
         }
