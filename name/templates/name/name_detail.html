@@ -1,210 +1,206 @@
 {% extends "name/name.html" %}
 {% load markdown_deux_tags %}
 {% load get_value from name_extras %}
+
 {% block title %}{{ requested_user.name }}{% endblock %}
+
 {% block head-extra %}
 <link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" requested_user %}">
-<link rel="alternate" type="application/json" href="{% url "name_json" requested_user %}">{% endblock %}
+<link rel="alternate" type="application/json" href="{% url "name_json" requested_user %}">
+{% endblock head-extra %}
+
 {% block content %}
-{% if requested_user.name_type == 0 %}
-<div itemscope itemtype="http://schema.org/Person" class="container-fluid">
-    {% elif requested_user.name_type == 1 %}
-    <div itemscope itemtype="http://schema.org/Organization" class="container-fluid">
-        {% elif requested_user.name_type == 4 %}
-            <div itemscope itemtype="http://schema.org/Place">
-            {% if current_location.status == 0 %}
+
+    <div {% if requested_user.has_schema_url %}itemscope itemtype="{{ requested_user.get_schema_url }}{% endif %}">
+        {% if requested_user.name_type == 4 and current_location.status == 0 %}
             <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
                 <meta itemprop="latitude" content="{{ current_location.latitude }}" />
                 <meta itemprop="longitude" content="{{ current_location.longitude }}" />
             </div>
-            {% endif %}
-            {% else %}
-            <div class="container-fluid">
-                {% endif %}
-                <div class="row-fluid">
-                    <div class="span11">
-                        <h2 class="named">
-                            {{ requested_user.name }}
-                        </h2>
-                    </div>
-                    {% if user.is_authenticated %}
-                    <div class="btn-group span1">
-                        <a class="btn" href="{% url "admin:name_name_change" requested_user.id %}">
-                            <i class="icon-pencil"></i> Edit
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                <table class="table table-striped table-hover">
-                    <colgroup><col class="labels"><col class="data"></colgroup>
-                <tr>
-                    <th>Authorized:</th>
-                    <td >
-                        <!-- all schema "Things" have a name property -->
-                        <span itemprop="name">{{ requested_user.name }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Name Type:</th>
-                    <td>{{ types|get_value:requested_user.name_type }}</td>
-                </tr>
-                <!-- current_LOCATION -->
-                {% for l in locations %}
-                <tr><th>Location: <em><small>({% if l.status == 0 %}current{% else %}former{% endif %})</small></em></th><td>{{ l.latitude }}, {{ l.longitude }}</td></tr>
-                {% endfor %}
-                <tr>
-                    <th>URI:</th>
-                    <td>
-                        <a href='{{ request.build_absolute_uri }}'>
-                            <span itemprop='url'>
-                                {{ request.build_absolute_uri }}
-                            </span>
-                        </a>
-                    </td>
-                </tr>
-                {% if requested_user.disambiguation %}
-                <tr>
-                   <th>Disambiguation:</th>
-                   <td>
+        {% endif %}
+
+        <h2 class="named">{{ requested_user.name }}</h2>
+
+        {% if user.is_authenticated %}
+            <div class="btn-group span1">
+                <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <table class="table table-striped">
+        <colgroup><col class="labels"><col class="data"></colgroup>
+        <tr>
+            <th>Authorized:</th>
+            <td >
+                <!-- all schema "Things" have a name property -->
+                <span itemprop="name">{{ requested_user.name }}</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Name Type:</th>
+            <td>{{ requested_user.get_name_type_label }}</td>
+        </tr>
+
+        {# Current location #}
+        {% for l in locations %}
+            <tr>
+                <th>Location: <em><small>({% if l.status == 0 %}current{% else %}former{% endif %})</small></em></th>
+                <td>{{ l.latitude }}, {{ l.longitude }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <th>URI:</th>
+            <td>
+                <a href='{{ request.build_absolute_uri }}'><span itemprop='url'>{{ request.build_absolute_uri }}</span></a>
+            </td>
+        </tr>
+
+        {% if requested_user.disambiguation %}
+            <tr>
+               <th>Disambiguation:</th>
+               <td>
                     {{ requested_user.disambiguation }}
                 </td>
             </tr>
-            {% endif %}
-            {% if requested_user.record_status == 0 and requested_user.merged_with == None %}
-            <!-- DETAIL -->
-            {% if requested_user.begin or requested_user.biography or requested_user.end %}
-            <!-- BEGIN -->
+        {% endif %}
+
+        {# FIXME: There is a lot of nesting here #}
+
+        {% if requested_user.begin or requested_user.biography or requested_user.end %}
+
             {% if requested_user.begin %}
-            <tr>
-                <th>{{ date_display_begin }}: </th>
-                <td>
-                    {% if requested_user.name_type == 0 %}
-                    <span itemprop="birthDate">{{ requested_user.begin }}</span>
-                    {% else %} {% if requested_user.name_type == 1 %}
-                    <span itemprop="foundingDate">{{ requested_user.begin }}</span>
-                    {% else %} {% if requested_user.name_type == 4 %}
-                    <span itemprop="erectedDate">{{ requested_user.begin }}</span>
-                    {% else %} {% if requested_user.name_type == 2 %}
-                    <span itemprop="startDate">{{ requested_user.begin }}</span>
-                    {% else %}
-                    {{ requested_user.begin }}
-                    {% endif %}{% endif %}{% endif %}{% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            <!-- END -->
-            {% if requested_user.end %}
-            <tr>
-                <th>{{ date_display_end }}: </th>
-                <td>
-                    {% if requested_user.name_type == 0 %}
-                    <span itemprop="deathDate">{{ requested_user.end }}</span>
-                    {% else %}
-                    {{ requested_user.end }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            <!-- BIOGRAPHY -->
-            {% if requested_user.biography %}
-            <tr>
-                <th>
-                    {% if requested_user.name_type == 0 %}
-                    Biographical Info:
-                    {% else %}
-                    History:
-                    {% endif %}
-                </th>
-                <td>
-                    {{ requested_user.biography|markdown }}
-                </td>
-            </tr>
-            {% endif %}
-            {% endif %}
-            <!-- LINKS -->
-            <tr>
-                <th>Links:</th>
-                <td>
-                    <ul>
-                        <li><img alt="library-icon" src="{{ MEDIA_URL }}aubrey_public/images/brand-digital-library/favicon.ico" style="max-width: 16px"> <strong>Internal: </strong>
-                            <a href="{{ BASE_URL }}/search/?q=&quot;{{ requested_user.name|urlencode }}&quot;&amp;t=metadata">UNT Libraries Digital Collections</a></li>
-                            {% if ordered_link_set %}
-                            {% for link in ordered_link_set.all %}
-                            {% if requested_user.record_status == 0 and link.visible %}
-                            <li>
-                                {% if link.type.icon_path %}
-                                <img alt="icon" src="{{ MEDIA_URL }}{{ link.type.icon_path }}" style="max-width: 16px">
-                                {% else %}
-                                <i class="icon-leaf"></i>
-                                {% endif %}
-                                {% if "http" in link|escape or ".edu" in link|escape or ".com" in link|escape %}
-                                <strong>{{ link.type }}:</strong> <a itemprop="sameAs" href="{{ link }}">{{ link }}</a>
-                                {% else %} {% if "@" in link|escape %}
-                                {{ link.type }}:
-                                <a href="{{ link }}">
-                                    <span itemprop="email">
-                                        {{ link }}
-                                    </span>
-                                </a>
-                                {% else %}
-                                <strong>{{ link.type }}:</strong> {{ link }}
-                                {% endif %} {% endif %}
-                            </li>
-                            {% endif %}
-                            {% endfor %}
-                            {% endif %}
-                        </ul>
+                <tr>
+                    <th>{{ date_display_begin }}: </th>
+                    <td>
+                        {% if requested_user.name_type == 0 %}
+                            <span itemprop="birthDate">{{ requested_user.begin }}</span>
+                        {% elif requested_user.name_type == 1 %}
+                                <span itemprop="foundingDate">{{ requested_user.begin }}</span>
+                        {% elif requested_user.name_type == 4 %}
+                            <span itemprop="erectedDate">{{ requested_user.begin }}</span>
+                        {% elif requested_user.name_type == 2 %}
+                            <span itemprop="startDate">{{ requested_user.begin }}</span>
+                        {% else %}
+                            {{ requested_user.begin }}
+                        {% endif %}
                     </td>
                 </tr>
-                <!-- VARIANTS -->
-                {% if requested_user.variant_set.all %}
+            {% endif %}
+
+            {% if requested_user.end %}
                 <tr>
-                  {% if requested_user.name_type == 1 %}
-                  <th>Variant Name:</th>
-                  {% elif requested_user.name_type == 4 %}
-                  <th>Also Known As:</th>
-                  {% else %}
-                  <th>Publishes As:</th>
-                  {% endif %}
-                  <td>
+                    <th>{{ date_display_end }}: </th>
+                    <td>
+                        {% if requested_user.name_type == 0 %}
+                            <span itemprop="deathDate">{{ requested_user.end }}</span>
+                        {% else %}
+                            {{ requested_user.end }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <!-- BIOGRAPHY -->
+            {% if requested_user.biography %}
+                <tr>
+                    <th>
+                        {% if requested_user.name_type == 0 %}
+                            Biographical Info:
+                        {% else %}
+                            History:
+                        {% endif %}
+                    </th>
+                    <td>
+                        {{ requested_user.biography|markdown }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endif %}
+
+            <!-- LINKS -->
+        <tr>
+            <th>Links:</th>
+            <td>
+                <ul>
+                    <li>
+                        <img alt="library-icon" src="{{ MEDIA_URL }}aubrey_public/images/brand-digital-library/favicon.ico" style="max-width: 16px"> <strong>Internal: </strong>
+                        <a href="{{ BASE_URL }}/search/?q=&quot;{{ requested_user.name|urlencode }}&quot;&amp;t=metadata">UNT Libraries Digital Collections</a>
+                    </li>
+
+                    {% if ordered_link_set %}
+                        {% for link in ordered_link_set.all %}
+                            {% if requested_user.record_status == 0 and link.visible %}
+                                <li>
+                                    {% if link.type.icon_path %}
+                                        <img alt="icon" src="{{ MEDIA_URL }}{{ link.type.icon_path }}" style="max-width: 16px">
+                                    {% else %}
+                                        <i class="icon-leaf"></i>
+                                    {% endif %}
+
+                                    {% if "http" in link|escape or ".edu" in link|escape or ".com" in link|escape %}
+                                        <strong>{{ link.type }}:</strong> <a itemprop="sameAs" href="{{ link }}">{{ link }}</a>
+                                    {% else %}
+                                        {% if "@" in link|escape %}
+                                            {{ link.type }}:
+                                            <a href="{{ link }}"><span itemprop="email">{{ link }}</span></a>
+                                        {% else %}
+                                            <strong>{{ link.type }}:</strong> {{ link }}
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </td>
+        </tr>
+        <!-- VARIANTS -->
+        {% if requested_user.variant_set.all %}
+            <tr>
+                {% if requested_user.name_type == 1 %}
+                    <th>Variant Name:</th>
+                {% elif requested_user.name_type == 4 %}
+                    <th>Also Known As:</th>
+                {% else %}
+                    <th>Publishes As:</th>
+                {% endif %}
+
+                <td>
                     <ul>
                         {% for v in requested_user.variant_set.all %}
-                        <li>
-                            {% if requested_user.name_type == 0 %}
-                            <span itemprop="additionalName">{{ v }}</span>
-                            {% else %}
-                            <span itemprop="alternateName">{{ v }}</span>
-                            {% endif %}
-                        </li>
-                        {%  endfor %}
+                            <li>
+                                {% if requested_user.name_type == 0 %}
+                                    <span itemprop="additionalName">{{ v }}</span>
+                                {% else %}
+                                    <span itemprop="alternateName">{{ v }}</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
                     </ul>
                 </td>
             </tr>
-            {% endif %}
-            <!-- NOTES -->
-            {% if note_set %}
+        {% endif %}
+
+        <!-- NOTES -->
+        {% if note_set %}
             <tr>
                 <th>Notes:</th>
-                <td>
-                    {{ note_set|join:"<br>" }}
-                </td>
+                <td>{{ note_set|join:"<br>" }}</td>
             </tr>
-            {% endif %}
-        </table>
-        {% if current_location.status == 0 %}
-            <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{requested_user}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
         {% endif %}
-            <h3>Alternate Formats</h3>
-            <div>
-                <a class="btn btn-success btn-large" href="{{ request.build_absolute_uri|slice:":-1" }}.mads.xml">
-                    MADS/XML
-                </a>
-                <a class="btn btn-success btn-large" href="{{ request.build_absolute_uri|slice:":-1" }}.json">
-                    JSON
-                </a>
-            </div>
-            {% else %}
-            <div class="alert alert-block alert-warning">The requested record has been suppressed or deleted.</div>
-            {% endif %}
-        </div>
-        {% endblock %}
+    </table>
+
+    {% if current_location.status == 0 %}
+        <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{requested_user}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
+    {% endif %}
+
+    <h3>Alternate Formats</h3>
+    <div>
+        <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.mads.xml">MADS/XML</a>
+        <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.json">JSON</a>
+    </div>
+</div>
+{% endblock content %}
