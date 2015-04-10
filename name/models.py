@@ -361,6 +361,73 @@ class Name(models.Model):
         id, name_type = NAME_TYPE_CHOICES[self.name_type]
         return name_type
 
+    def _is_name_type(self, type_id):
+        """Test if the instance of Name is a certain
+        Name Type.
+
+        Accepts the id of the Name Type, and returns a boolean.
+        """
+        return type_id == self.name_type
+
+    def is_personal(self):
+        """Checks if the Name has the Name Type Personal.
+
+        Returns a boolean.
+        """
+        return self._is_name_type(PERSONAL)
+
+    def is_organization(self):
+        """Checks if the Name has the Name Type Organization.
+
+        Returns a boolean.
+        """
+        return self._is_name_type(ORGANIZATION)
+
+    def is_event(self):
+        """Checks if the Name has the Name Type Event.
+
+        Returns a boolean.
+        """
+        return self._is_name_type(EVENT)
+
+    def is_software(self):
+        """Checks if the Name has the Name Type Software.
+
+        Returns a boolean.
+        """
+        return self._is_name_type(SOFTWARE)
+
+    def is_building(self):
+        """Checks if the Name has the Name Type Building.
+
+        Returns a boolean.
+        """
+        return self._is_name_type(BUILDING)
+
+    def _is_status_type(self, status_id):
+        return status_id == self.record_status
+
+    def is_active(self):
+        """Checks if the Name has the Active status.
+
+        Returns a boolean.
+        """
+        return self._is_status_type(ACTIVE)
+
+    def is_deleted(self):
+        """Checks if the Name has the Deleted status.
+
+        Returns a boolean.
+        """
+        return self._is_status_type(DELETED)
+
+    def is_suppressed(self):
+        """Checks if the Name has the Suppressed status.
+
+        Returns a boolean.
+        """
+        return self._is_status_type(SUPPRESSED)
+
     def save(self, **kwargs):
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
@@ -435,6 +502,13 @@ class Location(models.Model):
 
     def geo_point(self):
         return "%s, %s" % (self.latitude, self.longitude)
+
+    def is_current(self):
+        """Determines if the Location has a status of Current
+
+        Returns a boolean.
+        """
+        return CURRENT == self.status
 
     def save(self, **kwargs):
         super(Location, self).save()
