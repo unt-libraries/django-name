@@ -514,7 +514,7 @@ class Location(models.Model):
         super(Location, self).save()
         # if we change this location to the current location, all other
         # locations that belong to the same name should be changed to former.
-        if self.status == 0:
+        if self.is_current():
             former_locs = Location.objects.filter(
                 belong_to_name=self.belong_to_name).exclude(pk=self.pk)
             for l in former_locs:
