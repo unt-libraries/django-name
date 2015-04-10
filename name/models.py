@@ -3,6 +3,7 @@ import requests
 from django.db import models, transaction
 from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 
 NOTE_TYPE_CHOICES = (
     (0, 'Biographical/Historical'),
@@ -366,7 +367,12 @@ class Name(models.Model):
         Names that have relationships to other objects, particularly
         when those objects are serialized to other formats.
         """
-        return {'id': self.id, 'name': self.name, 'name_id': self.name_id}
+        return {
+            'id': self.id,
+            'name': self.name,
+            'name_id': self.name_id,
+            'url': reverse('name_entry_detail', args=[self.name_id])
+        }
 
     def __unicode__(self):
         return self.name_id
