@@ -433,7 +433,7 @@ class Name(models.Model):
             self.name_id = unicode(BaseTicketing.objects.create())
         self.normalized_name = normalizeSimplified(self.name)
         super(Name, self).save()
-        if self.name_type == 4 and Location.objects.filter(belong_to_name=self).count() == 0:
+        if self.is_building() and Location.objects.filter(belong_to_name=self).count() == 0:
             url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true' % self.normalized_name
             search_json = json.loads(requests.get(url).content)
             if search_json['status'] == 'OK' and len(search_json['results']) == 1:
