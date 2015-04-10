@@ -12,40 +12,53 @@ NOTE_TYPE_CHOICES = (
     (3, 'Source'),
     (4, 'Other'),
 )
+
+ACTIVE = 0
+DELETED = 1
+SUPPRESSED = 2
+
 RECORD_STATUS_CHOICES = (
-    (0, 'Active'),
-    (1, 'Deleted'),
-    (2, 'Suppressed'),
+    (ACTIVE, 'Active'),
+    (DELETED, 'Deleted'),
+    (SUPPRESSED, 'Suppressed'),
 )
+
+PERSONAL = 0
+ORGANIZATION = 1
+EVENT = 2
+SOFTWARE = 3
+BUILDING = 4
+
 NAME_TYPE_CHOICES = (
-    (0, 'Personal'),
-    (1, 'Organization'),
-    (2, 'Event'),
-    (3, 'Software'),
-    (4, 'Building'),
+    (PERSONAL, 'Personal'),
+    (ORGANIZATION, 'Organization'),
+    (EVENT, 'Event'),
+    (SOFTWARE, 'Software'),
+    (BUILDING, 'Building'),
 )
+
 DATE_DISPLAY_LABELS = {
-    0: {
+    PERSONAL: {
         'type': 'Personal',
         'begin': 'Date of Birth',
         'end': 'Date of Death'
     },
-    1: {
+    ORGANIZATION: {
         'type': 'Organization',
         'begin': 'Founded Date',
         'end': 'Defunct'
     },
-    2: {
+    EVENT: {
         'type': 'Event',
         'begin': 'Begin Date',
         'end': 'End Date'
     },
-    3: {
+    SOFTWARE: {
         'type': 'Software',
         'begin': 'Begin Date',
         'end': 'End Date'
     },
-    4: {
+    BUILDING: {
         'type': 'Building',
         'begin': 'Erected Date',
         'end': 'Demolished Date',
@@ -64,15 +77,19 @@ VARIANT_TYPE_CHOICES = (
     (3, 'Expansion'),
     (4, 'Other'),
 )
+
+CURRENT = 0
+FORMER = 1
+
 LOCATION_STATUS_CHOICES = (
-    (0, "current"),
-    (1, "former"),
+    (CURRENT, "current"),
+    (FORMER, "former"),
 )
 
 NAME_TYPE_SCHEMAS = {
-    0: 'http://schema.org/Person',
-    1: 'http://schema.org/Organization',
-    4: 'http://schema.org/Place',
+    PERSONAL: 'http://schema.org/Person',
+    ORGANIZATION: 'http://schema.org/Organization',
+    BUILDING: 'http://schema.org/Place',
 }
 
 
