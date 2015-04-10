@@ -370,38 +370,23 @@ class Name(models.Model):
         return type_id == self.name_type
 
     def is_personal(self):
-        """Checks if the Name has the Name Type Personal.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Name Type Personal."""
         return self._is_name_type(PERSONAL)
 
     def is_organization(self):
-        """Checks if the Name has the Name Type Organization.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Name Type Organization."""
         return self._is_name_type(ORGANIZATION)
 
     def is_event(self):
-        """Checks if the Name has the Name Type Event.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Name Type Event."""
         return self._is_name_type(EVENT)
 
     def is_software(self):
-        """Checks if the Name has the Name Type Software.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Name Type Software."""
         return self._is_name_type(SOFTWARE)
 
     def is_building(self):
-        """Checks if the Name has the Name Type Building.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Name Type Building."""
         return self._is_name_type(BUILDING)
 
     def _is_record_status(self, status_id):
@@ -413,24 +398,15 @@ class Name(models.Model):
         return status_id == self.record_status
 
     def is_active(self):
-        """Checks if the Name has the Active status.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Active status."""
         return self._is_record_status(ACTIVE)
 
     def is_deleted(self):
-        """Checks if the Name has the Deleted status.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Deleted status."""
         return self._is_record_status(DELETED)
 
     def is_suppressed(self):
-        """Checks if the Name has the Suppressed status.
-
-        Returns a boolean.
-        """
+        """True if the Name has the Suppressed status."""
         return self._is_record_status(SUPPRESSED)
 
     def save(self, **kwargs):
@@ -509,10 +485,7 @@ class Location(models.Model):
         return "%s, %s" % (self.latitude, self.longitude)
 
     def is_current(self):
-        """Determines if the Location has a status of Current
-
-        Returns a boolean.
-        """
+        """True if the Location has a status of Current."""
         return CURRENT == self.status
 
     def save(self, **kwargs):
