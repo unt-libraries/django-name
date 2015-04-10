@@ -2,8 +2,6 @@ import re
 import csv
 import copy
 import json
-import uuid
-import hashlib
 from xml.etree import ElementTree
 from django.http import HttpResponse, HttpResponseGone, HttpResponseRedirect
 from django.template import RequestContext
