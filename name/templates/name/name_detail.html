@@ -13,7 +13,8 @@
 {% block content %}
 
     <div {% if requested_user.has_schema_url %}itemscope itemtype="{{ requested_user.get_schema_url }}{% endif %}">
-        {% if requested_user.name_type == 4 and current_location.status == 0 %}
+        {{ requested_user.is_building }}
+        {% if requested_user.is_building and current_location.is_current %}
             <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
                 <meta itemprop="latitude" content="{{ current_location.latitude }}" />
                 <meta itemprop="longitude" content="{{ current_location.longitude }}" />
@@ -44,7 +45,7 @@
         {# Locations #}
         {% for l in locations %}
             <tr>
-                <th>Location: <em><small>({% if l.status == 0 %}current{% else %}former{% endif %})</small></em></th>
+                <th>Location: <em><small>({% if l.is_current %}current{% else %}former{% endif %})</small></em></th>
                 <td>{{ l.latitude }}, {{ l.longitude }}</td>
             </tr>
         {% endfor %}
@@ -71,13 +72,13 @@
             <tr>
                 <th>{{ date_display_begin }}: </th>
                 <td>
-                    {% if requested_user.name_type == 0 %}
+                    {% if requested_user.is_personal %}
                         <span itemprop="birthDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.name_type == 1 %}
+                    {% elif requested_user.is_organization %}
                             <span itemprop="foundingDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.name_type == 4 %}
+                    {% elif requested_user.is_building %}
                         <span itemprop="erectedDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.name_type == 2 %}
+                    {% elif requested_user.is_event %}
                         <span itemprop="startDate">{{ requested_user.begin }}</span>
                     {% else %}
                         {{ requested_user.begin }}
@@ -90,7 +91,7 @@
             <tr>
                 <th>{{ date_display_end }}: </th>
                 <td>
-                    {% if requested_user.name_type == 0 %}
+                    {% if requested_user.is_personal %}
                         <span itemprop="deathDate">{{ requested_user.end }}</span>
                     {% else %}
                         {{ requested_user.end }}
@@ -103,7 +104,7 @@
         {% if requested_user.biography %}
             <tr>
                 <th>
-                    {% if requested_user.name_type == 0 %}
+                    {% if requested_user.is_personal %}
                         Biographical Info:
                     {% else %}
                         History:
@@ -127,7 +128,7 @@
 
                     {% if ordered_link_set %}
                         {% for link in ordered_link_set.all %}
-                            {% if requested_user.record_status == 0 and link.visible %}
+                            {% if requested_user.is_active and link.visible %}
                                 <li>
                                     {% if link.type.icon_path %}
                                         <img alt="icon" src="{% static link.type.icon_path %}" style="max-width: 16px">
@@ -156,9 +157,9 @@
         <!-- VARIANTS -->
         {% if requested_user.variant_set.all %}
             <tr>
-                {% if requested_user.name_type == 1 %}
+                {% if requested_user.is_organization %}
                     <th>Variant Name:</th>
-                {% elif requested_user.name_type == 4 %}
+                {% elif requested_user.is_building %}
                     <th>Also Known As:</th>
                 {% else %}
                     <th>Publishes As:</th>
@@ -168,7 +169,7 @@
                     <ul class="list-unstyled">
                         {% for v in requested_user.variant_set.all %}
                             <li>
-                                {% if requested_user.name_type == 0 %}
+                                {% if requested_user.is_personal %}
                                     <span itemprop="additionalName">{{ v }}</span>
                                 {% else %}
                                     <span itemprop="alternateName">{{ v }}</span>
@@ -190,7 +191,7 @@
     </table>
 
     {# This will only display if the Name is a Building #}
-    {% if current_location.status == 0 %}
+    {% if current_location.is_current %}
         <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{requested_user}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
     {% endif %}
 
