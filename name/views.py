@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
@@ -593,17 +594,17 @@ def map(request):
     """
     Renders the results of a search back to the user
     """
-    url_template = 'http://auth.cloudmade.com/token/cbe612faccbe49d88b45420ed320aca7?userid=%s'
-    user_id = get_unique_user_id()
+    locations = Location.objects.all().filter(status=0)
+
+    if request.is_ajax():
+        data = serializers.serialize('json', locations,
+                                     use_natural_foreign_keys=True, indent=4)
+        return HttpResponse(data, content_type='application/json')
+
     # render the view with the dict of results
     return render_to_response(
         'name/map.html',
-
-        {
-            'token': requests.post(url_template % user_id),
-            'types': dict(NAME_TYPE_CHOICES),
-            'locations': Location.objects.all(),
-        },
+        {'locations': locations},
         context_instance=RequestContext(request)
     )
 
