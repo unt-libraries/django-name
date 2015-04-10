@@ -2,7 +2,6 @@ import re
 import csv
 import copy
 import json
-import requests
 import uuid
 import hashlib
 from xml.etree import ElementTree
