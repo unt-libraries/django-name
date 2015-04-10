@@ -404,7 +404,12 @@ class Name(models.Model):
         """
         return self._is_name_type(BUILDING)
 
-    def _is_status_type(self, status_id):
+    def _is_record_status(self, status_id):
+        """Test if the instance of Name has a particular
+        record_status.
+
+        Accepts the id of the Name Type, and returns a boolean.
+        """
         return status_id == self.record_status
 
     def is_active(self):
@@ -412,21 +417,21 @@ class Name(models.Model):
 
         Returns a boolean.
         """
-        return self._is_status_type(ACTIVE)
+        return self._is_record_status(ACTIVE)
 
     def is_deleted(self):
         """Checks if the Name has the Deleted status.
 
         Returns a boolean.
         """
-        return self._is_status_type(DELETED)
+        return self._is_record_status(DELETED)
 
     def is_suppressed(self):
         """Checks if the Name has the Suppressed status.
 
         Returns a boolean.
         """
-        return self._is_status_type(SUPPRESSED)
+        return self._is_record_status(SUPPRESSED)
 
     def save(self, **kwargs):
         if not self.name_id:
