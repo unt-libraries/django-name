@@ -359,11 +359,21 @@ class Name(models.Model):
                     longitude=geo_location['lng']
                 )
 
+    def natural_key(self):
+        """Returns the natural keys of the Name object.
+
+        This will allow us to include some information about
+        Names that have relationships to other objects, particularly
+        when those objects are serialized to other formats.
+        """
+        return {'id': self.id, 'name': self.name, 'name_id': self.name_id}
+
     def __unicode__(self):
         return self.name_id
 
     class Meta:
         ordering = ["name"]
+        unique_together = (('name', 'name_id'),)
 
 
 class Location(models.Model):
