@@ -578,17 +578,6 @@ def landing(request):
     )
 
 
-def get_unique_user_id():
-    '''returns a unique user id hash'''
-
-    mac = ''.join(['{:02x}'.format(
-        (uuid.getnode() >> i) & 0xff) for i in range(0, 8 * 6, 8)][::-1])
-    mac = ''.join([x.upper() for x in mac])
-    m = hashlib.sha1()
-    m.update(mac)
-    return m.hexdigest().upper()
-
-
 def map(request):
     """
     Renders the results of a search back to the user

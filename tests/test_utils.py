@@ -2,15 +2,6 @@ import pytest
 from name import views
 
 
-def test_get_unique_user_id():
-    '''Test get_unique_user_id.
-
-    Should always return the same ID for a single host.
-    '''
-    uids = [views.get_unique_user_id for i in range(1000)]
-    assert 1 == len(set(uids))
-
-
 @pytest.mark.django_db
 def test_filter_names_with_empty_query(search_fixtures):
     names = views.filter_names('', None)
