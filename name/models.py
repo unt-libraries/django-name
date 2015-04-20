@@ -5,12 +5,18 @@ from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
+BIOGRAPHICAL_HISTORICAL = 0
+DELETION_INFORMATION = 1
+NONPUBLIC = 2
+SOURCE = 3
+NOTE_TYPE_OTHER = 4
+
 NOTE_TYPE_CHOICES = (
-    (0, 'Biographical/Historical'),
-    (1, 'Deletion Information'),
-    (2, 'Nonpublic'),
-    (3, 'Source'),
-    (4, 'Other'),
+    (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
+    (DELETION_INFORMATION, 'Deletion Information'),
+    (NONPUBLIC, 'Nonpublic'),
+    (SOURCE, 'Source'),
+    (NOTE_TYPE_OTHER, 'Other'),
 )
 
 ACTIVE = 0
@@ -70,12 +76,19 @@ DATE_DISPLAY_LABELS = {
     },
 }
 
+
+ACRONYM = 0
+ABBREVIATION = 1
+TRANSLATION = 2
+EXPANSION = 3
+VARIANT_TYPE_OTHER = 4
+
 VARIANT_TYPE_CHOICES = (
-    (0, 'Acronym'),
-    (1, 'Abbreviation'),
-    (2, 'Translation'),
-    (3, 'Expansion'),
-    (4, 'Other'),
+    (ACRONYM, 'Acronym'),
+    (ABBREVIATION, 'Abbreviation'),
+    (TRANSLATION, 'Translation'),
+    (EXPANSION, 'Expansion'),
+    (VARIANT_TYPE_OTHER, 'Other'),
 )
 
 CURRENT = 0
