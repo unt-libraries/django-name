@@ -162,12 +162,12 @@
 
                 <td>
                     <ul class="list-unstyled">
-                        {% for v in requested_user.variant_set.all %}
+                        {% for variant in requested_user.variant_set.all %}
                             <li>
                                 {% if requested_user.is_personal %}
-                                    <span itemprop="additionalName">{{ v }}</span>
+                                    <span itemprop="additionalName">{{ variant }}</span>
                                 {% else %}
-                                    <span itemprop="alternateName">{{ v }}</span>
+                                    <span itemprop="alternateName">{{ variant }}</span>
                                 {% endif %}
                             </li>
                         {% endfor %}
