@@ -591,7 +591,7 @@ def map(request):
     # render the view with the dict of results
     return render_to_response(
         'name/map.html',
-        {'locations': locations},
+        {'locations': locations, 'types': dict(NAME_TYPE_CHOICES)},
         context_instance=RequestContext(request)
     )
 
