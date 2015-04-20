@@ -11,7 +11,7 @@
                     <form class="form form-inline" action="{% url "name_search" %}">
                         <select class="form-control" name="q_type" id="large_q_type">
                             {% for k, v in types.items %}
-                                {% if q_type == k %}
+                                {% if q_type == v %}
                                     <option value="{{ v }}" selected>{{ v }}</option>
                                 {% else %}
                                     <option value="{{ v }}">{{ v }}</option>
