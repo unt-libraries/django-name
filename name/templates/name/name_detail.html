@@ -121,11 +121,6 @@
             <th>Links:</th>
             <td>
                 <ul class="list-unstyled">
-                    <li>
-                        <img alt="library-icon" src="{{ MEDIA_URL }}aubrey_public/images/brand-digital-library/favicon.ico" style="max-width: 16px"> <strong>Internal: </strong>
-                        <a href="{{ BASE_URL }}/search/?q=&quot;{{ requested_user.name|urlencode }}&quot;&amp;t=metadata">UNT Libraries Digital Collections</a>
-                    </li>
-
                     {% if ordered_link_set %}
                         {% for link in ordered_link_set.all %}
                             {% if requested_user.is_active and link.visible %}
