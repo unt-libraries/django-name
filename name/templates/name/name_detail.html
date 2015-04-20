@@ -12,7 +12,6 @@
 {% block content %}
 
     <div {% if requested_user.has_schema_url %}itemscope itemtype="{{ requested_user.get_schema_url }}{% endif %}">
-        {{ requested_user.is_building }}
         {% if requested_user.is_building and current_location.is_current %}
             <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
                 <meta itemprop="latitude" content="{{ current_location.latitude }}" />
@@ -23,7 +22,9 @@
         <h2 class="named">{{ requested_user.name }}</h2>
 
         {% if user.is_authenticated %}
-            <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
+            <div class="control-btns">
+                <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
+            </div>
         {% endif %}
     </div>
 
