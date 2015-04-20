@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="text-center">
+            <ul class="pagination">
+                {% if entries.number != 1 %}
+                    <li><a href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order={{ sort }}&amp;page=1">first</a></li>
+                {% else %}
+                    <li class="disabled"><span>first</span></li>
+                {% endif %}
+
+                {% if entries.has_previous %}
+                    <li><a href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order={{ sort }}&amp;page={{ entries.previous_page_number }}">prev</a></li>
+                {% else %}
+                    <li class="disabled"><span>prev</span></li>
+                {% endif %}
+
+                {% for page in entries.paginator.page_range %}
+                    {% if entries.number == page %}
+                        <li class="disabled"><span>{{ page }}</span></li>
+
+                    {% else %} {% if page > entries.number|add:"-6" and page < entries.number|add:"6"  %}
+                        <li>
+                            <a href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order={{ sort }}&amp;page={{ page }}">
+                                {{ page }}
+                            </a>
+                        </li>
+                    {% endif %}{% endif %}
+                {% endfor %}
+
+                {% if entries.has_next %}
+                    <li><a href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order={{ sort }}&amp;page={{ entries.next_page_number }}">next</a></li>
+                {% else %}
+                    <li class="disabled"><span>next</span></li>
+                {% endif %}
+
+                {% if entries.number != entries.paginator.num_pages %}
+                    <li><a href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order={{ sort }}&amp;page={{ entries.paginator.num_pages }}">last</a></li>
+                {% else %}
+                    <li class="disabled"><span>last</span></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
