@@ -7,7 +7,7 @@ $(function() {
     tileLayerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     config = {maxZoom: 18, attribution: attribution};
 
-  // Set a default view incase there are no Locations.
+  // Set a default view in case there are no Locations.
   var map = L.map('map').setView([0, 0], 2);
 
   // The markers layer enables us to create marker clusters.
@@ -20,7 +20,7 @@ $(function() {
   $.get(url).done(function(data) {
     data.forEach(function(v, i){
       // Use the first location to determine where the
-      // map viewport with be focused initially.
+      // map viewport will be initially focused.
       if (i === 0) {
         map.setView([v.fields.latitude, v.fields.longitude], 5);
       }
