@@ -1,6 +1,6 @@
 import pytest
 from django.core.urlresolvers import reverse
-from django.template import Template, RequestContext, Context
+from django.template import Template, RequestContext
 
 
 @pytest.mark.parametrize('url_name,arg', [
