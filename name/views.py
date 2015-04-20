@@ -28,7 +28,6 @@ from name.models import (
 )
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
-MAINTENANCE_MSG = settings.MAINTENANCE_MSG
 
 
 # these next two functions were nabbed for the most part from this blog post:
@@ -205,7 +204,6 @@ def entry_detail(request, name_id):
                 'note_set': note_set,
                 'ordered_link_set': ordered_link_set,
                 'types': dict(NAME_TYPE_CHOICES),
-                'maintenance_message': MAINTENANCE_MSG,
                 'date_display_begin': date_display['begin'],
                 'date_display_end': date_display['end'],
             },
@@ -290,7 +288,6 @@ def about(request):
         'name/about.html',
         {
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )
@@ -399,7 +396,6 @@ def stats(request):
             'total_names': Name.objects.count(),
             'total_links': Identifier.objects.count(),
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )
@@ -571,7 +567,7 @@ def landing(request):
 
     return render_to_response(
         'name/landing.html',
-        {'counts': counts},
+        {'counts': counts, 'types': dict(NAME_TYPE_CHOICES)},
         context_instance=RequestContext(request)
     )
 
@@ -652,7 +648,6 @@ def search(request):
             'sort': sort_key,
             'entries': paginated_entries,
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )

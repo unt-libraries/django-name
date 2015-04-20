@@ -74,12 +74,6 @@
             </div>
 
             <div class="container">
-                {% if maintenance_message %}
-                    <div class="alert alert-danger">
-                        <strong>{{ maintenance_message }}</strong>
-                    </div>
-                {% endif %}
-
                 {% block content %}{% endblock content %}
             </div>
         {% endblock body %}
