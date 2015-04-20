@@ -60,12 +60,3 @@ def test_absolute_url_handles_empty_arguments(rf):
 
     expected = request.build_absolute_uri(reverse("name_landing"))
     assert expected, rendered
-
-
-def test_get_value():
-    value = 'foo'
-    context = Context({'context_var': (1, value)})
-    template = '{% load name_extras %}{{ context_var|get_value:1 }}'
-
-    rendered = Template(template).render(context)
-    assert value, rendered
