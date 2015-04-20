@@ -1,0 +1,43 @@
+<div class="navbar navbar-default navbar-fixed navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url "name_landing" %}">Name App</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url "name_stats" %}">Statistics</a></li>
+                        <li><a href="{% url "name_map" %}">Map</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url "name_about" %}">About</a></li>
+                <li><a href="{% url "name_feed" %}"><span class="fa fa-rss"></span></a></li>
+            </ul>
+            <form class="navbar-form navbar-right" id="search" action="{% url "name_search" %}">
+                <!-- show current searched type as the default selection, if it exists -->
+                <div class="form-group">
+                    <select class="form-control" name="q_type" id="q_type">
+                        {% for k, v in types.items %}
+                            {% if q_type == v %}
+                                <option value="{{ v }}" selected>{{ v }}</option>
+                            {% else %}
+                                <option value="{{ v }}">{{ v }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input class="form-control" type="text" name="q" id="names" value="{{ q }}">
+                    <button class="btn btn-default" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
