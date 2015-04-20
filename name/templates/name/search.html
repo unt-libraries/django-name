@@ -65,7 +65,7 @@
                     </tbody>
                         {% for entry in entries.object_list %}
                             {# TODO: Make sure the merged names are not sent via search #}
-                            {% if entry.record_status == 0 and entry.merged_with == None %}
+                            {% if entry.is_active and entry.merged_with == None %}
                                 <tr>
                                     <td>
                                         <a href='{% url "name_entry_detail" entry %}'>{{ entry.name }}</a>
