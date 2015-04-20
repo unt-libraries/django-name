@@ -576,16 +576,21 @@ def landing(request):
     )
 
 
-def map(request):
-    """
-    Renders the results of a search back to the user
-    """
+def map_json(request):
+    """Presents the Locations and related Names serialized into JSON."""
     locations = Location.objects.all().filter(status=0)
 
     if request.is_ajax():
         data = serializers.serialize('json', locations,
                                      use_natural_foreign_keys=True, indent=4)
         return HttpResponse(data, content_type='application/json')
+
+
+def map(request):
+    """
+    Renders the results of a search back to the user
+    """
+    locations = Location.objects.all().filter(status=0)
 
     # render the view with the dict of results
     return render_to_response(
