@@ -119,7 +119,7 @@ class AtomSiteNewsFeed(Feed):
 
     feed_type = Atom1Feed
     link = "/name/feed/"
-    title = "UNT Name App"
+    title = "Name App"
     subtitle = "new records"
 
     def items(self):
