@@ -192,7 +192,7 @@
 
     <h3>Alternate Formats</h3>
     <div>
-        <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.mads.xml">MADS/XML</a>
-        <a class="btn btn-default" href="{{ request.build_absolute_uri|slice:":-1" }}.json">JSON</a>
+        <a class="btn btn-default" href="{% url "name_mads_serialize" requested_user.name_id %}">MADS/XML</a>
+        <a class="btn btn-default" href="{% url "name_json" requested_user.name_id %}">JSON</a>
     </div>
 {% endblock content %}
