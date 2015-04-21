@@ -9,7 +9,7 @@
             {% include "name/introduction.html" %}
 
             <h3>Two search modes are available.</h3>
-            <p>Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existence lookup of the authorized name. The user should request "{% absolute_url "name_label" "(name_string_here)" %}". The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.<br>
+            <p>Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existence lookup of the authorized name. The user should request <code>{% absolute_url "name_label" "name_string_here" %}</code>. The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.<br>
             This page will first address the 'traditional' search API, then the label API.</p>
 
             <h3>Search API</h3>
