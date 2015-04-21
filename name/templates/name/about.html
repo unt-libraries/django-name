@@ -9,11 +9,10 @@
             {% include "name/introduction.html" %}
 
             <h3>Two search modes are available.</h3>
-            <p>Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existence lookup of the authorized name. The user should request <code>{% absolute_url "name_label" "name_string_here" %}</code>. The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.<br>
-            This page will first address the 'traditional' search API, then the label API.</p>
+            <p>Notice there are two modes of searching methods. The first mode is a traditional search which takes a query and a type, filtering records containing your query in either the authorized name field or the variant field. The second search method is more of an existence lookup of the authorized name. The user should request <code>{% absolute_url "name_label" "name_string_here" %}</code>. The API will then either return a 302 Found and redirect to the matching record, or a 404 Not Found.  This page will first address the 'traditional' search API, then the label API.</p>
 
             <h3>Search API</h3>
-            <p>Let's dive right in! The following are various search examples using <a href="http://www.cs.sunysb.edu/documentation/curl/index.html">curl</a>:</p>
+            <p>Let's dive right in! The following are various search examples using <a target="_blank" href="http://curl.haxx.se/docs/">curl</a>:</p>
 
                 <!--BEGIN CODE MARKUP-->
             <div>
@@ -57,7 +56,7 @@
             "id": "nm0043212",
             "name": "123 SoftCom",
             "type": "Software"
-        },
+        }
     ]
 
     $ curl "{% absolute_url "name_names" %}?q_type=Software,Organization"
@@ -85,28 +84,27 @@
             "id": "nm0000063",
             "name": "ABC Shop",
             "type": "Organization"
-        },
-
+        }
     ]
                 </pre>
             </div>
 
-            <h3>Search return codes</h3>
+            <h3>Search Return Codes</h3>
             <div>
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success">200 OK</a> response:
-                <ul><li>user gave a fully-formed search query which returns a list of results in JSON format</li></ul>
+                <ul><li>User gave a fully-formed search query which returns a list of results in JSON format.</li></ul>
 
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error">410 Gone</a> response:
-                <ul><li>user gives a request for a record that had existed, but has since been deleted</li></ul>
+                <ul><li>User gives a request for a record that had existed, but has since been deleted.</li></ul>
 
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error">404 Not Found</a> response:
-                <ul><li>user gives a request for a record that does not exist</li></ul>
+                <ul><li>User gives a request for a record that does not exist.</li></ul>
 
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error">403 Forbidden</a> response:
-                <ul><li>user gives a request for a record that exits, but is non-public</li></ul>
+                <ul><li>User gives a request for a record that exists, but is non-public.</li></ul>
 
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#3xx_Redirection">302 Redirect</a> response:
-                <ul><li>user requests a record which has been merged with another record</li></ul>
+                <ul><li>User requests a record which has been merged with another record.</li></ul>
             </div>
 
             <!--BEGIN PARAMETERS-->
@@ -119,7 +117,7 @@
             <strong>callback</strong>: <em>Optional</em> - the text representation of the jsonp callback wrapper.
 
             <h3>Label API</h3>
-            <p>The second method of searching is with the 'label' API. The label API is essentially a quick way to determine if an authorized name exists in the name app. The only two responses to this API are a 404 Not Found or a 302 Redirect.</p>
+            <p>The second method of searching is with the label API. The label API is essentially a quick way to determine if an authorized name exists in the Name App. The only two responses to this API are a 404 Not Found or a 302 Redirect.</p>
             <pre>
     $ curl "{% absolute_url "name_label" "joey-not-here" %}"
     No matching term found - authoritative, or variant - for "joey-not-here"
@@ -132,13 +130,13 @@
     Location: {% absolute_url "name_entry_detail" "nm0000085" %}
             </pre>
 
-            <h3>Label return codes</h3>
+            <h3>Label Return Codes</h3>
             <div>
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error">404 Not Found</a> response:
-                <ul><li>user gives an authorized name that does not exist in the Names App database</li></ul>
+                <ul><li>User gives an authorized name that does not exist in the Names App database.</li></ul>
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#3xx_Redirection">302 Redirect</a> response:
                 <ul>
-                    <li>user gives an authorized name that does exist in the Names App database. The system redirects to the corresponding record</li>
+                    <li>User gives an authorized name that does exist in the Names App database. The system redirects to the corresponding record.</li>
                 </ul>
             </div>
         </div>
