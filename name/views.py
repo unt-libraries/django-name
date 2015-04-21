@@ -3,7 +3,8 @@ import csv
 import copy
 import json
 from xml.etree import ElementTree
-from django.http import HttpResponse, HttpResponseGone, HttpResponseRedirect
+from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
+                         HttpResponseNotFound)
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q, Count, Max, Min
@@ -580,6 +581,7 @@ def map_json(request):
         data = serializers.serialize('json', locations,
                                      use_natural_foreign_keys=True, indent=4)
         return HttpResponse(data, content_type='application/json')
+    return HttpResponseNotFound()
 
 
 def map(request):
