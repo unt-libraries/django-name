@@ -4,7 +4,7 @@ $(function() {
   var form = $("form[name=map]"),
     url = form.attr('action'),
     attribution = form.find('#attribution').html(),
-    tileLayerUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    tileLayerUrl = 'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     config = {maxZoom: 18, attribution: attribution};
 
   // Set a default view in case there are no Locations.
