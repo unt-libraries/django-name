@@ -204,7 +204,6 @@ def entry_detail(request, name_id):
                 'locations': locations,
                 'note_set': note_set,
                 'ordered_link_set': ordered_link_set,
-                'types': dict(NAME_TYPE_CHOICES),
                 'date_display_begin': date_display['begin'],
                 'date_display_end': date_display['end'],
             },
@@ -287,9 +286,6 @@ def about(request):
 
     return render_to_response(
         'name/about.html',
-        {
-            'types': dict(NAME_TYPE_CHOICES),
-        },
         context_instance=RequestContext(request)
     )
 
@@ -396,7 +392,6 @@ def stats(request):
             'name_type_counts': name_type_counts,
             'total_names': Name.objects.count(),
             'total_links': Identifier.objects.count(),
-            'types': dict(NAME_TYPE_CHOICES),
         },
         context_instance=RequestContext(request)
     )
@@ -568,7 +563,7 @@ def landing(request):
 
     return render_to_response(
         'name/landing.html',
-        {'counts': counts, 'types': dict(NAME_TYPE_CHOICES)},
+        {'counts': counts},
         context_instance=RequestContext(request)
     )
 
@@ -593,7 +588,7 @@ def map(request):
     # render the view with the dict of results
     return render_to_response(
         'name/map.html',
-        {'locations': locations, 'types': dict(NAME_TYPE_CHOICES)},
+        {'locations': locations},
         context_instance=RequestContext(request)
     )
 
@@ -649,7 +644,6 @@ def search(request):
             'q': q,
             'sort': sort_key,
             'entries': paginated_entries,
-            'types': dict(NAME_TYPE_CHOICES),
         },
         context_instance=RequestContext(request)
     )
