@@ -80,39 +80,32 @@ def get_query(query_string, search_fields):
 
 
 def label(request, name_value):
-    """
-    Returns 302 or 404 if normalized value exists or not
-    """
-    # grab name value from URL pattern
-    if name_value:
-        # naco normalize it
-        normalized_value = normalizeSimplified(name_value)
-        try:
-            user = Name.objects.get(normalized_name=normalized_value)
+    """Find a name by label.
 
-            return HttpResponseRedirect(
-                reverse('name_entry_detail', args=[user.name_id]))
+    If the label matches a single name, users are redirected
+    to the name_entry_detail page. Otherwise, if the label
+    does not exist, or the specified label matches multiple Name
+    objects, a status code 404 is returned.
+    """
+    if not name_value:
+        return HttpResponseNotFound()
 
-        except Name.DoesNotExist:
-            # return 404 for an non existent naco form
-            return HttpResponse(
-                """
-                No matching term found
-                - authoritative, or variant -
-                for \"%s\"
-                """ % normalized_value, status=404
-            )
-        except:
-            # we need a catch for the possibility of multiple names
-            # having the same normalized value
-            return HttpResponse(
-                """
-                There are multiple Name objects with the same name: '%s'.
-                """ % normalized_value,
-                status=404
-            )
-    else:
-        return HttpResponse('404 Not Found', status=404)
+    normalized_name = normalizeSimplified(name_value)
+    try:
+        name = Name.objects.get(normalized_name=normalized_name)
+
+        return HttpResponseRedirect(
+            reverse('name_entry_detail', args=[name.name_id]))
+
+    except Name.DoesNotExist:
+        return HttpResponseNotFound(
+            u'No matching term found - authoritative, or variant - for \"{0}\"'
+            .format(name_value))
+
+    except Name.MultipleObjectsReturned:
+        return HttpResponseNotFound(
+            u'There are multiple Name objects with the same name: \'{0}\'.'
+            .format(normalized_name))
 
 
 class AtomSiteNewsFeed(Feed):
