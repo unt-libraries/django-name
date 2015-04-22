@@ -3,48 +3,68 @@ import requests
 from django.db import models, transaction
 from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+
+BIOGRAPHICAL_HISTORICAL = 0
+DELETION_INFORMATION = 1
+NONPUBLIC = 2
+SOURCE = 3
+NOTE_TYPE_OTHER = 4
 
 NOTE_TYPE_CHOICES = (
-    (0, 'Biographical/Historical'),
-    (1, 'Deletion Information'),
-    (2, 'Nonpublic'),
-    (3, 'Source'),
-    (4, 'Other'),
+    (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
+    (DELETION_INFORMATION, 'Deletion Information'),
+    (NONPUBLIC, 'Nonpublic'),
+    (SOURCE, 'Source'),
+    (NOTE_TYPE_OTHER, 'Other'),
 )
+
+ACTIVE = 0
+DELETED = 1
+SUPPRESSED = 2
+
 RECORD_STATUS_CHOICES = (
-    (0, 'Active'),
-    (1, 'Deleted'),
-    (2, 'Suppressed'),
+    (ACTIVE, 'Active'),
+    (DELETED, 'Deleted'),
+    (SUPPRESSED, 'Suppressed'),
 )
+
+PERSONAL = 0
+ORGANIZATION = 1
+EVENT = 2
+SOFTWARE = 3
+BUILDING = 4
+
 NAME_TYPE_CHOICES = (
-    (0, 'Personal'),
-    (1, 'Organization'),
-    (2, 'Event'),
-    (3, 'Software'),
-    (4, 'Building'),
+    (PERSONAL, 'Personal'),
+    (ORGANIZATION, 'Organization'),
+    (EVENT, 'Event'),
+    (SOFTWARE, 'Software'),
+    (BUILDING, 'Building'),
 )
+
 DATE_DISPLAY_LABELS = {
-    0: {
+    PERSONAL: {
         'type': 'Personal',
         'begin': 'Date of Birth',
         'end': 'Date of Death'
     },
-    1: {
+    ORGANIZATION: {
         'type': 'Organization',
         'begin': 'Founded Date',
         'end': 'Defunct'
     },
-    2: {
+    EVENT: {
         'type': 'Event',
         'begin': 'Begin Date',
         'end': 'End Date'
     },
-    3: {
+    SOFTWARE: {
         'type': 'Software',
         'begin': 'Begin Date',
         'end': 'End Date'
     },
-    4: {
+    BUILDING: {
         'type': 'Building',
         'begin': 'Erected Date',
         'end': 'Demolished Date',
@@ -55,17 +75,35 @@ DATE_DISPLAY_LABELS = {
         'end': 'Died/Defunct Date'
     },
 }
+
+
+ACRONYM = 0
+ABBREVIATION = 1
+TRANSLATION = 2
+EXPANSION = 3
+VARIANT_TYPE_OTHER = 4
+
 VARIANT_TYPE_CHOICES = (
-    (0, 'Acronym'),
-    (1, 'Abbreviation'),
-    (2, 'Translation'),
-    (3, 'Expansion'),
-    (4, 'Other'),
+    (ACRONYM, 'Acronym'),
+    (ABBREVIATION, 'Abbreviation'),
+    (TRANSLATION, 'Translation'),
+    (EXPANSION, 'Expansion'),
+    (VARIANT_TYPE_OTHER, 'Other'),
 )
+
+CURRENT = 0
+FORMER = 1
+
 LOCATION_STATUS_CHOICES = (
-    (0, "current"),
-    (1, "former"),
+    (CURRENT, "current"),
+    (FORMER, "former"),
 )
+
+NAME_TYPE_SCHEMAS = {
+    PERSONAL: 'http://schema.org/Person',
+    ORGANIZATION: 'http://schema.org/Organization',
+    BUILDING: 'http://schema.org/Place',
+}
 
 
 class Identifier_Type(models.Model):
@@ -322,15 +360,74 @@ class Name(models.Model):
             return True
         else:
             return False
+
     # this enables icon display on the django admin rather than textual "T/F"
     has_geocode.boolean = True
+
+    def has_schema_url(self):
+        return self.get_schema_url() is not None
+
+    def get_schema_url(self):
+        return NAME_TYPE_SCHEMAS.get(self.name_type, None)
+
+    def get_name_type_label(self):
+        id, name_type = NAME_TYPE_CHOICES[self.name_type]
+        return name_type
+
+    def _is_name_type(self, type_id):
+        """Test if the instance of Name is a certain
+        Name Type.
+
+        Accepts the id of the Name Type, and returns a boolean.
+        """
+        return type_id == self.name_type
+
+    def is_personal(self):
+        """True if the Name has the Name Type Personal."""
+        return self._is_name_type(PERSONAL)
+
+    def is_organization(self):
+        """True if the Name has the Name Type Organization."""
+        return self._is_name_type(ORGANIZATION)
+
+    def is_event(self):
+        """True if the Name has the Name Type Event."""
+        return self._is_name_type(EVENT)
+
+    def is_software(self):
+        """True if the Name has the Name Type Software."""
+        return self._is_name_type(SOFTWARE)
+
+    def is_building(self):
+        """True if the Name has the Name Type Building."""
+        return self._is_name_type(BUILDING)
+
+    def _is_record_status(self, status_id):
+        """Test if the instance of Name has a particular
+        record_status.
+
+        Accepts the id of the Name Type, and returns a boolean.
+        """
+        return status_id == self.record_status
+
+    def is_active(self):
+        """True if the Name has the Active status."""
+        return self._is_record_status(ACTIVE)
+
+    def is_deleted(self):
+        """True if the Name has the Deleted status."""
+        return self._is_record_status(DELETED)
+
+    def is_suppressed(self):
+        """True if the Name has the Suppressed status."""
+        return self._is_record_status(SUPPRESSED)
 
     def save(self, **kwargs):
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
         self.normalized_name = normalizeSimplified(self.name)
         super(Name, self).save()
-        if self.name_type == 4 and Location.objects.filter(belong_to_name=self).count() == 0:
+        if self.is_building() and Location.objects.filter(belong_to_name=self).count() == 0:
             url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true' % self.normalized_name
             search_json = json.loads(requests.get(url).content)
             if search_json['status'] == 'OK' and len(search_json['results']) == 1:
@@ -341,11 +438,26 @@ class Name(models.Model):
                     longitude=geo_location['lng']
                 )
 
+    def natural_key(self):
+        """Returns the natural keys of the Name object.
+
+        This will allow us to include some information about
+        Names that have relationships to other objects, particularly
+        when those objects are serialized to other formats.
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'name_id': self.name_id,
+            'url': reverse('name_entry_detail', args=[self.name_id])
+        }
+
     def __unicode__(self):
         return self.name_id
 
     class Meta:
         ordering = ["name"]
+        unique_together = (('name', 'name_id'),)
 
 
 class Location(models.Model):
@@ -385,11 +497,15 @@ class Location(models.Model):
     def geo_point(self):
         return "%s, %s" % (self.latitude, self.longitude)
 
+    def is_current(self):
+        """True if the Location has a status of Current."""
+        return CURRENT == self.status
+
     def save(self, **kwargs):
         super(Location, self).save()
         # if we change this location to the current location, all other
         # locations that belong to the same name should be changed to former.
-        if self.status == 0:
+        if self.is_current():
             former_locs = Location.objects.filter(
                 belong_to_name=self.belong_to_name).exclude(pk=self.pk)
             for l in former_locs:

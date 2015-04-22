@@ -1,0 +1,12 @@
+body {
+    padding-top: 80px;
+}
+
+.control-btns {
+    margin-top: 1em;
+    margin-bottom: 1em
+}
+
+.no-results {
+    margin-top: 4em;
+}

@@ -2,15 +2,14 @@ import re
 import csv
 import copy
 import json
-import requests
-import uuid
-import hashlib
 from xml.etree import ElementTree
-from django.http import HttpResponse, HttpResponseGone, HttpResponseRedirect
+from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
+                         HttpResponseNotFound)
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
@@ -30,7 +29,6 @@ from name.models import (
 )
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
-MAINTENANCE_MSG = settings.MAINTENANCE_MSG
 
 
 # these next two functions were nabbed for the most part from this blog post:
@@ -122,7 +120,7 @@ class AtomSiteNewsFeed(Feed):
 
     feed_type = Atom1Feed
     link = "/name/feed/"
-    title = "UNT Name App"
+    title = "Name App"
     subtitle = "new records"
 
     def items(self):
@@ -207,7 +205,6 @@ def entry_detail(request, name_id):
                 'note_set': note_set,
                 'ordered_link_set': ordered_link_set,
                 'types': dict(NAME_TYPE_CHOICES),
-                'maintenance_message': MAINTENANCE_MSG,
                 'date_display_begin': date_display['begin'],
                 'date_display_end': date_display['end'],
             },
@@ -292,7 +289,6 @@ def about(request):
         'name/about.html',
         {
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )
@@ -401,7 +397,6 @@ def stats(request):
             'total_names': Name.objects.count(),
             'total_links': Identifier.objects.count(),
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )
@@ -573,37 +568,32 @@ def landing(request):
 
     return render_to_response(
         'name/landing.html',
-        {'counts': counts},
+        {'counts': counts, 'types': dict(NAME_TYPE_CHOICES)},
         context_instance=RequestContext(request)
     )
 
 
-def get_unique_user_id():
-    '''returns a unique user id hash'''
+def map_json(request):
+    """Presents the Locations and related Names serialized into JSON."""
+    locations = Location.objects.all().filter(status=0)
 
-    mac = ''.join(['{:02x}'.format(
-        (uuid.getnode() >> i) & 0xff) for i in range(0, 8 * 6, 8)][::-1])
-    mac = ''.join([x.upper() for x in mac])
-    m = hashlib.sha1()
-    m.update(mac)
-    return m.hexdigest().upper()
+    if request.is_ajax():
+        data = serializers.serialize('json', locations,
+                                     use_natural_foreign_keys=True, indent=4)
+        return HttpResponse(data, content_type='application/json')
+    return HttpResponseNotFound()
 
 
 def map(request):
     """
     Renders the results of a search back to the user
     """
-    url_template = 'http://auth.cloudmade.com/token/cbe612faccbe49d88b45420ed320aca7?userid=%s'
-    user_id = get_unique_user_id()
+    locations = Location.objects.all().filter(status=0)
+
     # render the view with the dict of results
     return render_to_response(
         'name/map.html',
-
-        {
-            'token': requests.post(url_template % user_id),
-            'types': dict(NAME_TYPE_CHOICES),
-            'locations': Location.objects.all(),
-        },
+        {'locations': locations, 'types': dict(NAME_TYPE_CHOICES)},
         context_instance=RequestContext(request)
     )
 
@@ -660,7 +650,6 @@ def search(request):
             'sort': sort_key,
             'entries': paginated_entries,
             'types': dict(NAME_TYPE_CHOICES),
-            'maintenance_message': MAINTENANCE_MSG,
         },
         context_instance=RequestContext(request)
     )

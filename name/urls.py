@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'feed/$', AtomSiteNewsFeed(), name='name_feed'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
     url(r'map/$', 'name.views.map', name='name_map'),
+    url(r'map.json/$', 'name.views.map_json', name='name_map_json'),
     url(r'^$', 'name.views.landing', name='name_landing'),
     url(r'export/$', 'name.views.export', name='name_export'),
     url(r'search/$', 'name.views.search', name='name_search'),

@@ -1,5 +1,6 @@
 import pytest
 import json
+from name.models import Location, Name
 
 from django.core.urlresolvers import reverse
 
@@ -186,3 +187,37 @@ def test_name_json_returns_ok(client, name_fixture):
 def test_name_json_handles_unknown_name(client):
     response = client.get(reverse('name_json', args=[0]))
     assert 404 == response.status_code
+
+
+@pytest.mark.django_db
+def test_map_json_xhr_returns_payload(client):
+    name = Name.objects.create(name="Test", name_type=0)
+
+    Location.objects.create(
+        status=0,
+        latitude=33.210241,
+        longitude=-97.148857,
+        belong_to_name=name)
+
+    response = client.get(
+        reverse('name_map_json'),
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+    assert name.name_id in response.content
+    assert json.loads(response.content)
+
+
+@pytest.mark.django_db
+def test_map_json_xhr_returns_with_no_locations(client, twenty_name_fixtures):
+    response = client.get(
+        reverse('name_map_json'),
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+    assert response.context is None
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_map_json_returns_not_found(client, twenty_name_fixtures):
+    response = client.get(reverse('name_map_json'))
+    assert response.status_code == 404
