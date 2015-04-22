@@ -88,6 +88,18 @@ def test_label_returns_not_found_with_query(client):
 
 
 @pytest.mark.django_db
+def test_label_returns_not_found_multiple_names_found(client):
+    name_name = "John Smith"
+    Name.objects.create(name=name_name, name_type=0)
+    Name.objects.create(name=name_name, name_type=0)
+
+    response = client.get(
+        reverse('name_label', args=[name_name]))
+    assert 404 == response.status_code
+    assert 'There are multiple Name objects with' in response.content
+
+
+@pytest.mark.django_db
 def test_export(client, name_fixture):
     response = client.get(reverse('name_export'))
     assert 200 == response.status_code
