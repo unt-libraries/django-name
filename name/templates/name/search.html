@@ -10,7 +10,7 @@
                     <h3>Search the Name App</h3>
                     <form class="form form-inline" action="{% url "name_search" %}">
                         <select class="form-control" name="q_type" id="large_q_type">
-                            {% for k, v in types.items %}
+                            {% for k, v in name_types.items %}
                                 {% if q_type == v %}
                                     <option value="{{ v }}" selected>{{ v }}</option>
                                 {% else %}
