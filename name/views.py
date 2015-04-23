@@ -231,13 +231,9 @@ def opensearch(request):
 
 def about(request):
     """
-    Renders the name about page to the user
+    Renders the name about page to the user.
     """
-
-    return render_to_response(
-        'name/about.html',
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'name/about.html')
 
 
 def prepare_graph_date_range():
