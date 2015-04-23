@@ -173,18 +173,14 @@ def export(request):
 
     writer = csv.writer(response, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
 
-    # Write a row of [name_type, name, url] for each name object.
-    # (non merged, suppressed, deleted, etc)
+    # Iterate through the Active Names that are not merged with any other
+    # Name records and write a row for each record.
     for n in Name.objects.filter(record_status=0).filter(merged_with=None):
-        # Get the string form of the Name Type.
-        name_type = NAME_TYPE_CHOICES[n.name_type][1].lower()
-        name = n.name.encode('utf-8')
-
-        url = request.build_absolute_uri(
-            reverse('name_entry_detail', args=[n.name_id]))
-
-        # Write the row.
-        writer.writerow([name_type, name, url])
+        writer.writerow([
+            n.get_name_type_label().lower(),
+            n.name.encode('utf-8'),
+            request.build_absolute_uri(n.get_absolute_url())
+        ])
 
     return response
 
