@@ -373,6 +373,9 @@ class Name(models.Model):
     # this enables icon display on the django admin rather than textual "T/F"
     has_geocode.boolean = True
 
+    def get_absolute_url(self):
+        return reverse('name_entry_detail', args=[self.name_id])
+
     def has_schema_url(self):
         return self.get_schema_url() is not None
 
@@ -382,6 +385,9 @@ class Name(models.Model):
     def get_name_type_label(self):
         id, name_type = NAME_TYPE_CHOICES[self.name_type]
         return name_type
+
+    def get_date_display(self):
+        return DATE_DISPLAY_LABELS.get(self.name_type)
 
     def _is_name_type(self, type_id):
         """Test if the instance of Name is a certain
