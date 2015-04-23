@@ -469,6 +469,15 @@ class Name(models.Model):
         unique_together = (('name', 'name_id'),)
 
 
+class LocationManager(models.Manager):
+    use_for_related_fields = True
+
+    def _get_current_location(self):
+        return self.get_queryset().filter(status=CURRENT).first()
+
+    current_location = property(_get_current_location)
+
+
 class Location(models.Model):
     belong_to_name = models.ForeignKey("Name")
     latitude = models.DecimalField(
@@ -499,6 +508,8 @@ class Location(models.Model):
         max_length=2,
         choices=LOCATION_STATUS_CHOICES,
         default=0)
+
+    objects = LocationManager()
 
     class Meta:
         ordering = ["status"]
