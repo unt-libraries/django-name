@@ -146,10 +146,19 @@ class Identifier(models.Model):
         return self.value
 
 
+class NoteManager(models.Manager):
+    use_for_related_fields = True
+
+    def public_notes(self):
+        return self.get_queryset().exclude(note_type=NONPUBLIC)
+
+
 class Note(models.Model):
     note = models.TextField(help_text="Enter notes about this record here")
     note_type = models.IntegerField(choices=NOTE_TYPE_CHOICES)
     belong_to_name = models.ForeignKey("Name")
+
+    objects = NoteManager()
 
     def __unicode__(self):
         return self.note
