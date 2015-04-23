@@ -149,8 +149,7 @@ def entry_detail(request, name_id):
     """Name Entry Detail View."""
     queryset = (
         Name.objects.select_related().
-        prefetch_related('identifier_set__type')
-    )
+        prefetch_related('identifier_set__type'))
 
     name_entry = get_object_or_404(queryset, name_id=name_id)
 
