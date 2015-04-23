@@ -58,16 +58,6 @@ def test_resolve_type(rf, query, expected):
     assert len(types) == expected
 
 
-def test_resolve_q_returns_value(rf):
-    q = views.resolve_q(rf.get('/', {'q': 'value'}))
-    assert q == 'value'
-
-
-def test_resolve_q_returns_empty_string(rf):
-    q = views.resolve_q(rf.get('/'))
-    assert '' == q
-
-
 @pytest.mark.xfail(reason='No Test')
 def test_get_query():
     assert False

@@ -347,18 +347,6 @@ def stats(request):
     )
 
 
-def resolve_q(request):
-    """
-    resolves the name of the request
-    """
-
-    q = ''
-    if 'q' in request.GET:
-        q = request.GET.get('q', '')
-
-    return q
-
-
 def resolve_type(request):
     """
     resolves the type of the request
@@ -421,7 +409,7 @@ def get_names(request):
     # if the request is ajax, we want to retrieve the suggestions list
     if request.is_ajax():
         # resolve the name and type
-        q = resolve_q(request)
+        q = request.GET.get('q', '')
         q_types = resolve_type(request)
         # build a list of results
         results = []
@@ -434,7 +422,7 @@ def get_names(request):
             results.append(name_json)
     else:
         # resolve the name and type
-        q = resolve_q(request)
+        q = request.GET.get('q', '')
         q_types = resolve_type(request)
         results = []
         for n in filter_names(q, q_types):
@@ -547,7 +535,6 @@ def search(request):
     """
     Renders the big search bar and results of a search back to the user
     """
-
     VALID_SORTS = {
         'name_a': 'name',
         'name_d': '-name',
@@ -556,9 +543,10 @@ def search(request):
         'end_a': 'end',
         'end_d': '-end',
     }
+
     DEFAULT_SORT = 'name_a'
     # resolve the name and type
-    q = resolve_q(request)
+    q = request.GET.get('q', '')
     q_type = resolve_type(request)
     # set up the sorting
     sort_key = request.GET.get('order', DEFAULT_SORT)
