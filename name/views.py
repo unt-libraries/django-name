@@ -6,7 +6,8 @@ from xml.etree import ElementTree
 from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
                          HttpResponseNotFound)
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import (render_to_response, get_object_or_404, render,
+                              redirect)
 from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core import serializers
@@ -145,63 +146,24 @@ class AtomSiteNewsFeed(Feed):
 
 
 def entry_detail(request, name_id):
-    """
-    Renders the requested user detailed info page
-    """
+    """Name Entry Detail View."""
+    queryset = (
+        Name.objects.select_related().
+        prefetch_related('identifier_set__type')
+    )
 
-    # define the name_entry from the passed id
-    name_entry = get_object_or_404(Name, name_id=name_id)
+    name_entry = get_object_or_404(queryset, name_id=name_id)
 
-    # If the user is merged with any other user, set the
-    # name_entry to the merged user and redirect.
     if name_entry.merged_with:
-        name_entry = (
-            get_object_or_404(Name, name_id=name_entry.merged_with))
+        return redirect(name_entry.merged_with)
 
-        return HttpResponseRedirect(
-            reverse('name_entry_detail', args=[name_entry.name_id]))
+    elif name_entry.is_suppressed():
+        return HttpResponseNotFound()
 
-    # if suppressed record, return 'not found' code 404
-    elif name_entry.record_status == 2:
-        return HttpResponse(status=404)
-
-    # if deleted record, return 'gone' code 410
-    elif name_entry.record_status == 1:
+    elif name_entry.is_deleted():
         return HttpResponseGone('The requested record has been deleted!')
 
-    else:
-        if name_entry.name_type == 4:
-            try:
-                locations = Location.objects.filter(
-                    belong_to_name=name_entry)
-                current_location = Location.objects.get(
-                    belong_to_name=name_entry, status=0)
-            except:
-                locations = None
-                current_location = None
-        else:
-            current_location = None
-            locations = None
-
-        date_display = DATE_DISPLAY_LABELS[name_entry.name_type]
-        total_entries = Name.objects.all()
-        ordered_link_set = name_entry.identifier_set.order_by('order')
-        note_set = name_entry.note_set.exclude(note_type=2)
-
-        return render_to_response(
-            'name/name_detail.html',
-            {
-                'total_entries': total_entries,
-                'requested_user': name_entry,
-                'current_location': current_location,
-                'locations': locations,
-                'note_set': note_set,
-                'ordered_link_set': ordered_link_set,
-                'date_display_begin': date_display['begin'],
-                'date_display_end': date_display['end'],
-            },
-            context_instance=RequestContext(request)
-        )
+    return render(request, 'name/name_detail.html', {'name': name_entry})
 
 
 def export(request):
