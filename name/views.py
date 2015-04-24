@@ -61,6 +61,12 @@ def get_query(query_string, search_fields):
     given search fields.
     """
 
+    # FIXME: the only items that is ever passed to the search_fields positional
+    # argument is [name]. Let just roll with that
+
+    # FIXME: we set query to None, then we check if it is None, without
+    # ever altering it.
+
     # Query to search for every search term
     query = None
     terms = normalize_query(query_string)
@@ -149,7 +155,8 @@ def entry_detail(request, name_id):
     """Name Entry Detail View."""
     queryset = (
         Name.objects.select_related().
-        prefetch_related('identifier_set__type'))
+        prefetch_related('identifier_set__type')
+    )
 
     name_entry = get_object_or_404(queryset, name_id=name_id)
 
