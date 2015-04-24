@@ -58,14 +58,14 @@ def test_resolve_type(rf, query, expected):
     assert len(types) == expected
 
 
-def test_get_query_with_single_term():
-    result = views.get_query('testname', ['name'])
+def test_compose_query_with_single_term():
+    result = views.compose_query('testname')
     assert u'AND' in result.connector
     assert 'testname' in result.children[0]
 
 
-def test_get_query_with_multiple_terms():
-    result = views.get_query('foo bar baz bub', ['name'])
+def test_compose_query_with_multiple_terms():
+    result = views.compose_query('foo bar baz bub')
     assert u'AND' in result.connector
     assert len(result.children) is 4
 

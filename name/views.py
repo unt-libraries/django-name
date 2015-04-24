@@ -54,16 +54,30 @@ def normalize_query(query_string,
     ) for t in findterms(query_string)]
 
 
-def get_query(query_string, search_fields):
-    """Returns a query, that is a combination of Q objects.
+def compose_query(query_string):
+    """Composes a Q object from the query_string.
 
-    That combination aims to search keywords within a model by testing the
-    given search fields.
+    This will first normalize the query_sting and split the string up
+    into words. Then it will iterate over the list of words creating Q
+    object for each one. Last, it reduces the generated Q objects into
+    a single Q object by combining them using the & operator.
+
+    The reduce function essential performs the following operation for
+    a query_string that contains 4 words,
+
+        (((Q1 & Q2) & Q3) & Q4)
+
+    where Q1-4 are instances of the Q object.
     """
-    # Query to search for every search term
+    # Normalize the query_string which will also split the single string
+    # into a list of terms.
     terms = normalize_query(query_string)
+
+    # Create a generator that produces an instance of the Q object
+    # for each term.
     qs = (Q(name__icontains=term) for term in terms)
 
+    # Use bitwise AND to compose the objects into a single instance of Q.
     return reduce(lambda x, y: x & y, qs)
 
 
@@ -372,7 +386,7 @@ def filter_names(q, name_types):
     elif q:
         # all names that fit query OR all variants that contain query
         names = names.filter(
-            get_query(q, ['name']) |
+            compose_query(q) |
             Q(variant__variant__icontains=q)
         ).distinct()
 
