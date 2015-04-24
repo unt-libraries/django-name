@@ -55,35 +55,16 @@ def normalize_query(query_string,
 
 
 def get_query(query_string, search_fields):
-    """
-    Returns a query, that is a combination of Q objects. That
-    combination aims to search keywords within a model by testing the
+    """Returns a query, that is a combination of Q objects.
+
+    That combination aims to search keywords within a model by testing the
     given search fields.
     """
-
-    # FIXME: the only items that is ever passed to the search_fields positional
-    # argument is [name]. Let just roll with that
-
-    # FIXME: we set query to None, then we check if it is None, without
-    # ever altering it.
-
     # Query to search for every search term
-    query = None
     terms = normalize_query(query_string)
-    for term in terms:
-        # Query to search for a given term in each field
-        or_query = None
-        for field_name in search_fields:
-            q = Q(**{"%s__icontains" % field_name: term})
-            if or_query is None:
-                or_query = q
-            else:
-                or_query = or_query | q
-        if query is None:
-            query = or_query
-        else:
-            query &= or_query
-    return query
+    qs = (Q(name__icontains=term) for term in terms)
+
+    return reduce(lambda x, y: x & y, qs)
 
 
 def label(request, name_value):
