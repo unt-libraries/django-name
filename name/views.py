@@ -32,26 +32,20 @@ from name.models import (
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 
 
-# these next two functions were nabbed for the most part from this blog post:
-# julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
-#
-# they are implemented in the 'search' view
-def normalize_query(query_string,
-                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
-                    normspace=re.compile(r'\s{2,}').sub):
-    """
-    Splits the query string in individual keywords, getting rid of
+def normalize_query(query_string):
+    """Splits the query string in individual keywords, removing
     unnecessary spaces and grouping quoted words together.
+
     Example:
-
     >>> normalize_query('some random words "with quotes" and spaces')
-    ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
-
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
     """
-    return [normspace(
-        ' ',
-        (t[0] or t[1]).strip()
-    ) for t in findterms(query_string)]
+    findterms = re.compile(r'"([^"]+)"|(\S+)').findall
+    normspace = re.compile(r'\s{2,}').sub
+
+    terms = (findterms(query_string))
+
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in terms]
 
 
 def compose_query(query_string):
