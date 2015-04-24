@@ -169,9 +169,9 @@ def export(request):
 
     writer = csv.writer(response, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
 
-    # Iterate through the Active Names that are not merged with any other
+    # Iterate through the visible Names that are not merged with any other
     # Name records and write a row for each record.
-    for n in Name.objects.filter(record_status=0).filter(merged_with=None):
+    for n in Name.objects.visible():
         writer.writerow([
             n.get_name_type_label().lower(),
             n.name.encode('utf-8'),
@@ -368,21 +368,18 @@ def filter_names(q, name_types):
     """
     # we definitely don't want to serve up hidden/merged/deleted
     # records.
-    names = Name.objects.filter(record_status=0).filter(merged_with=None)
-    # we get passed a type - include that in the filter
+    names = Name.objects.visible()
+
+    # Filter by name type if it is passed with the request.
     if name_types:
         names = names.filter(name_type__in=name_types)
 
     # clean and normalize the query for the filter,
     #  searching name and bio
-    if q is '':
-        pass
-    elif q:
+    if q:
         # all names that fit query OR all variants that contain query
-        names = names.filter(
-            compose_query(q) |
-            Q(variant__variant__icontains=q)
-        ).distinct()
+        query_filter = compose_query(q) | Q(variant__variant__icontains=q)
+        names = names.filter(query_filter).distinct()
 
     return names
 
