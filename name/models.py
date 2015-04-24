@@ -277,6 +277,12 @@ def validate_merged_with(id):
         merge_sequence.append(name)
 
 
+class NameManager(models.Manager):
+    def visible(self):
+        return self.get_queryset().filter(
+            record_status=ACTIVE, merged_with=None)
+
+
 class Name(models.Model):
     """
     The record model defines the information stored by the name app
@@ -362,6 +368,8 @@ class Name(models.Model):
         unique=True,
         editable=False,
     )
+
+    objects = NameManager()
 
     def has_geocode(self):
         l = Location.objects.filter(belong_to_name=self)
