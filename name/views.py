@@ -340,23 +340,18 @@ def stats(request):
 
 
 def resolve_type(request):
-    """
-    resolves the type of the request
-    """
-    q_types = []
+    """Resolve the Name Types passed to the request."""
+    q_types = request.GET.get('q_type', None)
+    name_types = []
 
-    if 'q_type' in request.GET:
-        query_named_type = request.GET['q_type']
+    if q_types:
+        q_types = q_types.split(',')
 
-        if ',' in query_named_type:
-            query_named_type = query_named_type.split(',')
-        else:
-            query_named_type = [query_named_type]
         for k, v in NAME_TYPE_CHOICES:
-            for q_type in query_named_type:
-                if q_type == v:
-                    q_types.append(NAME_TYPE_CHOICES[k][0])
-    return q_types
+            if v in q_types:
+                name_types.append(NAME_TYPE_CHOICES[k][0])
+
+    return name_types
 
 
 def filter_names(q, name_types):
