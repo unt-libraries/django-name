@@ -6,6 +6,7 @@ from xml.etree import ElementTree
 from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
                          HttpResponseNotFound)
 from django.template import RequestContext
+from django.views import generic
 from django.shortcuts import (render_to_response, get_object_or_404, render,
                               redirect)
 from django.db.models import Q, Count, Max, Min
@@ -529,6 +530,40 @@ def search(request):
         },
         context_instance=RequestContext(request)
     )
+
+
+class SearchView(generic.ListView):
+    model = Name
+    template_name = 'name/search.html'
+    paginate_by = 10
+
+    VALID_SORTS = {
+        'name_a': 'name',
+        'name_d': '-name',
+        'begin_a': 'begin',
+        'begin_d': '-begin',
+        'end_a': 'end',
+        'end_d': '-end',
+    }
+
+    DEFAULT_SORT = 'name'
+
+    def get_sort_method(self):
+        order = self.request.GET.get('order', '')
+        order_by = self.VALID_SORTS.get(order, self.DEFAULT_SORT)
+        return order_by
+
+    def get_queryset(self):
+        return filter_names(self.request).order_by(self.get_sort_method())
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+        parameters = {
+            'q': self.request.GET.get('q'),
+            'q_type': self.request.GET.get('q_type'),
+            'order': self.request.GET.get('order')
+        }
+        return dict(context.items() + parameters.items())
 
 
 def name_json(request, name_id):
