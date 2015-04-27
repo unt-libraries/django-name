@@ -10,7 +10,7 @@ from django.shortcuts import (render_to_response, get_object_or_404, render,
                               redirect)
 from django.db.models import Q, Count, Max, Min
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.core import serializers
+from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
@@ -459,11 +459,13 @@ def landing(request):
 
 def map_json(request):
     """Presents the Locations and related Names serialized into JSON."""
-    locations = Location.objects.all().filter(status=0)
-
     if request.is_ajax():
-        data = serializers.serialize('json', locations,
-                                     use_natural_foreign_keys=True, indent=4)
+        data = serialize(
+            'json',
+            Location.objects.all().filter(status=0),
+            use_natural_foreign_keys=True,
+            indent=4)
+
         return HttpResponse(data, content_type='application/json')
     return HttpResponseNotFound()
 
