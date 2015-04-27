@@ -449,28 +449,12 @@ def paginate_entries(request, entries_result, num_per_page=10):
 
 
 def landing(request):
+    """View for the landing page of the Name App.
+
+    Sends Name count statistics in the context to display on the page.
     """
-    Renders the results of a search back to the user
-    """
-
-    # Get the active Names and create a context dictionary
-    # that contains the counts of each Name type.
-    active_names = Name.objects.all().filter(record_status=0)
-
-    counts = {
-        'total': active_names.count(),
-        'personal': active_names.filter(name_type=0).count(),
-        'organization': active_names.filter(name_type=1).count(),
-        'event': active_names.filter(name_type=2).count(),
-        'software': active_names.filter(name_type=3).count(),
-        'building': active_names.filter(name_type=4).count()
-    }
-
-    return render_to_response(
-        'name/landing.html',
-        {'counts': counts},
-        context_instance=RequestContext(request)
-    )
+    counts = {'counts': Name.objects.active_type_counts()}
+    return render(request, 'name/landing.html', counts)
 
 
 def map_json(request):
