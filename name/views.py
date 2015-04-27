@@ -339,40 +339,44 @@ def stats(request):
     )
 
 
-def resolve_type(request):
-    """Resolve the Name Types passed to the request."""
-    q_types = request.GET.get('q_type', None)
-    name_types = []
+def resolve_type(q_type):
+    """Resolve the Name Types passed to the request, and returns
+    a list of Name Type IDs.
 
-    if q_types:
-        q_types = q_types.split(',')
-
-        for k, v in NAME_TYPE_CHOICES:
-            if v in q_types:
-                name_types.append(NAME_TYPE_CHOICES[k][0])
-
-    return name_types
-
-
-def filter_names(q, name_types):
+    The input is expected to be the raw q_type query string value passed
+    in with the request.  The input is expected to be a comma delimited
+    list such as, `Personal,Event,Software`.  This function will lookup
+    up the ID of the Name Type based on the string and return a list
+    of Name Type IDs.
     """
-    Return the set of filtered name objects
+    if not q_type:
+        return []
 
-    q: Query string
-    name_types: List of name_type ids. List of integers.
+    q_type = q_type.split(',')
+
+    # Iterate through the Name Types and create a list of Name IDs
+    # using the corresponding strings values in q_type
+    return [k for k, v in NAME_TYPE_CHOICES if v in q_type]
+
+
+# TODO: Look at reducing the number of queries.
+def filter_names(request):
+    """Return the set of Name objects filtered on the query
+    parameters passed with the request.
     """
-    # we definitely don't want to serve up hidden/merged/deleted
-    # records.
+    q = request.GET.get('q', None)
+    name_types = resolve_type(request.GET.get('q_type', None))
+
+    # Retrieve the visible names from the database.
     names = Name.objects.visible()
 
     # Filter by name type if it is passed with the request.
     if name_types:
         names = names.filter(name_type__in=name_types)
 
-    # clean and normalize the query for the filter,
-    #  searching name and bio
+    # Do further filtering if the q parameter is present.
     if q:
-        # all names that fit query OR all variants that contain query
+        # All names that fit query OR all variants that contain query
         query_filter = compose_query(q) | Q(variant__variant__icontains=q)
         names = names.filter(query_filter).distinct()
 
@@ -391,14 +395,12 @@ def get_names(request):
         ('Access-Control-Allow-Headers', 'X-Requested-With'),
     ]
     # if the request is ajax, we want to retrieve the suggestions list
+    results = []
     if request.is_ajax():
         # resolve the name and type
-        q = request.GET.get('q', '')
-        q_types = resolve_type(request)
         # build a list of results
-        results = []
         # closest 10 results, filtered by query and type
-        for n in filter_names(q, q_types)[:10]:
+        for n in filter_names(request)[:10]:
             name_json = {'id': n.name_id, 'label(request, name_value)': n.name}
             if n.disambiguation:
                 name_json['label'] += " (" + n.disambiguation + ")"
@@ -406,10 +408,7 @@ def get_names(request):
             results.append(name_json)
     else:
         # resolve the name and type
-        q = request.GET.get('q', '')
-        q_types = resolve_type(request)
-        results = []
-        for n in filter_names(q, q_types):
+        for n in filter_names(request):
             name_json = {
                 'id': n.name_id,
                 'type': str(NAME_TYPE_CHOICES[n.name_type][1])
@@ -531,16 +530,16 @@ def search(request):
     DEFAULT_SORT = 'name_a'
     # resolve the name and type
     q = request.GET.get('q', '')
-    q_type = resolve_type(request)
+    q_type = resolve_type(request.GET.get('q_type', None))
     # set up the sorting
     sort_key = request.GET.get('order', DEFAULT_SORT)
     sort = VALID_SORTS.get(sort_key, DEFAULT_SORT)
     # use get_query function from the model, searching name and bio
-    if 'q' in request.GET or 'q_type' in request.GET:
+    if q or q_type:
         # paginate 15 per page and apply ordering
         paginated_entries = paginate_entries(
             request,
-            filter_names(q, q_type).order_by(sort),
+            filter_names(request).order_by(sort),
             15
         )
     else:
