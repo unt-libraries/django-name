@@ -413,8 +413,7 @@ def get_names(request):
             u'type': n.name_type,
             u'begin_date': n.begin if n.begin else None,
             u'disambiguation': n.disambiguation if n.disambiguation else None,
-            u'URL': request.build_absolute_uri(
-                reverse('name_entry_detail', args=[n.name_id]))
+            u'URL': request.build_absolute_uri(n.get_absolute_url())
         }
 
         results.append(name)
