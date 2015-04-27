@@ -279,8 +279,29 @@ def validate_merged_with(id):
 
 class NameManager(models.Manager):
     def visible(self):
+        """Retrieves all Name objects that have an Active record status
+        and are not merged with any other Name objects.
+        """
         return self.get_queryset().filter(
             record_status=ACTIVE, merged_with=None)
+
+    def active_type_counts(self):
+        """Calculates counts of Name objects by Name Type.
+
+        Statistics are based off of the queryset retuned by visible.
+        The total number is calculated using the count method. All
+        additional figures are calculated using Python to reduce the number
+        of queries.
+        """
+        names = self.visible()
+        return {
+            'total': names.count(),
+            'personal': len(filter(lambda n: n.is_personal(), names)),
+            'organization': len(filter(lambda n: n.is_organization(), names)),
+            'event': len(filter(lambda n: n.is_event(), names)),
+            'software': len(filter(lambda n: n.is_software(), names)),
+            'building': len(filter(lambda n: n.is_building(), names)),
+        }
 
 
 class Name(models.Model):
