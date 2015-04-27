@@ -471,17 +471,8 @@ def map_json(request):
 
 
 def map(request):
-    """
-    Renders the results of a search back to the user
-    """
-    locations = Location.objects.all().filter(status=0)
-
-    # render the view with the dict of results
-    return render_to_response(
-        'name/map.html',
-        {'locations': locations},
-        context_instance=RequestContext(request)
-    )
+    """Renders the map template."""
+    return render(request, 'name/map.html')
 
 
 def search(request):
