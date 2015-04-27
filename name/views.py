@@ -226,9 +226,7 @@ def opensearch(request):
 
 
 def about(request):
-    """
-    Renders the name about page to the user.
-    """
+    """Renders the name about page to the user."""
     return render(request, 'name/about.html')
 
 
