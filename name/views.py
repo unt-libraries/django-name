@@ -385,58 +385,45 @@ def filter_names(request):
 
 @jsonp
 def get_names(request):
-    """
-    returns the json ajax autocomplete
-    """
+    """Gets the JSON encoded version of the Names matching
+    the query parameters.
 
-    # headers sent in search.json responses
-    cors_headers = [
-        ('Access-Control-Allow-Origin', '*'),
-        ('Access-Control-Allow-Headers', 'X-Requested-With'),
-    ]
-    # if the request is ajax, we want to retrieve the suggestions list
-    results = []
+    This also provides the endpoint used for autocompletion
+    during search.
+    """
+    names = filter_names(request)
+
+    # If the request is AJAX, then it is most likely for autocompletion,
+    # so we will only return first 10 names.
     if request.is_ajax():
-        # resolve the name and type
-        # build a list of results
-        # closest 10 results, filtered by query and type
-        for n in filter_names(request)[:10]:
-            name_json = {'id': n.name_id, 'label(request, name_value)': n.name}
-            if n.disambiguation:
-                name_json['label'] += " (" + n.disambiguation + ")"
-            name_json['value'] = n.name
-            results.append(name_json)
-    else:
-        # resolve the name and type
-        for n in filter_names(request):
-            name_json = {
-                'id': n.name_id,
-                'type': str(NAME_TYPE_CHOICES[n.name_type][1])
-            }
-            if n.disambiguation:
-                name_json['disambiguation'] = n.disambiguation
+        names = names[:10]
 
-            name_json['name'] = n.name
-            name_json['URL'] = request.build_absolute_uri(
+    results = []
+    for n in names:
+        # If the disambiguation is present, add it to the label
+        # field in the form of "<name> (<disambiguation>)".
+        label = n.name
+        if n.disambiguation:
+            label = u'{0} ({1})'.format(n.name, n.disambiguation)
+
+        name = {
+            u'id': n.name_id,
+            u'name': n.name,
+            u'label': label,
+            u'type': n.name_type,
+            u'begin_date': n.begin if n.begin else None,
+            u'disambiguation': n.disambiguation if n.disambiguation else None,
+            u'URL': request.build_absolute_uri(
                 reverse('name_entry_detail', args=[n.name_id]))
+        }
 
-            if n.begin:
-                name_json['begin_date'] = n.begin
-            if n.end:
-                name_json['begin_date'] = n.end
-            results.append(name_json)
-    response = HttpResponse(
-        content_type='application/json'
-    )
-    # attached CORS headers
-    for hk, hv in cors_headers:
-        response[hk] = hv
-    json.dump(
-        results,
-        fp=response,
-        indent=4,
-        sort_keys=True,
-    )
+        results.append(name)
+
+    response = HttpResponse(content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Headers'] = 'X-Requested-With'
+
+    json.dump(results, fp=response, indent=4, sort_keys=True)
     return response
 
 
