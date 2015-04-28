@@ -181,6 +181,10 @@ class Variant(models.Model):
         editable=False,
     )
 
+    def get_variant_type_label(self):
+        id, variant_type = VARIANT_TYPE_CHOICES[self.variant_type]
+        return variant_type
+
     def save(self):
         self.normalized_variant = normalizeSimplified(self.variant)
         super(Variant, self).save()
