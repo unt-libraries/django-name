@@ -27,8 +27,17 @@ from name.models import (
     VARIANT_TYPE_CHOICES,
     NOTE_TYPE_CHOICES,
 )
+from . import serializers
+from rest_framework.renderers import JSONRenderer
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
+
+
+class JSONResponse(HttpResponse):
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data, renderer_context={'indent': 4})
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
 
 
 def normalize_query(query_string):
@@ -395,31 +404,13 @@ def get_names(request):
     if request.is_ajax():
         names = names[:10]
 
-    results = []
-    for n in names:
-        # If the disambiguation is present, add it to the label
-        # field in the form of "<name> (<disambiguation>)".
-        label = n.name
-        if n.disambiguation:
-            label = u'{0} ({1})'.format(n.name, n.disambiguation)
+    data = serializers.NameSearchSerializer(
+        names, many=True, context={'request': request})
 
-        name = {
-            u'id': n.name_id,
-            u'name': n.name,
-            u'label': label,
-            u'type': n.name_type,
-            u'begin_date': n.begin if n.begin else None,
-            u'disambiguation': n.disambiguation if n.disambiguation else None,
-            u'URL': request.build_absolute_uri(n.get_absolute_url())
-        }
-
-        results.append(name)
-
-    response = HttpResponse(content_type='application/json')
+    response = JSONResponse(data.data)
     response['Access-Control-Allow-Origin'] = '*'
     response['Access-Control-Allow-Headers'] = 'X-Requested-With'
 
-    json.dump(results, fp=response, indent=4, sort_keys=True)
     return response
 
 
@@ -478,65 +469,11 @@ class SearchView(generic.ListView):
 
 
 def name_json(request, name_id):
-    """
-    Returns result of name query in json format
-    """
+    """Returns result of name query in json format."""
+    name = get_object_or_404(Name, name_id=name_id)
+    data = serializers.NameSerializer(name, context={'request': request})
 
-    # define the requested user from the passed id
-    requested_user = get_object_or_404(Name, name_id=name_id)
-
-    jsonDict = {}
-    variant_list = []
-    link_list = []
-    note_list = []
-
-    jsonDict['name_type'] = str(
-        NAME_TYPE_CHOICES[requested_user.name_type][1]
-    ).lower()
-
-    # make list and add to json for variant
-    for variant in requested_user.variant_set.all():
-        variant_list.append({
-            "type": VARIANT_TYPE_CHOICES[variant.variant_type][1],
-            "variant": variant.variant
-        })
-        jsonDict['variants'] = variant_list
-
-    # make list and add to json for identifiers (links)
-    for link in requested_user.identifier_set.all():
-        if link.visible:
-            link_list.append({
-                "label": link.type.label,
-                "href": link.value
-            })
-        jsonDict['links'] = link_list
-
-    # make list and add to json for notes
-    for note in requested_user.note_set.all().exclude(note_type=2):
-        note_list.append({
-            "type": NOTE_TYPE_CHOICES[note.note_type][1],
-            "note": note.note
-        })
-        jsonDict['note'] = note_list
-
-    # build dictionary to serialize to json
-    if requested_user.begin:
-        jsonDict['begin_date'] = requested_user.begin
-    if requested_user.end:
-        jsonDict['end_date'] = requested_user.end
-    jsonDict['authoritative_name'] = requested_user.name
-    jsonDict['identifier'] = request.build_absolute_uri()[:-5]
-
-    # dump the dict to as an HttpResponse
-    response = HttpResponse(content_type='application/json')
-
-    json.dump(
-        jsonDict,
-        fp=response,
-        indent=4,
-        sort_keys=True,
-    )
-    return response
+    return JSONResponse(data.data)
 
 
 def set_prefixes(elem, prefix_map):
