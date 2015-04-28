@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    {% if not entries %}
+    {% if not name_list %}
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-center">
@@ -11,14 +11,14 @@
                     <form class="form form-inline" action="{% url "name_search" %}">
                         <select class="form-control" name="q_type" id="large_q_type">
                             {% for k, v in name_types.items %}
-                                {% if q_type == v %}
+                                {% if request.GET.q_type == v %}
                                     <option value="{{ v }}" selected>{{ v }}</option>
                                 {% else %}
                                     <option value="{{ v }}">{{ v }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
-                        <input class="form-control" type="text" name="q" id="large_names" value="{{ q }}">
+                        <input class="form-control" type="text" name="q" id="large_names" value="{{ request.GET.q }}">
                         <button class="btn btn-default" type="submit">Submit</button>
                     </form>
                 </div>
@@ -38,22 +38,22 @@
         <div class="row control-btns">
             <div class="col-sm-12">
                 <div class="btn-group pull-right">
-                    {% if sort != 'name_a' %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=name_a&amp;page={{ entries.page }}">Names <span class="help">(Sort Dsc.)</span></a>
+                    {% if request.GET.order != "name_a" %}
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_a&amp;page={{ name_list.page }}">Names <span class="help">(Sort Dsc.)</span></a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=name_d&amp;page={{ entries.page }}">Names <span class="help">(Sort Asc.)</span></a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_d&amp;page={{ name_list.page }}">Names <span class="help">(Sort Asc.)</span></a>
                     {% endif %}
 
-                    {% if sort != 'begin_a' %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=begin_a&amp;page={{ entries.page }}">{{ date_display_begin }}</a>
+                    {% if request.GET.order != "begin_a" %}
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_a&amp;page={{ name_list.page }}">Start Date (Asc.)</a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=begin_d&amp;page={{ entries.page }}">{{ date_display_begin }}</i></a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_d&amp;page={{ name_list.page }}">Start Date (Desc.)</a>
                     {% endif %}
 
-                    {% if sort != 'end_a' %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=end_a&amp;page={{ entries.page }}">{{ date_display_end }}</a>
+                    {% if request.GET.order != "end_a" %}
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_a&amp;page={{ name_list.page }}">End Date (Asc.)</a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ q_type }}&amp;q={{ q }}&amp;order=end_d&amp;page={{ entries.page }}">{{ date_display_end }}</a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_d&amp;page={{ name_list.page }}">End Date (Desc.)</a>
                     {% endif %}
                 </div>
             </div>
@@ -62,7 +62,7 @@
             <div class="col-sm-12">
                 <table class="table">
                     </tbody>
-                        {% for entry in entries.object_list %}
+                        {% for entry in name_list %}
                             {# TODO: Make sure the merged names are not sent via search #}
                             {% if entry.is_active and entry.merged_with == None %}
                                 <tr>
@@ -93,7 +93,7 @@
         </div>
     {% endif %}
 
-    {% if entries.paginator.num_pages > 1 %}
+    {% if is_paginated %}
         {% include "name/_pagination.html" %}
     {% endif %}
 
