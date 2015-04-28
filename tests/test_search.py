@@ -51,28 +51,28 @@ def test_search_with_q(client, twenty_name_fixtures):
     name = twenty_name_fixtures.first()
     url = reverse('name_search')
     response = client.get(url, {'q': name.name})
-    entries = response.context[-1]['entries']
-    assert name in entries.object_list
+    name_list = response.context[-1]['name_list']
+    assert name in name_list
 
 
 def test_search_with_q_type(client, search_fixtures):
     url = reverse('name_search')
     response = client.get(url, {'q_type': 'Personal'})
-    entries = response.context[-1]['entries']
-    assert len(entries.object_list) == 4
-    assert all(x.is_personal() for x in entries.object_list)
+    name_list = response.context[-1]['name_list']
+    assert len(name_list) == 4
+    assert all(x.is_personal() for x in name_list)
 
 
 def test_search_with_two_q_types(client, search_fixtures):
     url = reverse('name_search')
     response = client.get(url, {'q_type': 'Personal,Event'})
-    entries = response.context[-1]['entries']
-    assert len(entries.object_list) == 8
-    assert all(x.is_personal() or x.is_event() for x in entries.object_list)
+    name_list = response.context[-1]['name_list']
+    assert len(name_list) == 8
+    assert all(x.is_personal() or x.is_event() for x in name_list)
 
 
 def test_search_without_query(client, search_fixtures):
     url = reverse('name_search')
     response = client.get(url)
-    entries = response.context[-1]['entries']
-    assert entries is None
+    name_list = response.context[-1]['name_list']
+    assert len(name_list) is 0

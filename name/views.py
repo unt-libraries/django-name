@@ -476,66 +476,10 @@ def map(request):
     return render(request, 'name/map.html')
 
 
-def search(request):
-    """
-    Renders the big search bar and results of a search back to the user
-    """
-    VALID_SORTS = {
-        'name_a': 'name',
-        'name_d': '-name',
-        'begin_a': 'begin',
-        'begin_d': '-begin',
-        'end_a': 'end',
-        'end_d': '-end',
-    }
-
-    DEFAULT_SORT = 'name_a'
-    # resolve the name and type
-    q = request.GET.get('q', '')
-    q_type = resolve_type(request.GET.get('q_type', None))
-    # set up the sorting
-    sort_key = request.GET.get('order', DEFAULT_SORT)
-    sort = VALID_SORTS.get(sort_key, DEFAULT_SORT)
-    # use get_query function from the model, searching name and bio
-    if q or q_type:
-        # paginate 15 per page and apply ordering
-        paginated_entries = paginate_entries(
-            request,
-            filter_names(request).order_by(sort),
-            15
-        )
-    else:
-        # gather all records if all of the above is false
-        paginated_entries = None
-    # render html date display for the case of one q_type
-    if len(q_type) == 1:
-        date_display_begin = DATE_DISPLAY_LABELS[q_type[0]].get('begin')
-        date_display_end = DATE_DISPLAY_LABELS[q_type[0]].get('end')
-        q_type = DATE_DISPLAY_LABELS[q_type[0]]['type']
-    # if we have more than one qtype, use more generic dates
-    elif len(q_type) != 1:
-        date_display_begin = 'Start Date'
-        date_display_end = 'End Date'
-        # rebuild q_type display
-        q_type = ','.join([DATE_DISPLAY_LABELS[x]['type'] for x in q_type])
-    return render_to_response(
-        'name/search.html',
-        {
-            'date_display_begin': date_display_begin,
-            'date_display_end': date_display_end,
-            'q_type': q_type,
-            'q': q,
-            'sort': sort_key,
-            'entries': paginated_entries,
-        },
-        context_instance=RequestContext(request)
-    )
-
-
 class SearchView(generic.ListView):
     model = Name
     template_name = 'name/search.html'
-    paginate_by = 10
+    paginate_by = 15
 
     VALID_SORTS = {
         'name_a': 'name',
@@ -546,24 +490,17 @@ class SearchView(generic.ListView):
         'end_d': '-end',
     }
 
-    DEFAULT_SORT = 'name'
+    DEFAULT_SORT = VALID_SORTS['name_a']
 
     def get_sort_method(self):
         order = self.request.GET.get('order', '')
-        order_by = self.VALID_SORTS.get(order, self.DEFAULT_SORT)
-        return order_by
+        return self.VALID_SORTS.get(order, self.DEFAULT_SORT)
 
     def get_queryset(self):
-        return filter_names(self.request).order_by(self.get_sort_method())
-
-    def get_context_data(self, **kwargs):
-        context = super(SearchView, self).get_context_data(**kwargs)
-        parameters = {
-            'q': self.request.GET.get('q'),
-            'q_type': self.request.GET.get('q_type'),
-            'order': self.request.GET.get('order')
-        }
-        return dict(context.items() + parameters.items())
+        query = self.request.GET
+        if query.get('q') or query.get('q_type'):
+            return filter_names(self.request).order_by(self.get_sort_method())
+        return Name.objects.none()
 
 
 def name_json(request, name_id):
