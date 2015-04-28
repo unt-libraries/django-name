@@ -10,7 +10,6 @@ from django.views import generic
 from django.shortcuts import (render_to_response, get_object_or_404, render,
                               redirect)
 from django.db.models import Q, Count, Max, Min
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
@@ -27,7 +26,6 @@ from name.models import (
     NAME_TYPE_CHOICES,
     VARIANT_TYPE_CHOICES,
     NOTE_TYPE_CHOICES,
-    DATE_DISPLAY_LABELS,
 )
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
@@ -423,30 +421,6 @@ def get_names(request):
 
     json.dump(results, fp=response, indent=4, sort_keys=True)
     return response
-
-
-def paginate_entries(request, entries_result, num_per_page=10):
-    """
-    paginates a set of entries (set of model objects)
-    """
-
-    # create paginator from result set
-    paginator = Paginator(entries_result, num_per_page)
-
-    # try to resolve the current page
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        paginated_entries = paginator.page(page)
-
-    except (EmptyPage, InvalidPage):
-        paginated_entries = paginator.page(paginator.num_pages)
-
-    # send back the paginated entries
-    return paginated_entries
 
 
 def landing(request):
