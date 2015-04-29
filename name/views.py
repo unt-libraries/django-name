@@ -18,7 +18,7 @@ from dateutil import rrule
 from datetime import datetime
 from pynaco.naco import normalizeSimplified
 from name.decorators import jsonp
-from name.models import Name, Identifier, Location
+from name.models import Name, Identifier, Location, NAME_TYPE_CHOICES
 from . import serializers
 from rest_framework.renderers import JSONRenderer
 
