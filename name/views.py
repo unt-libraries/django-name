@@ -134,7 +134,7 @@ class AtomSiteNewsFeed(Feed):
         return location_set
 
     def item_description(self, item):
-        return "Name Type: %s" % NAME_TYPE_CHOICES[item.name_type][1]
+        return "Name Type: %s" % item.get_name_type_label()
 
     def item_link(self, item):
         return VOCAB_DOMAIN + 'name/' + item.name_id + '/'
