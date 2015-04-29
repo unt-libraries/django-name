@@ -1,31 +1,31 @@
 import re
 import csv
 import copy
-from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
-                         HttpResponseNotFound)
+
+from django import http
 from django.template import RequestContext
 from django.views import generic
-from django.shortcuts import (render_to_response, get_object_or_404, render,
-                              redirect)
 from django.db.models import Q, Count, Max, Min
-from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.templatetags.static import static
 from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
+from django.shortcuts import (render_to_response, get_object_or_404, render,
+                              redirect)
 from dateutil import rrule
 from datetime import datetime
 from pynaco.naco import normalizeSimplified
-from name.decorators import jsonp
-from name.models import Name, Identifier, Location, NAME_TYPE_CHOICES
-from . import serializers
 from rest_framework.renderers import JSONRenderer
+
+from .decorators import jsonp
+from .models import Name, Identifier, Location, NAME_TYPE_CHOICES
+from . import serializers
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 
 
-class JSONResponse(HttpResponse):
+class JSONResponse(http.HttpResponse):
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data, renderer_context={'indent': 4})
         kwargs['content_type'] = 'application/json'
@@ -84,22 +84,22 @@ def label(request, name_value):
     objects, a status code 404 is returned.
     """
     if not name_value:
-        return HttpResponseNotFound()
+        return http.HttpResponseNotFound()
 
     normalized_name = normalizeSimplified(name_value)
     try:
         name = Name.objects.get(normalized_name=normalized_name)
 
-        return HttpResponseRedirect(
+        return http.HttpResponseRedirect(
             reverse('name_entry_detail', args=[name.name_id]))
 
     except Name.DoesNotExist:
-        return HttpResponseNotFound(
+        return http.HttpResponseNotFound(
             u'No matching term found - authoritative, or variant - for \"{0}\"'
             .format(name_value))
 
     except Name.MultipleObjectsReturned:
-        return HttpResponseNotFound(
+        return http.HttpResponseNotFound(
             u'There are multiple Name objects with the same name: \'{0}\'.'
             .format(normalized_name))
 
@@ -153,10 +153,10 @@ def entry_detail(request, name_id):
         return redirect(name_entry.merged_with)
 
     elif name_entry.is_suppressed():
-        return HttpResponseNotFound()
+        return http.HttpResponseNotFound()
 
     elif name_entry.is_deleted():
-        return HttpResponseGone('The requested record has been deleted!')
+        return http.HttpResponseGone('The requested record has been deleted!')
 
     return render(request, 'name/name_detail.html', {'name': name_entry})
 
@@ -164,7 +164,7 @@ def entry_detail(request, name_id):
 def export(request):
     """Exports Names as TSV file."""
     # Create a CSV response.
-    response = HttpResponse(content_type='text/csv')
+    response = http.HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.tsv"'
 
     writer = csv.writer(response, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
@@ -399,13 +399,13 @@ def landing(request):
 def map_json(request):
     """Presents the Locations and related Names serialized into JSON."""
     if request.is_ajax():
-        data = serialize(
-            'json',
-            Location.objects.all().filter(status=0),
-            use_natural_foreign_keys=True)
+        locations = Location.objects.filter(status=0)
 
-        return HttpResponse(data, content_type='application/json')
-    return HttpResponseNotFound()
+        data = serializers.LocationSerializer(
+            locations, many=True, context={'request': request})
+
+        return JSONResponse(data.data)
+    return http.HttpResponseNotFound()
 
 
 def map(request):
