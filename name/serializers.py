@@ -87,3 +87,10 @@ class NameSearchSerializer(serializers.ModelSerializer):
         if obj.disambiguation:
             return u'{0} ({1})'.format(obj.name, obj.disambiguation)
         return obj.name
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    belong_to_name = NameSerializer()
+
+    class Meta:
+        model = models.Location
