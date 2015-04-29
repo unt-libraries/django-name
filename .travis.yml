@@ -8,9 +8,21 @@ env:
         - DB_USER=travis
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py27-django16
-        - TOX_ENV=py27-django17
-        - TOX_ENV=py27-django18
+        - TOX_ENV=py27-django16-drf22
+        - TOX_ENV=py27-django16-drf23
+        - TOX_ENV=py27-django16-drf24
+        - TOX_ENV=py27-django16-drf30
+        - TOX_ENV=py27-django16-drf31
+        - TOX_ENV=py27-django17-drf22
+        - TOX_ENV=py27-django17-drf23
+        - TOX_ENV=py27-django17-drf24
+        - TOX_ENV=py27-django17-drf30
+        - TOX_ENV=py27-django17-drf31
+        - TOX_ENV=py27-django18-drf22
+        - TOX_ENV=py27-django18-drf23
+        - TOX_ENV=py27-django18-drf24
+        - TOX_ENV=py27-django18-drf30
+        - TOX_ENV=py27-django18-drf31
         - TOX_ENV=flake8
 install:
     - pip install tox
