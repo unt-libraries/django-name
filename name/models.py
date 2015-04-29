@@ -160,6 +160,10 @@ class Note(models.Model):
 
     objects = NoteManager()
 
+    def get_note_type_label(self):
+        id, note_type = NOTE_TYPE_CHOICES[self.note_type]
+        return note_type
+
     def __unicode__(self):
         return self.note
 
