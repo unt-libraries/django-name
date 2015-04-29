@@ -189,47 +189,28 @@ def export(request):
 
 
 def opensearch(request):
-    """Opensearch
+    """Renders Opensearch XML file.
 
-    Returns Opensearch XML file.
+    Opensearch URL templates are composed in the view
+    because it is easier than creating them in the template.
     """
+    # Query templates for the URLs.
+    search_query = '{0}?q_type=Personal&q={{searchTerms}}'
+    search_json_query = '{0}?q={{searchTerms}}'
 
-    # create XML root element
-    root = ElementTree.Element('OpenSearchDescription')
-    root.set('xmlns', 'http://a9.com/-/spec/opensearch/1.1/')
+    # Build the absolute URLs.
+    search_url = request.build_absolute_uri(reverse('name_search'))
+    search_json_url = request.build_absolute_uri(reverse('name_names'))
 
-    # define the children to root and their parameters
-    shortname = ElementTree.SubElement(root, 'ShortName')
-    shortname.text = "Name App"
-    description = ElementTree.SubElement(root, 'Description')
-    description.text = "Search Name App Entries"
+    # Compose the full URLs  that will be sent to the template.
+    search = search_query.format(search_url)
+    search_json = search_json_query.format(search_json_url)
+    image = request.build_absolute_uri(static('name/img/favicon.png'))
 
-    # set icon
-    image = ElementTree.SubElement(root, 'Image')
-    image.set('width', '16')
-    image.set('height', '16')
-    image.text = request.get_host() + '/media/icons/unt_favicon.ico'
+    urls = dict(search=search, search_json=search_json, image=image)
 
-    # set search url
-    url = ElementTree.SubElement(root, 'Url')
-    url.set('type', 'text/html')
-    url.set(
-        'template',
-        "{url}?q_type=Personal&q={{searchTerms}}".format(
-            url=request.build_absolute_uri(reverse('name_search')))
-    )
-
-    auto_suggest = ElementTree.SubElement(root, 'Url')
-    auto_suggest.set('type', 'application/x-suggestions+json')
-    auto_suggest.set(
-        'template',
-        "{url}?q={{searchTerms}}".format(
-            url=request.build_absolute_uri(reverse('name_names')))
-    )
-
-    # export the element tree to a string and send to httpresponse
-    t = ElementTree.tostring(root)
-    return HttpResponse(t, content_type='text/xml')
+    return render(request, 'name/opensearch.xml',
+                  urls, content_type='text/xml')
 
 
 def about(request):
