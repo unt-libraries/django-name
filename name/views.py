@@ -402,8 +402,7 @@ def map_json(request):
         data = serialize(
             'json',
             Location.objects.all().filter(status=0),
-            use_natural_foreign_keys=True,
-            indent=4)
+            use_natural_foreign_keys=True)
 
         return HttpResponse(data, content_type='application/json')
     return HttpResponseNotFound()
