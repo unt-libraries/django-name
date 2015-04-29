@@ -12,24 +12,25 @@ class IdentifierSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source='note_type')
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Note
         fields = ('note', 'type')
 
+    def get_type(self, obj):
+        return obj.get_note_type_label().lower()
+
 
 class VariantSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source='variant_type')
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Variant
         fields = ('variant', 'type')
 
-
-class NameTypeField(serializers.Field):
-    def to_representation(self, obj):
-        return obj.get_name_type_label().lower()
+    def get_type(self, obj):
+        return obj.get_variant_type_label().lower()
 
 
 class NameSerializer(serializers.ModelSerializer):
