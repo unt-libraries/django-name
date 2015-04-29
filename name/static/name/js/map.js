@@ -18,17 +18,18 @@ $(function() {
 
   // Get the JSON payload of locations from the endpoint.
   $.get(url).done(function(data) {
+    // console.log(data)
     data.forEach(function(v, i){
       // Use the first location to determine where the
       // map viewport will be initially focused.
       if (i === 0) {
-        map.setView([v.fields.latitude, v.fields.longitude], 5);
+        map.setView([v.latitude, v.longitude], 5);
       }
 
-      var title = v.fields.belong_to_name.name;
+      var title = v.belong_to_name.authoritative_name;
       // Instantiate a new marker.
       var marker = L.marker(
-        [v.fields.latitude, v.fields.longitude],
+        [v.latitude, v.longitude],
         {title: title}
       );
 
@@ -36,7 +37,7 @@ $(function() {
       // inside the marker. This will create a link to the name detail
       // page. Then add the new marker to the markers layer, which will 
       // give us marker clusters.
-      var a = $('<a/>', {'href': v.fields.belong_to_name.url,'text': title });
+      var a = $('<a/>', {'href': v.belong_to_name.identifier,'text': title });
       marker.bindPopup(a.prop('outerHTML'));
       markers.addLayer(marker);
     });
