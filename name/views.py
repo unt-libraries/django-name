@@ -1,7 +1,6 @@
 import re
 import csv
 import copy
-from xml.etree import ElementTree
 from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
                          HttpResponseNotFound)
 from django.template import RequestContext
@@ -12,20 +11,14 @@ from django.db.models import Q, Count, Max, Min
 from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
+from django.templatetags.static import static
 from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
 from dateutil import rrule
 from datetime import datetime
 from pynaco.naco import normalizeSimplified
 from name.decorators import jsonp
-from name.models import (
-    Name,
-    Identifier,
-    Location,
-    NAME_TYPE_CHOICES,
-    VARIANT_TYPE_CHOICES,
-    NOTE_TYPE_CHOICES,
-)
+from name.models import Name, Identifier, Location
 from . import serializers
 from rest_framework.renderers import JSONRenderer
 
