@@ -1,7 +1,6 @@
 import re
 import csv
 import copy
-import json
 from xml.etree import ElementTree
 from django.http import (HttpResponse, HttpResponseGone, HttpResponseRedirect,
                          HttpResponseNotFound)
