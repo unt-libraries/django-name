@@ -1,6 +1,6 @@
 import json
 import requests
-from django.db import models, transaction
+from django.db import models, transaction, connection
 from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -310,6 +310,19 @@ class NameManager(models.Manager):
             'software': len(filter(lambda n: n.is_software(), names)),
             'building': len(filter(lambda n: n.is_building(), names)),
         }
+
+    def _counts_per_month(self, date_column):
+        truncate_date = connection.ops.date_trunc_sql('month', date_column)
+        return (self.extra({'month': truncate_date})
+                    .values('month')
+                    .annotate(count=models.Count(date_column))
+                    .order_by(date_column))
+
+    def created_stats(self):
+        return self._counts_per_month('date_created')
+
+    def modified_stats(self):
+        return self._counts_per_month('last_modified')
 
 
 class Name(models.Model):
