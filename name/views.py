@@ -20,7 +20,7 @@ from rest_framework.renderers import JSONRenderer
 
 from .decorators import jsonp
 from .models import Name, Identifier, Location, NAME_TYPE_CHOICES
-from . import serializers
+from .api import serializers
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 
