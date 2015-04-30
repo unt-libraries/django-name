@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . import models
+from .. import models
 
 
 class IdentifierSerializer(serializers.ModelSerializer):
@@ -94,3 +94,19 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Location
+
+
+class NameStatisticsMonthSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    total_to_date = serializers.IntegerField()
+    month = serializers.DateTimeField()
+
+
+class NameStatisticsTypeSerializer(serializers.Serializer):
+    running_total = serializers.IntegerField()
+    stats = NameStatisticsMonthSerializer(many=True)
+
+
+class NameStatisticsSerializer(serializers.Serializer):
+    created = NameStatisticsTypeSerializer()
+    modified = NameStatisticsTypeSerializer()
