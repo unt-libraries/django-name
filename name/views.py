@@ -450,8 +450,8 @@ def name_json(request, name_id):
 
 def mads_serialize(request, name_id):
     queryset = (
-        Name.objects.select_related().
-        prefetch_related('identifier_set__type', 'note_set', 'variant_set')
+        Name.objects.select_related()
+        .prefetch_related('identifier_set__type', 'note_set', 'variant_set')
     )
 
     context = dict(name=get_object_or_404(queryset, name_id=name_id))
