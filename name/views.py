@@ -20,7 +20,7 @@ from rest_framework.renderers import JSONRenderer
 
 from .decorators import jsonp
 from .models import Name, Identifier, Location, NAME_TYPE_CHOICES
-from .api import serializers
+from .api import serializers, stats as statistics
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 
@@ -285,11 +285,19 @@ def calc_total_by_month(**kwargs):
     return month_skeleton
 
 
+def stats_json(request):
+    stats = statistics.NameStatistics()
+    stats.calculate()
+    data = serializers.NameStatisticsSerializer(stats)
+    return JSONResponse(data.data)
+
+
 def stats(request):
     """
     Renders the name stats page to the user
     """
 
+    return render(request, 'name/stats2.html')
     name_type_counts = {
         'personal': Name.objects.filter(name_type=0).count(),
         'organization': Name.objects.filter(name_type=1).count(),
