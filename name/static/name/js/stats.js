@@ -11,16 +11,19 @@ var Statistics = function(options) {
   this.controlWrapper = new google.visualization.ControlWrapper(options.controlConfig);
   this.chartWrapper = new google.visualization.ChartWrapper(options.chartConfig);
 
-  this.dashboard = new google.visualization.Dashboard(this.stage);
+  this.dashboard = new google.visualization.Dashboard(this.stage[0]);
   this.dashboard.bind(this.controlWrapper, this.chartWrapper);
+  this.piechart = new google.visualization.PieChart(this.stage.find('#piechart')[0]);
+
 
   this.stage.on('click', '.chart-nav', $.proxy(this.redrawDashboard, this));
 
-  $.ajax({context: this, async: false, url: '/name/stats.json/', success: this.setupDashboard});
+  $.ajax({context: this, url: '/name/stats.json/', success: this.setupDashboard});
 };
 
 Statistics.prototype.setupDashboard = function(data) {
   this.dispatch(data);
+  this.createPieChart(data); 
   this.drawDashboard(DEFAULT_CHART);
 };
 
@@ -53,6 +56,23 @@ Statistics.prototype.createDataTable = function(data, date_type, total_type, lab
 
   dataTable.addRows(table);
   this.dataTables.push(dataTable);
+};
+
+Statistics.prototype.createPieChart = function(data) {
+  var table = [['type', 'num types']];
+
+  $.each(data.name_type_totals, function(i, v) {
+    table.push([i, v]);
+  });
+
+  var dataTable = google.visualization.arrayToDataTable(table);
+
+  this.piechart.draw(dataTable, {
+    title: 'Name Distribution by Type',
+    pieHole: 0.4,
+    height: 300,
+  });
+
 };
 
 Statistics.create = function() {
