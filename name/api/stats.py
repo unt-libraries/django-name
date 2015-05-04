@@ -103,6 +103,7 @@ class NameStatistics(object):
     def __init__(self):
         self.created = NameStatisticsType(Name.objects.created_stats())
         self.modified = NameStatisticsType(Name.objects.modified_stats())
+        self.name_type_totals = Name.objects.active_type_counts()
 
     def calculate(self):
         self.created.calculate()
