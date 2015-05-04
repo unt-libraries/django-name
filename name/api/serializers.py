@@ -110,3 +110,4 @@ class NameStatisticsTypeSerializer(serializers.Serializer):
 class NameStatisticsSerializer(serializers.Serializer):
     created = NameStatisticsTypeSerializer()
     modified = NameStatisticsTypeSerializer()
+    name_type_totals = serializers.DictField()
