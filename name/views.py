@@ -1,20 +1,15 @@
 import re
 import csv
-import copy
 
 from django import http
-from django.template import RequestContext
 from django.views import generic
-from django.db.models import Q, Count, Max, Min
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.contrib.syndication.views import Feed
 from django.templatetags.static import static
 from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
-from django.shortcuts import (render_to_response, get_object_or_404, render,
-                              redirect)
-from dateutil import rrule
-from datetime import datetime
+from django.shortcuts import get_object_or_404, render, redirect
 from pynaco.naco import normalizeSimplified
 from rest_framework.renderers import JSONRenderer
 
@@ -211,80 +206,6 @@ def about(request):
     return render(request, 'name/about.html')
 
 
-def prepare_graph_date_range():
-    """
-    Several functions use the same code to prepare the dates and values
-    for the graphing of event data, so we can make a function for it.
-    DRY 4 LYPHE
-
-    returns list of lists
-    """
-
-    name_objects = Name.objects.all()
-    # grab the dates for the bounds of the graphs
-    if name_objects.count() > 0:
-        dates = Name.objects.all().aggregate(
-            Min("date_created"), Max('date_created'))
-        system_start_date = dates['date_created__min']
-        system_end_date = dates['date_created__max']
-
-        # setup list for month call data
-        daily_edit_counts = []
-        # we need to first fill in the first month, because it won't
-        # grab that when the for loop iterates to a new month.
-        month = system_start_date.strftime('%Y-%m')
-        daily_edit_counts.append([datetime.strptime(month, '%Y-%m'), 0])
-        # start with a zero count and reset this as we cross a month
-        for dt in rrule.rrule(
-            rrule.DAILY,
-            dtstart=system_start_date,
-            until=system_end_date,
-        ):
-            # if we change months
-            if month != dt.strftime('%Y-%m'):
-                month = dt.strftime('%Y-%m')
-                # make the year and drop in if i doenst exist
-                daily_edit_counts.append(
-                    [datetime.strptime(month, '%Y-%m'), 0])
-        return daily_edit_counts
-    else:
-        raise Exception('no name objects to construct graph')
-
-
-def calc_total_by_month(**kwargs):
-    """
-    totals for the bag / file count by month.
-    Returns an ordered dict
-    """
-
-    if kwargs['created']:
-        # get the daily Name totals
-        daily_counts = Name.objects.extra(
-            select={'day': 'date_created'}
-        ).values('day').annotate(num=Count('date_created'))
-    elif kwargs['edited']:
-        # get the daily Name totals
-        daily_counts = Name.objects.extra(
-            select={'day': 'last_modified'}
-        ).values('day').annotate(num=Count('last_modified'))
-    # make current total events count
-    current_total = 0
-    month_skeleton = copy.deepcopy(prepare_graph_date_range())
-    # fill in totals
-    for u in month_skeleton:
-        # replace existing value of zero with sum of nums in certain
-        # month
-        current_month_counts = [e for e in daily_counts if datetime.strftime(
-            e['day'], '%Y-%m') == datetime.strftime(u[0], '%Y-%m')]
-
-        for n in current_month_counts:
-            current_total += n['num']
-        u[1] = current_total
-        if not kwargs['running']:
-            current_total = 0
-    return month_skeleton
-
-
 def stats_json(request):
     stats = statistics.NameStatistics()
     stats.calculate()
@@ -296,34 +217,11 @@ def stats(request):
     """
     Renders the name stats page to the user
     """
-
-    return render(request, 'name/stats2.html')
-    name_type_counts = {
-        'personal': Name.objects.filter(name_type=0).count(),
-        'organization': Name.objects.filter(name_type=1).count(),
-        'event': Name.objects.filter(name_type=2).count(),
-        'software': Name.objects.filter(name_type=3).count(),
+    context = {
+        'total_names': Name.objects.count(),
+        'total_identifiers': Identifier.objects.count()
     }
-    name_line_graph_data = {
-        'creation_running': calc_total_by_month(created=True,
-                                                edited=False, running=True),
-        'creation_monthly': calc_total_by_month(created=True,
-                                                edited=False, running=False),
-        'edited_running': calc_total_by_month(created=False,
-                                              edited=True, running=True),
-        'edited_monthly': calc_total_by_month(created=False,
-                                              edited=True, running=False),
-    }
-    return render_to_response(
-        'name/stats.html',
-        {
-            'name_line_graph_data': name_line_graph_data,
-            'name_type_counts': name_type_counts,
-            'total_names': Name.objects.count(),
-            'total_links': Identifier.objects.count(),
-        },
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'name/stats.html', context)
 
 
 def resolve_type(q_type):
