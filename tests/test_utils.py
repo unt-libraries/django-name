@@ -82,13 +82,3 @@ def test_compose_query_with_multiple_terms():
 def test_normalize_query(query, expected):
     normalized = views.normalize_query(query)
     assert len(normalized) == expected
-
-
-@pytest.mark.xfail(reason='No Test')
-def test_calc_total_by_month():
-    assert False
-
-
-@pytest.mark.xfail(reason='No Test')
-def test_prepare_graph_date_range():
-    assert False
