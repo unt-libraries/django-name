@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'stats.json/$', 'name.views.stats_json', name='name_stats_json'),
     url(r'stats/$', 'name.views.stats', name='name_stats'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
     url(r'feed/$', views.AtomSiteNewsFeed(), name='name_feed'),
