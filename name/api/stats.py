@@ -85,6 +85,8 @@ class NameStatisticsType(object):
         delta = relativedelta(months=1)
 
         while current <= end:
+            if not len(queryset) > 0:
+                return
             elem = queryset[0]
             # Compare the element's datetime to the `current` datetime
             if elem.get('month') == current:
