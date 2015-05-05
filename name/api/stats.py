@@ -36,7 +36,6 @@ class NameStatisticsType(object):
     def __init__(self, queryset):
         self.running_total = 0
         self.queryset = queryset
-        self.start = queryset.first().get('month')
         self.stats = []
 
     def calculate(self):
@@ -73,8 +72,16 @@ class NameStatisticsType(object):
         Name was not created, this method will instead create an element
         with `count` set to 0 for said month and yield it instead.
         """
-        # Convert the queryset to a list so that we can mutate
-        # it with the pop() method.
+        # Return early if the queryset is empty.
+        if not len(self.queryset) > 0:
+            return
+
+        # Use the month in the first element of the queryset
+        # as the starting month.
+        current = self.queryset.first().get('month')
+
+        # Convert the queryset to a list so that we can use the
+        # pop() method.
         queryset = list(self.queryset)
 
         # Create a datetime object for the first day of the current
@@ -82,16 +89,16 @@ class NameStatisticsType(object):
         now = datetime.now()
         end = datetime(now.year, now.month, 1)
 
-        current = self.start
         # Set up the delta to increment the `current` date in the generator.
         delta = relativedelta(months=1)
 
         while current <= end:
-            if not len(queryset) > 0:
-                return
-            elem = queryset[0]
-            # Compare the element's datetime to the `current` datetime
-            if elem.get('month') == current:
+            # Get the first element of the list, if it exists.
+            elem = queryset[0] if len(queryset) else False
+
+            # Yield the first queryset element if the element
+            # exists and if it's memeber month is equal to `current`.
+            if elem and elem.get('month') == current:
                 yield queryset.pop(0)
             else:
                 yield dict(count=0, month=current)
