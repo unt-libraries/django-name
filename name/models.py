@@ -526,8 +526,13 @@ class LocationManager(models.Manager):
     use_for_related_fields = True
 
     def _get_current_location(self):
+        """Filters through a Name objects related locations and
+        returns the one marked as current.
+        """
         return self.get_queryset().filter(status=CURRENT).first()
 
+    # Makes the current location available as a property on
+    # the RelatedManager.
     current_location = property(_get_current_location)
 
 
