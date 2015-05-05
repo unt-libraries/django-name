@@ -1,18 +1,18 @@
 import pytest
-from name import views
+from name import utils
 
 
 @pytest.mark.django_db
 def test_filter_names_with_empty_query(rf, search_fixtures):
     request = rf.get('/')
-    names = views.filter_names(request)
+    names = utils.filter_names(request)
     assert names.count() == search_fixtures.count()
 
 
 @pytest.mark.django_db
 def test_filter_names_with_query(rf, search_fixtures):
     request = rf.get('/', {'q': 1})
-    names = views.filter_names(request)
+    names = utils.filter_names(request)
     assert names.count() == 5
 
 
@@ -26,7 +26,7 @@ def test_filter_names_with_query(rf, search_fixtures):
 def test_filter_names_with_query_and_name_types(rf, q_type,
                                                 expected, search_fixtures):
     request = rf.get('/', {'q': '1', 'q_type': q_type})
-    names = views.filter_names(request)
+    names = utils.filter_names(request)
     assert names.count() == expected
 
 
@@ -40,7 +40,7 @@ def test_filter_names_with_query_and_name_types(rf, q_type,
 def test_filter_names_with_no_query_and_name_types(rf, q_type,
                                                    expected, search_fixtures):
     request = rf.get('/', {'q_type': q_type})
-    names = views.filter_names(request)
+    names = utils.filter_names(request)
     assert names.count() == expected
 
 
@@ -57,18 +57,18 @@ def test_filter_names_with_no_query_and_name_types(rf, q_type,
     ('Unknown,Types', 0)
 ])
 def test_resolve_type(rf, query, expected):
-    types = views.resolve_type(query)
+    types = utils.resolve_type(query)
     assert len(types) == expected
 
 
 def test_compose_query_with_single_term():
-    result = views.compose_query('testname')
+    result = utils.compose_query('testname')
     assert u'AND' in result.connector
     assert 'testname' in result.children[0]
 
 
 def test_compose_query_with_multiple_terms():
-    result = views.compose_query('foo bar baz bub')
+    result = utils.compose_query('foo bar baz bub')
     assert u'AND' in result.connector
     assert len(result.children) is 4
 
@@ -80,5 +80,5 @@ def test_compose_query_with_multiple_terms():
     ('"Pun. cua," tion! !!', 3),
 ])
 def test_normalize_query(query, expected):
-    normalized = views.normalize_query(query)
+    normalized = utils.normalize_query(query)
     assert len(normalized) == expected
