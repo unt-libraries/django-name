@@ -1,0 +1,99 @@
+import pytest
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from name.api import stats
+from name.models import Name, PERSONAL
+
+
+class TestNameStatisticsType:
+
+    @pytest.mark.django_db
+    def test_get_queryset_members_returns_none_with_empty_queryset(self):
+        """Check the behaviour of get_queryset_member when no objects
+        are contained in the queryset passed to NameStatisticsType.
+
+        The generator is expected to raise a StopIteration upon
+        the first call of next().
+        """
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        result = name_stats.get_queryset_members()
+
+        with pytest.raises(StopIteration):
+            next(result)
+
+    @pytest.mark.django_db
+    def test_get_queryset_members_with_names_created_in_current_month(self):
+        Name.objects.create(name="Test Name", name_type=PERSONAL)
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        gen = name_stats.get_queryset_members()
+
+        now = datetime.now()
+        expected_month = datetime(now.year, now.month, 1)
+
+        result = next(gen)
+        assert result['count'] == 1
+        assert result['month'] == expected_month
+
+    @pytest.mark.django_db
+    def test_get_queryset_members_with_no_names_created_in_current_month(self):
+        """Check that get_queryset_members generates the correct data
+        when the queryset is empty but the generator has not yet raised
+        a StopIteration.
+        """
+        now = datetime.now()
+        date_created = now - relativedelta(months=5)
+        current_month = datetime(now.year, now.month, 1)
+
+        name = Name.objects.create(name="Test Name", name_type=PERSONAL)
+
+        # Manual reset the date_created field so then Name was no longer
+        # created in the current month.
+        name.date_created = date_created
+        name.save()
+
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        gen = name_stats.get_queryset_members()
+
+        # Expand the generator into a list, and get the last element.
+        # That element will represent the statistics for the current month,
+        # where no names were created.
+        results = [n for n in gen]
+        last_result = results.pop()
+
+        assert last_result['count'] == 0
+        assert last_result['month'] == current_month
+
+    @pytest.mark.django_db
+    def test_calculate_with_empty_queryset(self):
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        result = name_stats.calculate()
+        assert isinstance(result, list)
+        assert len(result) == 0
+
+    @pytest.mark.django_db
+    def test_calculate_counts(self):
+        now = datetime.now()
+        date_created = now - relativedelta(months=2)
+
+        name1 = Name.objects.create(name="Test Name 1", name_type=PERSONAL)
+        Name.objects.create(name="Test Name 2", name_type=PERSONAL)
+
+        name1.date_created = date_created
+        name1.save()
+
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        results = name_stats.calculate()
+
+        assert len(results) == 3
+
+        first_month = results.pop(0)
+        assert first_month.total_to_date == 1
+        assert first_month.total == 1
+
+        second_month = results.pop(0)
+        assert second_month.total_to_date == 1
+        assert second_month.total == 0
+
+        third_month = results.pop(0)
+        assert third_month.total_to_date == 2
+        assert third_month.total == 1
