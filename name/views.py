@@ -9,23 +9,11 @@ from django.utils.feedgenerator import Atom1Feed
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from pynaco.naco import normalizeSimplified
-from rest_framework.renderers import JSONRenderer
 
-from .decorators import jsonp
 from .models import Name, Identifier, Location
-from .api import serializers, stats as statistics
 from .utils import filter_names
 
 VOCAB_DOMAIN = settings.VOCAB_DOMAIN
-
-
-class JSONResponse(http.HttpResponse):
-    """HTTP Response object for returning JSON data."""
-
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data, renderer_context={'indent': 4})
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
 
 
 def label(request, name_value):
@@ -135,7 +123,7 @@ def export(request):
 
 
 def opensearch(request):
-    """Renders Opensearch XML file.
+    """Renders an Opensearch XML file.
 
     Opensearch URL templates are composed in the view
     because it is easier than creating them in the template.
@@ -164,12 +152,6 @@ def about(request):
     return render(request, 'name/about.html')
 
 
-def stats_json(request):
-    stats = statistics.NameStatistics()
-    data = serializers.NameStatisticsSerializer(stats)
-    return JSONResponse(data.data)
-
-
 def stats(request):
     """Renders the stats template."""
     context = {
@@ -179,50 +161,13 @@ def stats(request):
     return render(request, 'name/stats.html', context)
 
 
-@jsonp
-def get_names(request):
-    """Gets the JSON encoded version of the Names matching
-    the query parameters.
-
-    This also provides the endpoint used for autocompletion
-    during search.
-    """
-    names = filter_names(request)
-
-    # If the request is AJAX, then it is most likely for autocompletion,
-    # so we will only return first 10 names.
-    if request.is_ajax():
-        names = names[:10]
-
-    data = serializers.NameSearchSerializer(
-        names, many=True, context={'request': request})
-
-    response = JSONResponse(data.data)
-    response['Access-Control-Allow-Origin'] = '*'
-    response['Access-Control-Allow-Headers'] = 'X-Requested-With'
-
-    return response
-
-
 def landing(request):
     """View for the landing page of the Name App.
 
     Sends Name count statistics in the context to display on the page.
     """
-    counts = {'counts': Name.objects.active_type_counts()}
+    counts = dict(counts=Name.objects.active_type_counts())
     return render(request, 'name/landing.html', counts)
-
-
-def map_json(request):
-    """Presents the Locations and related Names serialized into JSON."""
-    if request.is_ajax():
-        locations = Location.objects.filter(status=0)
-
-        data = serializers.LocationSerializer(
-            locations, many=True, context={'request': request})
-
-        return JSONResponse(data.data)
-    return http.HttpResponseNotFound()
 
 
 def map(request):
@@ -255,14 +200,6 @@ class SearchView(generic.ListView):
         if query.get('q') or query.get('q_type'):
             return filter_names(self.request).order_by(self.get_sort_method())
         return Name.objects.none()
-
-
-def name_json(request, name_id):
-    """Returns result of name query in json format."""
-    name = get_object_or_404(Name, name_id=name_id)
-    data = serializers.NameSerializer(name, context={'request': request})
-
-    return JSONResponse(data.data)
 
 
 def mads_serialize(request, name_id):
