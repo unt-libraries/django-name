@@ -21,6 +21,8 @@ VOCAB_DOMAIN = settings.VOCAB_DOMAIN
 
 
 class JSONResponse(http.HttpResponse):
+    """HTTP Response object for returning JSON data."""
+
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data, renderer_context={'indent': 4})
         kwargs['content_type'] = 'application/json'
