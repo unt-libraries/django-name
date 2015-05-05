@@ -114,6 +114,7 @@ class NameStatistics(object):
         self.created = NameStatisticsType(Name.objects.created_stats())
         self.modified = NameStatisticsType(Name.objects.modified_stats())
         self.name_type_totals = Name.objects.active_type_counts()
+        self.calculate()
 
     def calculate(self):
         self.created.calculate()

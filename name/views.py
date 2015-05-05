@@ -210,7 +210,6 @@ def about(request):
 
 def stats_json(request):
     stats = statistics.NameStatistics()
-    stats.calculate()
     data = serializers.NameStatisticsSerializer(stats)
     return JSONResponse(data.data)
 
