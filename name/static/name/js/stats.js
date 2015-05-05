@@ -5,7 +5,7 @@
 var DEFAULT_CHART = 0;
 
 var Statistics = function(options) {
-  this.stage = $(options.target);
+  this.stage = $(options.stage);
   this.dataTables = [];
 
   this.controlWrapper = new google.visualization.ControlWrapper(options.controlConfig);
@@ -15,10 +15,13 @@ var Statistics = function(options) {
   this.dashboard.bind(this.controlWrapper, this.chartWrapper);
   this.piechart = new google.visualization.PieChart(this.stage.find('#piechart')[0]);
 
-
   this.stage.on('click', '.chart-nav', $.proxy(this.redrawDashboard, this));
 
-  $.ajax({context: this, url: '/name/stats.json/', success: this.setupDashboard});
+  $.ajax({
+    context: this,
+    url: this.stage.find('form').attr('action'),
+    success: this.setupDashboard
+  });
 };
 
 Statistics.prototype.setupDashboard = function(data) {
@@ -72,7 +75,6 @@ Statistics.prototype.createPieChart = function(data) {
     pieHole: 0.4,
     height: 300,
   });
-
 };
 
 Statistics.create = function() {
@@ -106,7 +108,7 @@ Statistics.create = function() {
   return new Statistics({
     controlConfig: controlConfig,
     chartConfig: chartConfig,
-    target: '#dashboard'
+    stage: '#dashboard',
   });
 };
 
