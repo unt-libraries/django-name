@@ -97,3 +97,27 @@ class TestNameStatisticsType:
         third_month = results.pop(0)
         assert third_month.total_to_date == 2
         assert third_month.total == 1
+
+
+class TestNameStatisticsMonth:
+    def test_available_instance_variables(self):
+        name_stats_month = stats.NameStatisticsMonth()
+        assert hasattr(name_stats_month, 'total')
+        assert hasattr(name_stats_month, 'total_to_date')
+        assert hasattr(name_stats_month, 'month')
+
+
+class TestNameStatistics:
+    @pytest.mark.django_db
+    def test_available_instance_variables(self):
+        name_stats = stats.NameStatistics()
+        assert hasattr(name_stats, 'created')
+        assert hasattr(name_stats, 'modified')
+        assert hasattr(name_stats, 'name_type_totals')
+
+    @pytest.mark.django_db
+    def test_has_statistics(self, twenty_name_fixtures):
+        name_stats = stats.NameStatistics()
+        assert len(name_stats.created.stats) > 0
+        assert len(name_stats.modified.stats) > 0
+        assert len(name_stats.name_type_totals) > 0
