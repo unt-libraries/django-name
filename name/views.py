@@ -216,9 +216,7 @@ def stats_json(request):
 
 
 def stats(request):
-    """
-    Renders the name stats page to the user
-    """
+    """Renders the stats template."""
     context = {
         'total_names': Name.objects.count(),
         'total_identifiers': Identifier.objects.count()
