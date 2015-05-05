@@ -7,6 +7,7 @@ class NameStatisticsMonth(object):
     """A simple datatype to represent Name statistics for a
     single month.
     """
+
     def __init__(self, **kwargs):
         self.total = kwargs.get('total', 0)
         self.total_to_date = kwargs.get('total_to_date', 0)
@@ -31,6 +32,7 @@ class NameStatisticsType(object):
            a new NameStatisticsMonth object for each month up to
            the current month according to the system time.
     """
+
     def __init__(self, queryset):
         self.running_total = 0
         self.queryset = queryset
@@ -100,6 +102,7 @@ class NameStatistics(object):
     """Container class to for all statistics gathered on
     Name objects.
     """
+
     def __init__(self):
         self.created = NameStatisticsType(Name.objects.created_stats())
         self.modified = NameStatisticsType(Name.objects.modified_stats())
