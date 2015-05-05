@@ -13,10 +13,6 @@ class NameStatisticsMonth(object):
         self.total_to_date = kwargs.get('total_to_date', 0)
         self.month = kwargs.get('month', None)
 
-    def __repr__(self):
-        return '<{name} {0}, {1}>'.format(
-            str(self.month), self.total, name=self.__class__.__name__)
-
 
 class NameStatisticsType(object):
     """Statistics class for calculating a the number
