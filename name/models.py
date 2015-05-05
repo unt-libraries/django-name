@@ -252,7 +252,6 @@ def validate_merged_with(id):
         been merged with. If a loop is created, we will also create
         the opportunity for an HTTP redirect loop.
     """
-
     try:
         merge_target = Name.objects.get(id=id)
     except Name.DoesNotExist:
