@@ -295,7 +295,7 @@ class NameManager(models.Manager):
     def active_type_counts(self):
         """Calculates counts of Name objects by Name Type.
 
-        Statistics are based off of the queryset retuned by visible.
+        Statistics are based off of the queryset returned by visible.
         The total number is calculated using the count method. All
         additional figures are calculated using Python to reduce the number
         of queries.
@@ -311,6 +311,16 @@ class NameManager(models.Manager):
         }
 
     def _counts_per_month(self, date_column):
+        """Calculates the number of Names by month according to the
+        date_column passed in.
+
+        This will return a ValueQuerySet where each element is in the form
+        of
+            {
+               count: <Number of Names for the month>,
+               month: <Datetime object for first day of the given month>
+            }
+        """
         truncate_date = connection.ops.date_trunc_sql('month', date_column)
         return (self.extra({'month': truncate_date})
                     .values('month')
@@ -318,9 +328,11 @@ class NameManager(models.Manager):
                     .order_by(date_column))
 
     def created_stats(self):
+        """Gets the number of Names created per month."""
         return self._counts_per_month('date_created')
 
     def modified_stats(self):
+        """Gets the number of Names that were modified per month."""
         return self._counts_per_month('last_modified')
 
 
