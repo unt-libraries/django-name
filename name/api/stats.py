@@ -18,7 +18,7 @@ class NameStatisticsType(object):
     """Statistics class for calculating a the number
     of Name objects in the database using a DateTime field.
 
-    Accepts an Iterable of dictionaries in the form of
+    Accepts an ValuesQuerySet of dictionaries in the form of
         [{ count: <num>, month: <datetime object> }, ...]
 
     This will calculate:
