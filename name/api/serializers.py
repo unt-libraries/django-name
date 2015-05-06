@@ -46,16 +46,8 @@ class NameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Name
-        fields = (
-            'authoritative_name',
-            'name_type',
-            'begin_date',
-            'end_date',
-            'identifier',
-            'links',
-            'notes',
-            'variants',
-        )
+        fields = ('authoritative_name', 'name_type', 'begin_date', 'end_date',
+                  'identifier', 'links', 'notes', 'variants',)
 
     def get_name_type(self, obj):
         return obj.get_name_type_label().lower()
@@ -70,15 +62,8 @@ class NameSearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Name
-        fields = (
-            'id',
-            'name',
-            'label',
-            'type',
-            'begin_date',
-            'disambiguation',
-            'URL'
-        )
+        fields = ('id', 'name', 'label', 'type', 'begin_date',
+                  'disambiguation', 'URL')
 
     def get_type(self, obj):
         return obj.get_name_type_label().lower()
