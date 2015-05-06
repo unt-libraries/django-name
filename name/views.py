@@ -124,7 +124,7 @@ def opensearch(request):
     """Renders an Opensearch XML file.
 
     Opensearch URL templates are composed in the view
-    to more easily compose the absolut url with the
+    to more easily compose the absolute url with the
     query string.
     """
     # Query templates for the URLs.
