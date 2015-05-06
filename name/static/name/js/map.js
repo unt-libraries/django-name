@@ -18,7 +18,6 @@ $(function() {
 
   // Get the JSON payload of locations from the endpoint.
   $.get(url).done(function(data) {
-    // console.log(data)
     data.forEach(function(v, i){
       // Use the first location to determine where the
       // map viewport will be initially focused.

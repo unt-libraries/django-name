@@ -15,7 +15,7 @@ class NameStatisticsMonth(object):
 
 
 class NameStatisticsType(object):
-    """Statistics class for calculating a the number
+    """Statistics class for calculating the number
     of Name objects in the database using a DateTime field.
 
     Accepts an ValuesQuerySet of dictionaries in the form of
@@ -66,7 +66,7 @@ class NameStatisticsType(object):
         only contain elements for each month where a name was created
         or modified (based ont the queryset). If there is a month when a
         Name was not created, this method will instead create an element
-        with `count` set to 0 for said month and yield it instead.
+        with `count` set to 0 for said month and yield it.
         """
         # Return early if the queryset is empty.
         if not len(self.queryset) > 0:

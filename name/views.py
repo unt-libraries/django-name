@@ -101,7 +101,7 @@ def entry_detail(request, name_id):
 
 
 def export(request):
-    """Exports Names as TSV file."""
+    """Exports Names to a TSV file."""
     # Create a CSV response.
     response = http.HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.tsv"'
@@ -135,7 +135,7 @@ def opensearch(request):
     search_url = request.build_absolute_uri(reverse('name_search'))
     search_json_url = request.build_absolute_uri(reverse('name_names'))
 
-    # Compose the full URLs  that will be sent to the template.
+    # Compose the full URLs that will be sent to the template.
     search = search_query.format(search_url)
     search_json = search_json_query.format(search_json_url)
     image = request.build_absolute_uri(static('name/img/favicon.png'))
