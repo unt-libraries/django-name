@@ -97,7 +97,7 @@ def entry_detail(request, name_id):
     elif name_entry.is_deleted():
         return http.HttpResponseGone('The requested record has been deleted!')
 
-    return render(request, 'name/name_detail.html', {'name': name_entry})
+    return render(request, 'name/name_detail.html', dict(name=name_entry))
 
 
 def export(request):
@@ -153,10 +153,10 @@ def about(request):
 
 def stats(request):
     """View for the Stats page."""
-    context = {
-        'total_names': Name.objects.count(),
-        'total_identifiers': Identifier.objects.count()
-    }
+    context = dict(
+        total_names=Name.objects.count(),
+        total_identifiers=Identifier.objects.count()
+    )
     return render(request, 'name/stats.html', context)
 
 
