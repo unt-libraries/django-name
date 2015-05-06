@@ -161,6 +161,9 @@ class Note(models.Model):
     objects = NoteManager()
 
     def get_note_type_label(self):
+        """Returns the label associated with an instance's
+        note_type.
+        """
         id, note_type = NOTE_TYPE_CHOICES[self.note_type]
         return note_type
 
@@ -186,6 +189,9 @@ class Variant(models.Model):
     )
 
     def get_variant_type_label(self):
+        """Returns the label associated with an instance's
+        variant_type.
+        """
         id, variant_type = VARIANT_TYPE_CHOICES[self.variant_type]
         return variant_type
 
@@ -328,11 +334,15 @@ class NameManager(models.Manager):
                     .order_by(date_column))
 
     def created_stats(self):
-        """Gets the number of Names created per month."""
+        """Returns a ValueQuerySet of the number of Names created per
+        month.
+        """
         return self._counts_per_month('date_created')
 
     def modified_stats(self):
-        """Gets the number of Names that were modified per month."""
+        """Returns a ValueQuerySet of the number of Names modified per
+        month.
+        """
         return self._counts_per_month('last_modified')
 
 
