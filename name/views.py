@@ -46,8 +46,6 @@ def label(request, name_value):
 
 
 class AtomSiteNewsFeed(Feed):
-    """Sets up atom feed"""
-
     feed_type = Atom1Feed
     link = "/name/feed/"
     title = "Name App"
@@ -82,7 +80,7 @@ class AtomSiteNewsFeed(Feed):
 
 
 def entry_detail(request, name_id):
-    """Name Entry Detail View."""
+    """View for the Name detail page."""
     queryset = (
         Name.objects.select_related().
         prefetch_related('identifier_set__type')
@@ -126,7 +124,8 @@ def opensearch(request):
     """Renders an Opensearch XML file.
 
     Opensearch URL templates are composed in the view
-    because it is easier than creating them in the template.
+    to more easily compose the absolut url with the
+    query string.
     """
     # Query templates for the URLs.
     search_query = '{0}?q_type=Personal&q={{searchTerms}}'
@@ -148,12 +147,12 @@ def opensearch(request):
 
 
 def about(request):
-    """Renders the name about page to the user."""
+    """View for the About page."""
     return render(request, 'name/about.html')
 
 
 def stats(request):
-    """Renders the stats template."""
+    """View for the Stats page."""
     context = {
         'total_names': Name.objects.count(),
         'total_identifiers': Identifier.objects.count()
@@ -162,16 +161,13 @@ def stats(request):
 
 
 def landing(request):
-    """View for the landing page of the Name App.
-
-    Sends Name count statistics in the context to display on the page.
-    """
+    """View for the Landing page."""
     counts = dict(counts=Name.objects.active_type_counts())
     return render(request, 'name/landing.html', counts)
 
 
 def map(request):
-    """Renders the map template."""
+    """View for the Map page."""
     return render(request, 'name/map.html')
 
 
@@ -203,6 +199,7 @@ class SearchView(generic.ListView):
 
 
 def mads_serialize(request, name_id):
+    """Renders the Name serialized into the MADS XML format."""
     queryset = (
         Name.objects.select_related()
         .prefetch_related('identifier_set__type', 'note_set', 'variant_set')
