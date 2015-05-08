@@ -39,21 +39,21 @@
             <div class="col-sm-12">
                 <div class="btn-group pull-right">
                     {% if request.GET.order != "name_a" %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_a&amp;page={{ name_list.page }}">Names <span class="help">(Sort Dsc.)</span></a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_a&amp;page={{ page_obj.number }}">Names <span class="help">(Sort Dsc.)</span></a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_d&amp;page={{ name_list.page }}">Names <span class="help">(Sort Asc.)</span></a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=name_d&amp;page={{ page_obj.number }}">Names <span class="help">(Sort Asc.)</span></a>
                     {% endif %}
 
                     {% if request.GET.order != "begin_a" %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_a&amp;page={{ name_list.page }}">Start Date (Asc.)</a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_a&amp;page={{ page_obj.number }}">Start Date (Asc.)</a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_d&amp;page={{ name_list.page }}">Start Date (Desc.)</a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=begin_d&amp;page={{ page_obj.number }}">Start Date (Desc.)</a>
                     {% endif %}
 
                     {% if request.GET.order != "end_a" %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_a&amp;page={{ name_list.page }}">End Date (Asc.)</a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_a&amp;page={{ page_obj.number }}">End Date (Asc.)</a>
                     {% else %}
-                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_d&amp;page={{ name_list.page }}">End Date (Desc.)</a>
+                        <a class="btn btn-default" href="?q_type={{ request.GET.q_type }}&amp;q={{ request.GET.q }}&amp;order=end_d&amp;page={{ page_obj.number }}">End Date (Desc.)</a>
                     {% endif %}
                 </div>
             </div>
