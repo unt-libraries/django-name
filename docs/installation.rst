@@ -5,7 +5,7 @@ Installation
 
 1. Install the package from Github ::
 
-        $ pip install http://github.com/unt-libraries/django-name
+    $ pip install http://github.com/unt-libraries/django-name
 
 .. note::
     This package is not yet available on PyPI.
