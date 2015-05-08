@@ -1,6 +1,4 @@
-(function() {
-  'use strict';
-})();
+'use strict';
 
 var DEFAULT_CHART = 0;
 
