@@ -1,5 +1,6 @@
 requests==2.5.0
 dateutils==0.6.6
 django-markdown-deux==1.0.5
+djangorestframework>=3.1
 
 git+git://github.com/unt-libraries/pynaco@0.1.0

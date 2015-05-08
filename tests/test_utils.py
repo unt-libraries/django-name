@@ -1,42 +1,46 @@
 import pytest
-from name import views
+from name import utils
 
 
 @pytest.mark.django_db
-def test_filter_names_with_empty_query(search_fixtures):
-    names = views.filter_names('', None)
+def test_filter_names_with_empty_query(rf, search_fixtures):
+    request = rf.get('/')
+    names = utils.filter_names(request)
     assert names.count() == search_fixtures.count()
 
 
 @pytest.mark.django_db
-def test_filter_names_with_query(search_fixtures):
-    names = views.filter_names('1', None)
+def test_filter_names_with_query(rf, search_fixtures):
+    request = rf.get('/', {'q': 1})
+    names = utils.filter_names(request)
     assert names.count() == 5
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('types,expected', [
-    ([0], 1),             # Personal
-    ([0, 1], 2),          # Personal, Organization
-    ([0, 1, 2], 3),       # Personal, Organization, Event
-    ([0, 1, 2, 3, 4], 5)  # All name types.
+@pytest.mark.parametrize('q_type,expected', [
+    ('Personal', 1),
+    ('Personal,Organization', 2),
+    ('Personal,Organization,Event', 3),
+    ('Personal,Organization,Event,Software,Building', 5)
 ])
-def test_filter_names_with_query_and_name_types(types,
+def test_filter_names_with_query_and_name_types(rf, q_type,
                                                 expected, search_fixtures):
-    names = views.filter_names('1', types)
+    request = rf.get('/', {'q': '1', 'q_type': q_type})
+    names = utils.filter_names(request)
     assert names.count() == expected
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('types,expected', [
-    ([0], 4),              # Personal
-    ([0, 1], 8),           # Personal, Organization
-    ([0, 1, 2], 12),       # Personal, Organization, Event
-    ([0, 1, 2, 3, 4], 20)  # All name types.
+@pytest.mark.parametrize('q_type,expected', [
+    ('Personal', 4),
+    ('Personal,Organization', 8),
+    ('Personal,Organization,Event', 12),
+    ('Personal,Organization,Event,Software,Building', 20)
 ])
-def test_filter_names_with_no_query_and_name_types(types,
+def test_filter_names_with_no_query_and_name_types(rf, q_type,
                                                    expected, search_fixtures):
-    names = views.filter_names('', types)
+    request = rf.get('/', {'q_type': q_type})
+    names = utils.filter_names(request)
     assert names.count() == expected
 
 
@@ -53,24 +57,20 @@ def test_filter_names_with_no_query_and_name_types(types,
     ('Unknown,Types', 0)
 ])
 def test_resolve_type(rf, query, expected):
-    request = rf.get('/', {'q_type': query})
-    types = views.resolve_type(request)
+    types = utils.resolve_type(query)
     assert len(types) == expected
 
 
-def test_resolve_q_returns_value(rf):
-    q = views.resolve_q(rf.get('/', {'q': 'value'}))
-    assert q == 'value'
+def test_compose_query_with_single_term():
+    result = utils.compose_query('testname')
+    assert u'AND' in result.connector
+    assert 'testname' in result.children[0]
 
 
-def test_resolve_q_returns_empty_string(rf):
-    q = views.resolve_q(rf.get('/'))
-    assert '' == q
-
-
-@pytest.mark.xfail(reason='No Test')
-def test_get_query():
-    assert False
+def test_compose_query_with_multiple_terms():
+    result = utils.compose_query('foo bar baz bub')
+    assert u'AND' in result.connector
+    assert len(result.children) is 4
 
 
 @pytest.mark.parametrize('query,expected', [
@@ -80,15 +80,5 @@ def test_get_query():
     ('"Pun. cua," tion! !!', 3),
 ])
 def test_normalize_query(query, expected):
-    normalized = views.normalize_query(query)
+    normalized = utils.normalize_query(query)
     assert len(normalized) == expected
-
-
-@pytest.mark.xfail(reason='No Test')
-def test_calc_total_by_month():
-    assert False
-
-
-@pytest.mark.xfail(reason='No Test')
-def test_prepare_graph_date_range():
-    assert False

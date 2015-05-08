@@ -2,28 +2,30 @@
 {% load staticfiles %}
 {% load markdown_deux_tags %}
 
-{% block title %}{{ requested_user.name }}{% endblock %}
+{% block title %}{{ name.name }}{% endblock %}
 
 {% block head-extra %}
-    <link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" requested_user %}">
-    <link rel="alternate" type="application/json" href="{% url "name_json" requested_user %}">
+    <link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" name %}">
+    <link rel="alternate" type="application/json" href="{% url "name_json" name %}">
 {% endblock head-extra %}
 
 {% block content %}
 
-    <div {% if requested_user.has_schema_url %}itemscope itemtype="{{ requested_user.get_schema_url }}{% endif %}">
-        {% if requested_user.is_building and current_location.is_current %}
-            <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-                <meta itemprop="latitude" content="{{ current_location.latitude }}" />
-                <meta itemprop="longitude" content="{{ current_location.longitude }}" />
-            </div>
-        {% endif %}
+    <div {% if name.has_schema_url %}itemscope itemtype="{{ name.get_schema_url }}{% endif %}">
+        {% with name.location_set.current_location as current_location %}
+            {% if name.is_building and current_location %}
+                <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                    <meta itemprop="latitude" content="{{ current_location.latitude }}" />
+                    <meta itemprop="longitude" content="{{ current_location.longitude }}" />
+                </div>
+            {% endif %}
+        {% endwith %}
 
-        <h2 class="named">{{ requested_user.name }}</h2>
+        <h2 class="named">{{ name.name }}</h2>
 
         {% if user.is_authenticated %}
             <div class="control-btns">
-                <a class="btn btn-default" href="{% url "admin:name_name_change" requested_user.id %}">Edit</a>
+                <a class="btn btn-default" href="{% url "admin:name_name_change" name.id %}">Edit</a>
             </div>
         {% endif %}
     </div>
@@ -34,21 +36,23 @@
             <th>Authorized:</th>
             <td >
                 <!-- all schema "Things" have a name property -->
-                <span itemprop="name">{{ requested_user.name }}</span>
+                <span itemprop="name">{{ name.name }}</span>
             </td>
         </tr>
         <tr>
             <th>Name Type:</th>
-            <td>{{ requested_user.get_name_type_label }}</td>
+            <td>{{ name.get_name_type_label }}</td>
         </tr>
 
         {# Locations #}
-        {% for l in locations %}
-            <tr>
-                <th>Location: <em><small>({% if l.is_current %}current{% else %}former{% endif %})</small></em></th>
-                <td>{{ l.latitude }}, {{ l.longitude }}</td>
-            </tr>
-        {% endfor %}
+        {% if name.is_building %}
+            {% for l in name.location_set.all %}
+                <tr>
+                    <th>Location: <em><small>({% if l.is_current %}current{% else %}former{% endif %})</small></em></th>
+                    <td>{{ l.latitude }}, {{ l.longitude }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
 
         <tr>
             <th>URI:</th>
@@ -57,61 +61,61 @@
             </td>
         </tr>
 
-        {% if requested_user.disambiguation %}
+        {% if name.disambiguation %}
             <tr>
                <th>Disambiguation:</th>
                <td>
-                    {{ requested_user.disambiguation }}
+                    {{ name.disambiguation }}
                 </td>
             </tr>
         {% endif %}
 
         {# FIXME: There is a lot of nesting here #}
 
-        {% if requested_user.begin %}
+        {% if name.begin %}
             <tr>
-                <th>{{ date_display_begin }}: </th>
+                <th>{{ name.get_date_display.begin }}: </th>
                 <td>
-                    {% if requested_user.is_personal %}
-                        <span itemprop="birthDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.is_organization %}
-                            <span itemprop="foundingDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.is_building %}
-                        <span itemprop="erectedDate">{{ requested_user.begin }}</span>
-                    {% elif requested_user.is_event %}
-                        <span itemprop="startDate">{{ requested_user.begin }}</span>
+                    {% if name.is_personal %}
+                        <span itemprop="birthDate">{{ name.begin }}</span>
+                    {% elif name.is_organization %}
+                            <span itemprop="foundingDate">{{ name.begin }}</span>
+                    {% elif name.is_building %}
+                        <span itemprop="erectedDate">{{ name.begin }}</span>
+                    {% elif name.is_event %}
+                        <span itemprop="startDate">{{ name.begin }}</span>
                     {% else %}
-                        {{ requested_user.begin }}
+                        {{ name.begin }}
                     {% endif %}
                 </td>
             </tr>
         {% endif %}
 
-        {% if requested_user.end %}
+        {% if name.end %}
             <tr>
-                <th>{{ date_display_end }}: </th>
+                <th>{{ name.get_date_display.end }}: </th>
                 <td>
-                    {% if requested_user.is_personal %}
-                        <span itemprop="deathDate">{{ requested_user.end }}</span>
+                    {% if name.is_personal %}
+                        <span itemprop="deathDate">{{ name.end }}</span>
                     {% else %}
-                        {{ requested_user.end }}
+                        {{ name.end }}
                     {% endif %}
                 </td>
             </tr>
         {% endif %}
 
         <!-- BIOGRAPHY -->
-        {% if requested_user.biography %}
+        {% if name.biography %}
             <tr>
                 <th>
-                    {% if requested_user.is_personal %}
+                    {% if name.is_personal %}
                         Biographical Info:
                     {% else %}
                         History:
                     {% endif %}
                 </th>
                 <td>
-                    {{ requested_user.biography|markdown }}
+                    {{ name.biography|markdown }}
                 </td>
             </tr>
         {% endif %}
@@ -121,9 +125,9 @@
             <th>Links:</th>
             <td>
                 <ul class="list-unstyled">
-                    {% if ordered_link_set %}
-                        {% for link in ordered_link_set.all %}
-                            {% if requested_user.is_active and link.visible %}
+                    {% if name.identifier_set.exists %}
+                        {% for link in name.identifier_set.all %}
+                            {% if name.is_active and link.visible %}
                                 <li>
                                     {% if link.type.icon_path %}
                                         <img alt="icon" src="{% static link.type.icon_path %}" style="max-width: 16px">
@@ -150,11 +154,11 @@
         </tr>
 
         <!-- VARIANTS -->
-        {% if requested_user.variant_set.all %}
+        {% if name.variant_set.all %}
             <tr>
-                {% if requested_user.is_organization %}
+                {% if name.is_organization %}
                     <th>Variant Name:</th>
-                {% elif requested_user.is_building %}
+                {% elif name.is_building %}
                     <th>Also Known As:</th>
                 {% else %}
                     <th>Publishes As:</th>
@@ -162,9 +166,9 @@
 
                 <td>
                     <ul class="list-unstyled">
-                        {% for variant in requested_user.variant_set.all %}
+                        {% for variant in name.variant_set.all %}
                             <li>
-                                {% if requested_user.is_personal %}
+                                {% if name.is_personal %}
                                     <span itemprop="additionalName">{{ variant }}</span>
                                 {% else %}
                                     <span itemprop="alternateName">{{ variant }}</span>
@@ -177,22 +181,26 @@
         {% endif %}
 
         <!-- NOTES -->
-        {% if note_set %}
-            <tr>
-                <th>Notes:</th>
-                <td>{{ note_set|join:"<br>" }}</td>
-            </tr>
-        {% endif %}
+        {% with name.note_set.public_notes as public_notes %}
+            {% if public_notes %}
+                <tr>
+                    <th>Notes:</th>
+                    <td>{{ public_notes|join:"<br>" }}</td>
+                </tr>
+            {% endif %}
+        {% endwith %}
     </table>
 
     {# This will only display if the Name is a Building #}
-    {% if current_location.is_current %}
-        <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{requested_user}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
+    {% if name.is_building %}
+        {% with name.location_set.current_location as current_location %}
+        <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{name}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
+        {% endwith %}
     {% endif %}
 
     <h3>Alternate Formats</h3>
     <div>
-        <a class="btn btn-default" href="{% url "name_mads_serialize" requested_user.name_id %}">MADS/XML</a>
-        <a class="btn btn-default" href="{% url "name_json" requested_user.name_id %}">JSON</a>
+        <a class="btn btn-default" href="{% url "name_mads_serialize" name.name_id %}">MADS/XML</a>
+        <a class="btn btn-default" href="{% url "name_json" name.name_id %}">JSON</a>
     </div>
 {% endblock content %}

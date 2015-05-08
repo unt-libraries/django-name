@@ -88,6 +88,18 @@ def test_label_returns_not_found_with_query(client):
 
 
 @pytest.mark.django_db
+def test_label_returns_not_found_multiple_names_found(client):
+    name_name = "John Smith"
+    Name.objects.create(name=name_name, name_type=0)
+    Name.objects.create(name=name_name, name_type=0)
+
+    response = client.get(
+        reverse('name_label', args=[name_name]))
+    assert 404 == response.status_code
+    assert 'There are multiple Name objects with' in response.content
+
+
+@pytest.mark.django_db
 def test_export(client, name_fixture):
     response = client.get(reverse('name_export'))
     assert 200 == response.status_code
@@ -115,8 +127,6 @@ def test_stats_returns_ok(client, name_fixture):
     assert 200 == response.status_code
 
 
-# FIXME: This should not throw a 500
-@pytest.mark.xfail
 @pytest.mark.django_db
 def test_stats_returns_ok_with_no_names(client):
     response = client.get(reverse('name_stats'))
@@ -189,6 +199,11 @@ def test_name_json_handles_unknown_name(client):
     assert 404 == response.status_code
 
 
+def test_map_returns_ok(client):
+    response = client.get(reverse('name_map'))
+    assert 200 == response.status_code
+
+
 @pytest.mark.django_db
 def test_map_json_xhr_returns_payload(client):
     name = Name.objects.create(name="Test", name_type=0)
@@ -221,3 +236,24 @@ def test_map_json_xhr_returns_with_no_locations(client, twenty_name_fixtures):
 def test_map_json_returns_not_found(client, twenty_name_fixtures):
     response = client.get(reverse('name_map_json'))
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_stats_json_returns_ok_with_no_names(client):
+    response = client.get(reverse('name_stats_json'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_stats_json_returns_ok(client, search_fixtures):
+    response = client.get(reverse('name_stats_json'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_stats_json_json_data(client, search_fixtures):
+    response = client.get(reverse('name_stats_json'))
+    data = json.loads(response.content)
+    assert data.get('created', False)
+    assert data.get('modified', False)
+    assert data.get('name_type_totals', False)

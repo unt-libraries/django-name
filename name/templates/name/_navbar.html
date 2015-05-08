@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <select class="form-control" name="q_type" id="q_type">
                         {# Show current searched type as the default selection, if it exists #}
-                        {% for k, v in types.items %}
+                        {% for k, v in name_types.items %}
                             {% if q_type == v %}
                                 <option value="{{ v }}" selected>{{ v }}</option>
                             {% else %}

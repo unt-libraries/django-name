@@ -1,6 +1,6 @@
 import json
 import requests
-from django.db import models, transaction
+from django.db import models, transaction, connection
 from pynaco.naco import normalizeSimplified
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -146,10 +146,26 @@ class Identifier(models.Model):
         return self.value
 
 
+class NoteManager(models.Manager):
+    use_for_related_fields = True
+
+    def public_notes(self):
+        return self.get_queryset().exclude(note_type=NONPUBLIC)
+
+
 class Note(models.Model):
     note = models.TextField(help_text="Enter notes about this record here")
     note_type = models.IntegerField(choices=NOTE_TYPE_CHOICES)
     belong_to_name = models.ForeignKey("Name")
+
+    objects = NoteManager()
+
+    def get_note_type_label(self):
+        """Returns the label associated with an instance's
+        note_type.
+        """
+        id, note_type = NOTE_TYPE_CHOICES[self.note_type]
+        return note_type
 
     def __unicode__(self):
         return self.note
@@ -171,6 +187,13 @@ class Variant(models.Model):
         help_text="NACO normalized variant text",
         editable=False,
     )
+
+    def get_variant_type_label(self):
+        """Returns the label associated with an instance's
+        variant_type.
+        """
+        id, variant_type = VARIANT_TYPE_CHOICES[self.variant_type]
+        return variant_type
 
     def save(self):
         self.normalized_variant = normalizeSimplified(self.variant)
@@ -235,7 +258,6 @@ def validate_merged_with(id):
         been merged with. If a loop is created, we will also create
         the opportunity for an HTTP redirect loop.
     """
-
     try:
         merge_target = Name.objects.get(id=id)
     except Name.DoesNotExist:
@@ -266,6 +288,62 @@ def validate_merged_with(id):
             raise ValidationError(u'The specified merge action completes '
                                   'a merge loop. Unable to complete merge.')
         merge_sequence.append(name)
+
+
+class NameManager(models.Manager):
+    def visible(self):
+        """Retrieves all Name objects that have an Active record status
+        and are not merged with any other Name objects.
+        """
+        return self.get_queryset().filter(
+            record_status=ACTIVE, merged_with=None)
+
+    def active_type_counts(self):
+        """Calculates counts of Name objects by Name Type.
+
+        Statistics are based off of the queryset returned by visible.
+        The total number is calculated using the count method. All
+        additional figures are calculated using Python to reduce the number
+        of queries.
+        """
+        names = self.visible()
+        return {
+            'total': names.count(),
+            'personal': len(filter(lambda n: n.is_personal(), names)),
+            'organization': len(filter(lambda n: n.is_organization(), names)),
+            'event': len(filter(lambda n: n.is_event(), names)),
+            'software': len(filter(lambda n: n.is_software(), names)),
+            'building': len(filter(lambda n: n.is_building(), names)),
+        }
+
+    def _counts_per_month(self, date_column):
+        """Calculates the number of Names by month according to the
+        date_column passed in.
+
+        This will return a ValueQuerySet where each element is in the form
+        of
+            {
+               count: <Number of Names for the month>,
+               month: <Datetime object for first day of the given month>
+            }
+        """
+        truncate_date = connection.ops.date_trunc_sql('month', date_column)
+        return (self.extra({'month': truncate_date})
+                    .values('month')
+                    .annotate(count=models.Count(date_column))
+                    .order_by(date_column))
+
+    def created_stats(self):
+        """Returns a ValueQuerySet of the number of Names created per
+        month.
+        """
+        return self._counts_per_month('date_created')
+
+    def modified_stats(self):
+        """Returns a ValueQuerySet of the number of Names modified per
+        month.
+        """
+        return self._counts_per_month('last_modified')
 
 
 class Name(models.Model):
@@ -354,6 +432,8 @@ class Name(models.Model):
         editable=False,
     )
 
+    objects = NameManager()
+
     def has_geocode(self):
         l = Location.objects.filter(belong_to_name=self)
         if len(l) > 0:
@@ -364,6 +444,9 @@ class Name(models.Model):
     # this enables icon display on the django admin rather than textual "T/F"
     has_geocode.boolean = True
 
+    def get_absolute_url(self):
+        return reverse('name_entry_detail', args=[self.name_id])
+
     def has_schema_url(self):
         return self.get_schema_url() is not None
 
@@ -373,6 +456,9 @@ class Name(models.Model):
     def get_name_type_label(self):
         id, name_type = NAME_TYPE_CHOICES[self.name_type]
         return name_type
+
+    def get_date_display(self):
+        return DATE_DISPLAY_LABELS.get(self.name_type)
 
     def _is_name_type(self, type_id):
         """Test if the instance of Name is a certain
@@ -438,26 +524,26 @@ class Name(models.Model):
                     longitude=geo_location['lng']
                 )
 
-    def natural_key(self):
-        """Returns the natural keys of the Name object.
-
-        This will allow us to include some information about
-        Names that have relationships to other objects, particularly
-        when those objects are serialized to other formats.
-        """
-        return {
-            'id': self.id,
-            'name': self.name,
-            'name_id': self.name_id,
-            'url': reverse('name_entry_detail', args=[self.name_id])
-        }
-
     def __unicode__(self):
         return self.name_id
 
     class Meta:
         ordering = ["name"]
         unique_together = (('name', 'name_id'),)
+
+
+class LocationManager(models.Manager):
+    use_for_related_fields = True
+
+    def _get_current_location(self):
+        """Filters through a Name objects related locations and
+        returns the one marked as current.
+        """
+        return self.get_queryset().filter(status=CURRENT).first()
+
+    # Makes the current location available as a property on
+    # the RelatedManager.
+    current_location = property(_get_current_location)
 
 
 class Location(models.Model):
@@ -490,6 +576,8 @@ class Location(models.Model):
         max_length=2,
         choices=LOCATION_STATUS_CHOICES,
         default=0)
+
+    objects = LocationManager()
 
     class Meta:
         ordering = ["status"]
