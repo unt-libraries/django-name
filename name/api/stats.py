@@ -18,12 +18,12 @@ class NameStatisticsType(object):
     """Statistics class for calculating the number
     of Name objects in the database using a DateTime field.
 
-    Accepts an ValuesQuerySet of dictionaries in the form of
+    Accepts a ValuesQuerySet of dictionaries in the form of
         [{ count: <num>, month: <datetime object> }, ...]
 
     This will calculate:
         1. The overall total of of Name objects according to the
-           the Iterable passed in.j
+           the Iterable passed in.
         2. Starting from the first Name created, this will create
            a new NameStatisticsMonth object for each month up to
            the current month according to the system time.
@@ -64,7 +64,7 @@ class NameStatisticsType(object):
 
         The queryset used to initialize this object is expected to
         only contain elements for each month where a name was created
-        or modified (based ont the queryset). If there is a month when a
+        or modified (based on the queryset). If there is a month when a
         Name was not created, this method will instead create an element
         with `count` set to 0 for said month and yield it.
         """
@@ -93,7 +93,7 @@ class NameStatisticsType(object):
             elem = queryset[0] if len(queryset) else False
 
             # Yield the first queryset element if the element
-            # exists and if it's memeber month is equal to `current`.
+            # exists and if it's member month is equal to `current`.
             if elem and elem.get('month') == current:
                 yield queryset.pop(0)
             else:
@@ -102,7 +102,7 @@ class NameStatisticsType(object):
 
 
 class NameStatistics(object):
-    """Container class to for all statistics gathered on
+    """Container class for all statistics gathered on
     Name objects.
     """
 
