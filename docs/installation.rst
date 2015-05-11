@@ -27,9 +27,9 @@ Installation
         'name.context_processors.name_types'
     )
 
-- The `request` context processor is required by the Name app. The built-in templates require access to request parameters.
+- The ``request`` context processor is required by the Name app. The built-in templates require access to request parameters.
 
-- The `name_types` processors enables the filter component of the search action.
+- The ``name_types`` processors enables the filter component of the search action.
 
 4. Include the URLS ::
 
