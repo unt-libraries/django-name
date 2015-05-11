@@ -49,6 +49,9 @@ $ docker-compose up -d
 
 # run the migrations
 $ docker-compose run --rm web ./manage.py migrate
+
+# optional: add a superuser in order to login to the admin interface
+$ docker-compose run --rm web ./manage.py createsuperuser
 ```
 
 The code is in a volume that is shared between your workstation and the web container, which means any edits you make on your workstation will also be reflected in the Docker container. No need to rebuild the container to pick up changes in the code.
@@ -74,7 +77,7 @@ To run the tests via Tox, use this command.
 ```sh
 $ docker-compose run --rm web tox
 ```
-The Tox configuration will test this app with Django 1.6 - 1.8beta.
+The Tox configuration will test this app with Django 1.6 - 1.8.
 
 To run the tests only with development environment (i.e. with Django 1.7)
 ```sh
