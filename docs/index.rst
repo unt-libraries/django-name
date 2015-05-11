@@ -22,7 +22,7 @@ Table of Contents
   development
 
 
-Aknowledgements
+Acknowledgements
 ===============
 
 - `Joey Liechty`_
