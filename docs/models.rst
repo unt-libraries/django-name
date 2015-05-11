@@ -15,17 +15,17 @@ Name objects have a variety configurable options.
 Fields
 ''''''
 
-``Name`` - The canonical form of the name.
+``name`` - The canonical form of the name.
 
-``Name Type`` - One of `Personal`, `Organization`, `Software`, `Building`, or `Event`
+``name_type`` - One of `Personal`, `Organization`, `Software`, `Building`, or `Event`
 
-``Biography`` - Markdown enabled biography of the personal the Name record represents.
+``biography`` - Markdown enabled biography of the personal the Name record represents.
 
-``Begin`` - The starting date for the Name record. This will be different for each Name Type, for instance, this field would be the birth date for a `Personal` name, and the erected date for a `Building` name.
+``begin`` - The starting date for the Name record. This will be different for each Name Type, for instance, this field would be the birth date for a `Personal` name, and the erected date for a `Building` name.
 
-``End`` - Similar to ``Begin``
+``end`` - Similar to ``begin``
 
-``Disambiguation`` - Clarification to whom or what the record pertains.
+``disambiguation`` - Clarification to whom or what the record pertains.
 
 .. _variant-model-ref:
 
@@ -77,11 +77,11 @@ These are customizable types for the Name :ref:`variant-model-ref`.
 Fields
 ''''''
 
-``Label`` - How the Identifier should be displayed.
+``label`` - How the Identifier should be displayed.
 
-``Icon Path`` - Relative path to the icon.
+``icon_path`` - Relative path to the icon.
 
-``Homepage`` - URL to the homepage of the service or website.
+``homepage`` - URL to the homepage of the service or website.
 
 There are 14 ``Identifier Types`` that are provided on install. Those types are
 
