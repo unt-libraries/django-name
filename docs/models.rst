@@ -15,9 +15,11 @@ Name objects have a variety configurable options.
 Fields
 ''''''
 
+``Name`` - The canonical form of the name.
+
 ``Name Type`` - One of `Personal`, `Organization`, `Software`, `Building`, or `Event`
 
-``Biography`` - Markdown enable biography of the personal the Name record represents.
+``Biography`` - Markdown enabled biography of the personal the Name record represents.
 
 ``Begin`` - The starting date for the Name record. This will be different for each Name Type, for instance, this field would be the birth date for a `Personal` name, and the erected date for a `Building` name.
 
