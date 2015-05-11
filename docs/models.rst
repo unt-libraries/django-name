@@ -27,6 +27,7 @@ Fields
 
 ``Disambiguation`` - Clarification to whom or what the record pertains.
 
+.. _variant-model-ref:
 
 Variants
 ''''''''
@@ -71,7 +72,7 @@ Name records are capable of being merged with other Name records. Once merged wi
 Identifier Type
 ---------------
 
-These are customizable types for the Name Variants. 
+These are customizable types for the Name :ref:`variant-model-ref`. 
 
 Fields
 ''''''
