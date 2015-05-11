@@ -3,6 +3,11 @@
 Models
 ======
 
+- :ref:`name-model-ref`
+- :ref:`identifier-type-model-ref`
+
+.. _name-model-ref:
+
 Name
 ----
 Name objects have a variety configurable options. 
@@ -34,11 +39,11 @@ Options include:
 - `Other`
 
 Identifiers
-''''''''''''''
-The Identifier contains an type, (see `Identifier Type`), and value which is often represented as a permalink. For instance, the link to the person's Twitter profile would be an Identifier.
+'''''''''''
+The Identifier contains an type, (see :ref:`identifier-type-model-ref`), and value which is often represented as a permalink. For instance, the link to the person's Twitter profile would be an Identifier.
 
 Notes
-''''''
+'''''
 Additional notes regarding the person or the Name record. 
 
 Notes can be any of the following type:
@@ -50,16 +55,18 @@ Notes can be any of the following type:
 - `Other`
 
 Locations
-''''''''''
+'''''''''
 Locations are represented by a pair of geographic coordinates, than enable some mapping features within the app. A Name's location may be either `current` or `former`, and a Name may only have one `current` location at any given time.
 
 Misc Options
-''''''''''''''
+''''''''''''
 
 Name records are capable of being merged with other Name records. Once merged with another record, any attempts to retrieve information about the merged record with redirect users to the Name record the was the target of the merge.
 
 
-Identifier type
+.. _identifier-type-model-ref:
+
+Identifier Type
 ---------------
 
 Placeholder for information about the ``Identifier Type`` model.
