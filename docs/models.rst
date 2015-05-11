@@ -71,4 +71,30 @@ Name records are capable of being merged with other Name records. Once merged wi
 Identifier Type
 ---------------
 
-Placeholder for information about the ``Identifier Type`` model.
+These are customizable types for the Name Variants. 
+
+Fields
+''''''
+
+``Label`` - How the Identifier should be displayed.
+
+``Icon Path`` - Relative path to the icon.
+
+``Homepage`` - URL to the homepage of the service or website.
+
+There are 14 ``Identifier Types`` that are provided on install. Those types are
+
+- Academia
+- Facebook
+- Google Scholar
+- Homepage
+- Linkedin
+- LOC
+- ORD ID
+- ResearchGate
+- Scopus
+- Tumblr
+- Twitter
+- UNT Faculty
+- VIAF
+- Wikipedia
