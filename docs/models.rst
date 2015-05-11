@@ -59,7 +59,7 @@ Notes can be any of the following type:
 
 Locations
 '''''''''
-Locations are represented by a pair of geographic coordinates, than enable some mapping features within the app. A Name's location may be either `current` or `former`, and a Name may only have one `current` location at any given time.
+Locations are represented by a geographic coordinate, wich enable some mapping features within the app when present. A Name's location may be either ``current`` or ``former``, and a Name may only have one ``current`` location at any given time.
 
 Misc Options
 ''''''''''''
