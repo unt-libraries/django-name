@@ -1,12 +1,23 @@
 import pytest
-from name.models import validate_merged_with, Name
+from name.validators import validate_merged_with
+from name.models import Name
 from django.core.exceptions import ValidationError
 
 
 @pytest.mark.django_db
-def test_validate_merged_with_fails_with_unknown_id():
+def test_validate_merged_with_passes_without_merged_with():
+    name = Name.objects.create(name='John Smith', name_type=0)
+    validate_merged_with(name)
+
+
+@pytest.mark.django_db
+def test_validate_merged_with_fails_with_unsaved_name():
+    name = Name.objects.create(name='John Smith', name_type=0)
+    not_saved = Name(name='John Doe', name_type=0)
+    name.merged_with = not_saved
+
     with pytest.raises(ValidationError):
-        validate_merged_with(1)
+        validate_merged_with(name)
 
 
 @pytest.mark.django_db
@@ -15,9 +26,8 @@ def test_validate_merged_with_passes():
     secondary = Name.objects.create(name='Secondary', name_type=0)
 
     secondary.merged_with = primary
-    secondary.save()
 
-    validate_merged_with(secondary.id)
+    validate_merged_with(secondary)
 
 
 @pytest.mark.django_db
@@ -34,10 +44,9 @@ def test_validate_merged_with_fails():
     primary.merged_with = secondary
 
     secondary.save()
-    primary.save()
 
     with pytest.raises(ValidationError):
-        validate_merged_with(primary.id)
+        validate_merged_with(primary)
 
 
 @pytest.mark.django_db
@@ -51,7 +60,7 @@ def test_validate_merged_with_fails_when_name_merges_with_itself():
     name.save()
 
     with pytest.raises(ValidationError):
-        validate_merged_with(name.id)
+        validate_merged_with(name)
 
 
 @pytest.mark.django_db
@@ -73,4 +82,4 @@ def test_validate_merged_with_fails_with_more_than_two_names():
     primary.save()
 
     with pytest.raises(ValidationError):
-        validate_merged_with(primary.id)
+        validate_merged_with(primary)
