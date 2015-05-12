@@ -2,7 +2,6 @@ import json
 import requests
 from django.db import models, transaction, connection
 from pynaco.naco import normalizeSimplified
-from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
 from .validators import validate_merged_with
@@ -245,7 +244,6 @@ class BaseTicketing(models.Model):
         return u'nm%07d' % self.ticket
 
 
-
 class NameManager(models.Manager):
     def visible(self):
         """Retrieves all Name objects that have an Active record status
@@ -481,8 +479,9 @@ class Name(models.Model):
                 )
 
     def clean(self, *args, **kwargs):
-        if self.merged_with:
-            validate_merged_with(self)
+        # Call merged_with_validator here, so that we can pass in
+        # the model instance.
+        validate_merged_with(self)
         super(Name, self).clean(*args, **kwargs)
 
     def __unicode__(self):
