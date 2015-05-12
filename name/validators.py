@@ -27,15 +27,32 @@ def validate_merged_with(name):
 
         We need to prevent this because navigating to a name that has
         been merged with another, will redirect you to the Name it has
-        been merged with. If a loop is created, we will also create
+        been merged with.  If a loop is created, we will also create
         the opportunity for an HTTP redirect loop.
+
+    Unlike typical Django validators, this requires a model instance
+    as a parameter, instead of the value, which in this case would have
+    been the ID of the related model.  Because of this requirement, this
+    validator cannot be added via the `validator` kwarg on a ForeignKey
+    field.  Rather this method should be called from the `clean` method.
     """
+    # Return early if there is no need to validate.
+    if name.merged_with is None:
+        return
+
+    # Get the Name class from the model instance, to avoid
+    # circular importing name.models.Name.
+    Name = name.__class__
+
+    # Prevent the user from attempting to merge with a nonexistent
+    # Name.
     try:
-        merge_target = name.__class__.objects.get(id=name.merged_with_id)
-    except name.__class__.DoesNotExist:
+        merge_target = Name.objects.get(id=name.merged_with_id)
+    except Name.DoesNotExist:
         raise ValidationError(
             dict(merged_with=u'The merge target must exist.'))
 
+    # Prevent the user from attempting to merge a name with itself.
     if name.merged_with_id == name.id:
         raise ValidationError(
             dict(merged_with=u'Unable to merge a Name with itself.'))
