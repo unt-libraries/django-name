@@ -13,9 +13,9 @@ def test_validate_merged_with_passes_without_merged_with():
 @pytest.mark.django_db
 def test_validate_merged_with_fails_with_unsaved_name():
     name = Name.objects.create(name='John Smith', name_type=0)
-    not_saved = Name(name='John Doe', name_type=0)
+    not_saved = Name(id=13, name='John Doe', name_type=0)
+
     name.merged_with = not_saved
-    name.merged_with_id = 10
 
     with pytest.raises(ValidationError):
         validate_merged_with(name)
