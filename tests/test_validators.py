@@ -15,6 +15,7 @@ def test_validate_merged_with_fails_with_unsaved_name():
     name = Name.objects.create(name='John Smith', name_type=0)
     not_saved = Name(name='John Doe', name_type=0)
     name.merged_with = not_saved
+    name.merged_with_id = 10
 
     with pytest.raises(ValidationError):
         validate_merged_with(name)
@@ -61,6 +62,46 @@ def test_validate_merged_with_fails_when_name_merges_with_itself():
 
     with pytest.raises(ValidationError):
         validate_merged_with(name)
+
+
+@pytest.mark.django_db
+def test_validate_merged_with_when_name_changed_merged_with_to_new_name():
+    """Check that validation does not alter when a name has a
+    merged_with model, but is then changed to another name instance.
+    """
+    primary = Name.objects.create(name='Primary', name_type=0)
+    second = Name.objects.create(name='Second', name_type=0)
+    third = Name.objects.create(name='Third', name_type=0)
+
+    primary.merged_with = second
+    primary.save()
+
+    validate_merged_with(primary)
+
+    primary.merged_with = third
+    primary.save()
+
+    validate_merged_with(primary)
+
+
+@pytest.mark.django_db
+def test_validate_merged_with_when_name_changed_merged_with_to_invalid_name():
+    """Check that validation if a valid merged_with related model is
+    changed to an invalid related model.
+    """
+    primary = Name.objects.create(name='Primary', name_type=0)
+    second = Name.objects.create(name='Second', name_type=0)
+    third = Name(id=31, name='Third', name_type=0)
+
+    primary.merged_with = second
+    primary.save()
+
+    validate_merged_with(primary)
+
+    primary.merged_with = third
+
+    with pytest.raises(ValidationError):
+        validate_merged_with(primary)
 
 
 @pytest.mark.django_db
