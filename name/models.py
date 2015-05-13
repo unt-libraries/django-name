@@ -478,7 +478,7 @@ class Name(models.Model):
                 )
 
     def clean(self, *args, **kwargs):
-        # Call merged_with_validator here, so that we can pass in
+        # Call merged_with_validator here so that we can pass in
         # the model instance.
         validate_merged_with(self)
         super(Name, self).clean(*args, **kwargs)
