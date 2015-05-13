@@ -23,12 +23,12 @@ def test_validate_merged_with_fails_with_unsaved_name():
 
 @pytest.mark.django_db
 def test_validate_merged_with_passes():
-    primary = Name.objects.create(name='Primary', name_type=0)
-    secondary = Name.objects.create(name='Secondary', name_type=0)
+    john = Name.objects.create(name='John Smith', name_type=0)
+    jane = Name.objects.create(name='Jane Doe', name_type=0)
 
-    secondary.merged_with = primary
+    jane.merged_with = john
 
-    validate_merged_with(secondary)
+    validate_merged_with(jane)
 
 
 @pytest.mark.django_db
@@ -38,16 +38,16 @@ def test_validate_merged_with_fails():
     This should fail when attempting to circularly merge Names.
     Example: Name1 -> Name2, Name2 -> Name1.
     """
-    primary = Name.objects.create(name='Primary', name_type=0)
-    secondary = Name.objects.create(name='Secondary', name_type=0)
+    john = Name.objects.create(name='John Smith', name_type=0)
+    jane = Name.objects.create(name='Jane Doe', name_type=0)
 
-    secondary.merged_with = primary
-    primary.merged_with = secondary
+    jane.merged_with = john
+    john.merged_with = jane
 
-    secondary.save()
+    jane.save()
 
     with pytest.raises(ValidationError):
-        validate_merged_with(primary)
+        validate_merged_with(john)
 
 
 @pytest.mark.django_db
@@ -55,7 +55,7 @@ def test_validate_merged_with_fails_when_name_merges_with_itself():
     """Check that validate_merged_with fails when we try to merge
     a name into itself.
     """
-    name = Name.objects.create(name='Primary', name_type=0)
+    name = Name.objects.create(name='John Smith', name_type=0)
 
     name.merged_with = name
     name.save()
@@ -69,19 +69,19 @@ def test_validate_merged_with_when_name_changed_merged_with_to_new_name():
     """Check that validation does not alter when a name has a
     merged_with model, but is then changed to another name instance.
     """
-    primary = Name.objects.create(name='Primary', name_type=0)
-    second = Name.objects.create(name='Second', name_type=0)
-    third = Name.objects.create(name='Third', name_type=0)
+    john = Name.objects.create(name='John Smith', name_type=0)
+    jane = Name.objects.create(name='Jane Doe', name_type=0)
+    ben = Name.objects.create(name='Ben Willis', name_type=0)
 
-    primary.merged_with = second
-    primary.save()
+    john.merged_with = jane
+    john.save()
 
-    validate_merged_with(primary)
+    validate_merged_with(john)
 
-    primary.merged_with = third
-    primary.save()
+    john.merged_with = ben
+    john.save()
 
-    validate_merged_with(primary)
+    validate_merged_with(john)
 
 
 @pytest.mark.django_db
@@ -89,19 +89,19 @@ def test_validate_merged_with_when_name_changed_merged_with_to_invalid_name():
     """Check that validation if a valid merged_with related model is
     changed to an invalid related model.
     """
-    primary = Name.objects.create(name='Primary', name_type=0)
-    second = Name.objects.create(name='Second', name_type=0)
-    third = Name(id=31, name='Third', name_type=0)
+    john = Name.objects.create(name='John Smith', name_type=0)
+    jane = Name.objects.create(name='Jane Doe', name_type=0)
+    ben = Name(id=31, name='Ben Willis', name_type=0)
 
-    primary.merged_with = second
-    primary.save()
+    john.merged_with = jane
+    john.save()
 
-    validate_merged_with(primary)
+    validate_merged_with(john)
 
-    primary.merged_with = third
+    john.merged_with = ben
 
     with pytest.raises(ValidationError):
-        validate_merged_with(primary)
+        validate_merged_with(john)
 
 
 @pytest.mark.django_db
@@ -109,18 +109,18 @@ def test_validate_merged_with_fails_with_more_than_two_names():
     """Checks that a merge loop constisting of more than two name
     also fails validation.
     """
-    primary = Name.objects.create(name='Primary', name_type=0)
-    second = Name.objects.create(name='Second', name_type=0)
-    third = Name.objects.create(name='Third', name_type=0)
+    john = Name.objects.create(name='John Smith', name_type=0)
+    jane = Name.objects.create(name='Jane Doe', name_type=0)
+    ben = Name.objects.create(name='Ben Willis', name_type=0)
 
-    second.merged_with = primary
-    second.save()
+    jane.merged_with = john
+    jane.save()
 
-    third.merged_with = second
-    third.save()
+    ben.merged_with = jane
+    ben.save()
 
-    primary.merged_with = third
-    primary.save()
+    john.merged_with = ben
+    john.save()
 
     with pytest.raises(ValidationError):
-        validate_merged_with(primary)
+        validate_merged_with(john)
