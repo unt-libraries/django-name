@@ -17,4 +17,4 @@ install:
 before_script:
     - mysql -e 'create database name_test;'
 script:
-    - tox -e $TOX_ENV
+    - tox -e $TOX_ENV -- --ds=tests.settings.travis
