@@ -364,7 +364,6 @@ class Name(models.Model):
         blank=True,
         null=True,
         related_name='merged_with_name',
-        # validators=[validate_merged_with],
     )
 
     # automatically generate created date
