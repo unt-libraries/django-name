@@ -1,7 +1,9 @@
 import pytest
-from name.validators import validate_merged_with
-from name.models import Name
+
 from django.core.exceptions import ValidationError
+
+from name.models import Name
+from name.validators import validate_merged_with
 
 
 @pytest.mark.django_db
