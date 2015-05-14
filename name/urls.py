@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from django.conf import settings
 from name import views
 
 
@@ -33,11 +32,3 @@ urlpatterns = patterns(
         name='name_entry_detail'
     ),
 )
-
-if settings.DEBUG:
-
-    # static files (images, css, javascript, etc.)
-    urlpatterns += patterns(
-        '',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT}))
