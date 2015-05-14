@@ -1,19 +1,25 @@
-from mock import MagicMock
-from name.context_processors import baseurl
+from name.context_processors import name_types
+from name.models import NAME_TYPE_CHOICES
 
 
-# rf is a pytest-django fixture
-def test_baseurl_is_https(rf):
-    """Test that the returned url has the https scheme."""
+def test_name_types(rf):
+    """Verify that the name_types processors add the NAME_TYPES_CHOICES
+    to the passed in request.
+    """
     request = rf.get('/')
-    request.is_secure = MagicMock(name='is_secure', return_value=True)
-    context = baseurl(request)
-    assert 'https://' in context['BASE_URL']
+    context = name_types(request)
+    assert dict(NAME_TYPE_CHOICES) == context['name_types']
 
 
-def test_baseurl_is_http(rf):
-    """Test that the returned url has the http scheme."""
-    request = rf.get('/')
-    request.is_secure = MagicMock(name='is_secure', return_value=False)
-    context = baseurl(request)
-    assert 'http://' in context['BASE_URL']
+def test_name_types_in_request(client):
+    """Verify that the NAME_TYPE_CHOICES are present when the
+    context processors are enabled.
+
+    The name_type context processor is already added to the test project.
+    See tests/settings/base.py
+
+    We use the client made available by pytest-django to get a request
+    that has already processed.
+    """
+    request = client.get('/')
+    assert dict(NAME_TYPE_CHOICES) == request.context['name_types']
