@@ -1,3 +1,5 @@
+import pytest
+
 from name.context_processors import name_types
 from name.models import NAME_TYPE_CHOICES
 
@@ -11,6 +13,7 @@ def test_name_types(rf):
     assert dict(NAME_TYPE_CHOICES) == context['name_types']
 
 
+@pytest.mark.django_db
 def test_name_types_in_request(client):
     """Verify that the NAME_TYPE_CHOICES are present when the
     context processors are enabled.
@@ -21,5 +24,5 @@ def test_name_types_in_request(client):
     We use the client made available by pytest-django to get a request
     that has already processed.
     """
-    request = client.get('/')
+    request = client.get('/name/')
     assert dict(NAME_TYPE_CHOICES) == request.context['name_types']

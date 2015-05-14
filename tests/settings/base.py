@@ -42,6 +42,20 @@ TEMPLATE_DIRS = (
     local_path('templates'),
 )
 
+# Minimal template settings for testing Django 1.8.
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'name.context_processors.name_types'
+            ],
+        },
+    },
+]
+
 VOCAB_DOMAIN = 'http://localhost/'
 
 MAINTENANCE_MSG = None
