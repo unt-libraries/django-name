@@ -88,8 +88,8 @@ def test_validate_merged_with_when_name_changed_merged_with_to_new_name():
 
 @pytest.mark.django_db
 def test_validate_merged_with_when_name_changed_merged_with_to_invalid_name():
-    """Check that validation if a valid merged_with related model is
-    changed to an invalid related model.
+    """Check that validation works properly when a valid merged_with
+    related model is changed to an invalid related model.
     """
     john = Name.objects.create(name='John Smith', name_type=0)
     jane = Name.objects.create(name='Jane Doe', name_type=0)
