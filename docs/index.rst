@@ -17,13 +17,13 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-  installation
-  models
-  development
+   installation
+   models
+   development
 
 
 Acknowledgements
-===============
+================
 
 - `Joey Liechty`_
 - `Damon Kelley`_
