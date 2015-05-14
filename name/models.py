@@ -2,8 +2,9 @@ import json
 import requests
 from django.db import models, transaction, connection
 from pynaco.naco import normalizeSimplified
-from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+
+from .validators import validate_merged_with
 
 BIOGRAPHICAL_HISTORICAL = 0
 DELETION_INFORMATION = 1
@@ -243,53 +244,6 @@ class BaseTicketing(models.Model):
         return u'nm%07d' % self.ticket
 
 
-def validate_merged_with(id):
-    """Validator for the merged_with ForeignKey field.
-
-    This will prevent two scenarios from occurring.
-    1. Merging with a nonexistent Name object.
-
-    2. Creating a loop of foreign key relationships.
-        For example:
-            Name 1 -> Name 2 -> Name 3 -> Name 1
-
-        We need to prevent this because navigating to a name that has
-        been merged with another, will redirect you to the Name it has
-        been merged with. If a loop is created, we will also create
-        the opportunity for an HTTP redirect loop.
-    """
-    try:
-        merge_target = Name.objects.get(id=id)
-    except Name.DoesNotExist:
-        raise ValidationError(u'The merge target must exist.')
-
-    def follow_merged_with(name):
-        """A generator to get the merged_with relationship
-        of a Name object.
-
-        This will return a Name object until it reaches a Name that
-        does not have a merged_with relationship.
-        """
-        while name:
-            merged_into = name.merged_with
-            if merged_into:
-                yield merged_into
-            name = merged_into
-
-    # Iterate through the generator and keep track of the return names.
-    # We will find a loop if the return name is already in
-    # merged_list. If this happens we will raise a validation error.
-    # If we don't find duplicates, then no loop has been created and
-    # the generator will raise it's own StopIteration and we will implicitly
-    # return.
-    merge_sequence = list()
-    for name in follow_merged_with(merge_target):
-        if name in merge_sequence:
-            raise ValidationError(u'The specified merge action completes '
-                                  'a merge loop. Unable to complete merge.')
-        merge_sequence.append(name)
-
-
 class NameManager(models.Manager):
     def visible(self):
         """Retrieves all Name objects that have an Active record status
@@ -410,7 +364,6 @@ class Name(models.Model):
         blank=True,
         null=True,
         related_name='merged_with_name',
-        validators=[validate_merged_with],
     )
 
     # automatically generate created date
@@ -523,6 +476,12 @@ class Name(models.Model):
                     latitude=geo_location['lat'],
                     longitude=geo_location['lng']
                 )
+
+    def clean(self, *args, **kwargs):
+        # Call merged_with_validator here so that we can pass in
+        # the model instance.
+        validate_merged_with(self)
+        super(Name, self).clean(*args, **kwargs)
 
     def __unicode__(self):
         return self.name_id
