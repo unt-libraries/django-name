@@ -12,8 +12,7 @@ from pynaco.naco import normalizeSimplified
 
 from .models import Name, Identifier, Location
 from .utils import filter_names
-
-VOCAB_DOMAIN = settings.VOCAB_DOMAIN
+from . import app_settings
 
 
 def label(request, name_value):
@@ -50,6 +49,9 @@ class AtomSiteNewsFeed(Feed):
     link = "/name/feed/"
     title = "Name App"
     subtitle = "new records"
+    author_name = app_settings.NAME_FEED_AUTHOR_NAME
+    author_email = app_settings.NAME_FEED_AUTHOR_EMAIL
+    author_link = app_settings.NAME_FEED_AUTHOR_LINK
 
     def items(self):
         # last 5 added items
