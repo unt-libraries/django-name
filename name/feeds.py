@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.feedgenerator import Atom1Feed
 
 from . import app_settings
-from .models import Name, Location
+from .models import Name
 
 
 class NameAtomFeedType(Atom1Feed):
@@ -26,25 +26,11 @@ class NameAtomFeed(Feed):
         # last 5 added items
         return Name.objects.order_by('-date_created')[:20]
 
-    def item_title(self, item):
-        return item.name
+    def item_title(self, obj):
+        return obj.name
 
-    def item_location(self, item):
-        """
-        Returns an extra keyword arguments dictionary that is used
-        with the `add_item` call of the feed generator. Add the
-        'content' field of the 'Entry' item, to be used by the custom
-        feed generator.
-        """
-        location_set = []
-        for l in Location.objects.filter(belong_to_name=item):
-            location_set.append(
-                'georss:point', "%s %s" % (l.latitude, l.longitude)
-            )
-        return location_set
+    def item_description(self, obj):
+        return 'Name Type: {0}'.format(obj.get_name_type_label())
 
-    def item_description(self, item):
-        return "Name Type: %s" % item.get_name_type_label()
-
-    def item_link(self, item):
-        return item.get_absolute_url()
+    def item_link(self, obj):
+        return obj.get_absolute_url()
