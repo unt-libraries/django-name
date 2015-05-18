@@ -76,7 +76,7 @@ class AtomSiteNewsFeed(Feed):
         return "Name Type: %s" % item.get_name_type_label()
 
     def item_link(self, item):
-        return VOCAB_DOMAIN + 'name/' + item.name_id + '/'
+        return item.get_absolute_url()
 
 
 def entry_detail(request, name_id):
