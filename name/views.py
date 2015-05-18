@@ -44,8 +44,15 @@ def label(request, name_value):
             .format(normalized_name))
 
 
+class NameFeed(Atom1Feed):
+    """Create an Atom feed that sets the Content-Type response
+    header to application/xml.
+    """
+    mime_type = 'application/xml'
+
+
 class AtomSiteNewsFeed(Feed):
-    feed_type = Atom1Feed
+    feed_type = NameFeed
     link = "/name/feed/"
     title = "Name App"
     subtitle = "new records"
