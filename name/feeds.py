@@ -33,7 +33,6 @@ class NameAtomFeed(Feed):
     author_link = app_settings.NAME_FEED_AUTHOR_LINK
 
     def items(self):
-        # last 5 added items
         return Name.objects.order_by('-date_created')[:20]
 
     def item_title(self, obj):
