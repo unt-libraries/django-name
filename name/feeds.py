@@ -1,4 +1,5 @@
 from django.contrib.syndication.views import Feed
+from django.core.urlresolvers import reverse_lazy
 from django.utils.feedgenerator import Atom1Feed
 
 from . import app_settings
@@ -14,7 +15,7 @@ class NameAtomFeedType(Atom1Feed):
 
 class NameAtomFeed(Feed):
     feed_type = NameAtomFeedType
-    link = "/name/feed/"
+    link = reverse_lazy("name_feed")
     title = "Name App"
     subtitle = "New Name Records"
     author_name = app_settings.NAME_FEED_AUTHOR_NAME
