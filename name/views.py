@@ -54,7 +54,7 @@ class AtomSiteNewsFeed(Feed):
     feed_type = NameFeed
     link = "/name/feed/"
     title = "Name App"
-    subtitle = "new records"
+    subtitle = "New Name Records"
     author_name = app_settings.NAME_FEED_AUTHOR_NAME
     author_email = app_settings.NAME_FEED_AUTHOR_EMAIL
     author_link = app_settings.NAME_FEED_AUTHOR_LINK
