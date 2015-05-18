@@ -461,6 +461,10 @@ class Name(models.Model):
         """True if the Name has the Suppressed status."""
         return self._is_record_status(SUPPRESSED)
 
+    def has_locations(self):
+        if hasattr(self, 'location_set'):
+            return True
+
     def save(self, **kwargs):
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
