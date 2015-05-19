@@ -1,8 +1,10 @@
 import json
 import requests
+import markdown2
+
+from django.core.urlresolvers import reverse
 from django.db import models, transaction, connection
 from pynaco.naco import normalizeSimplified
-from django.core.urlresolvers import reverse
 
 from .validators import validate_merged_with
 
@@ -396,6 +398,9 @@ class Name(models.Model):
 
     # this enables icon display on the django admin rather than textual "T/F"
     has_geocode.boolean = True
+
+    def render_biography(self):
+        return markdown2.markdown(self.biography)
 
     def get_absolute_url(self):
         return reverse('name_entry_detail', args=[self.name_id])
