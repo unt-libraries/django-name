@@ -99,15 +99,6 @@
         }
     }, 
     {
-        "pk": 6, 
-        "model": "name.identifier_type", 
-        "fields": {
-            "icon_path": "name\/icons\/unt-faculty_favicon.ico", 
-            "homepage": "http:\/\/unt.edu\/", 
-            "label": "UNT Faculty"
-        }
-    }, 
-    {
         "pk": 8, 
         "model": "name.identifier_type", 
         "fields": {
