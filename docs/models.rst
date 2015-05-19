@@ -10,7 +10,7 @@ Models
 
 Name
 ----
-Name objects have a variety configurable options. 
+Name objects have a variety of configurable options. 
 
 Fields
 ''''''
@@ -19,9 +19,9 @@ Fields
 
 ``name_type`` - One of `Personal`, `Organization`, `Software`, `Building`, or `Event`
 
-``biography`` - Markdown enabled biography of the personal the Name record represents.
+``biography`` - Markdown enabled biography of the entity that the Name record represents.
 
-``begin`` - The starting date for the Name record. This will be different for each Name Type, for instance, this field would be the birth date for a `Personal` name, and the erected date for a `Building` name.
+``begin`` - The starting date for the Name record. This will be different for each Name Type, for instance, this field would be the birth date for a `Personal` name and the erected date for a `Building` name.
 
 ``end`` - Similar to ``begin``
 
@@ -43,7 +43,7 @@ Options include:
 
 Identifiers
 '''''''''''
-The Identifier contains an type, (see :ref:`identifier-type-model-ref`), and value which is often represented as a permalink. For instance, the link to the person's Twitter profile would be an Identifier.
+The Identifier contains a type, (see :ref:`identifier-type-model-ref`), and value which is often represented as a permalink. For instance, the link to the person's Twitter profile would be an Identifier.
 
 Notes
 '''''
@@ -59,12 +59,12 @@ Notes can be any of the following type:
 
 Locations
 '''''''''
-Locations are represented by a geographic coordinate, wich enable some mapping features within the app when present. A Name's location may be either ``current`` or ``former``, and a Name may only have one ``current`` location at any given time.
+Locations are represented by a geographic coordinate, which enable some mapping features within the app when present. A Name's location may be either ``current`` or ``former``, and a Name may only have one ``current`` location at any given time.
 
 Misc Options
 ''''''''''''
 
-Name records are capable of being merged with other Name records. Once merged with another record, any attempts to retrieve information about the merged record with redirect users to the Name record the was the target of the merge.
+Name records are capable of being merged with other Name records. Once merged with another record, any attempts to retrieve information about the merged record will redirect users to the Name record the was the target of the merge.
 
 
 .. _identifier-type-model-ref:

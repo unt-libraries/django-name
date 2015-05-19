@@ -58,9 +58,9 @@ To run the tests via Tox, use this command. ::
 
 The Tox configuration will test this app with Django 1.6 - 1.8.
 
-To run the tests only with development environment (i.e. with Django 1.7) ::
+To run the tests only with the development environment (i.e. with Django 1.7) ::
 
     $ docker-compose run --rm web ./runtests.py
 
 .. note::
-    This is the same command that Tox issues inside each test environment is has defined.
+    This is the same command that Tox issues inside each test environment it has defined.
