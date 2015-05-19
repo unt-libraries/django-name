@@ -7,8 +7,11 @@ from .models import Name
 
 
 class NameAtomFeedType(Atom1Feed):
-    """Create an Atom feed that sets the Content-Type response
-    header to application/xml.
+    """Custom Atom Feed Type for Name objects.
+
+    This will set the Content-Type header to application/xml, and
+    add a georss:point element to any entry that has a current location
+    set.
     """
     mime_type = 'application/xml'
 
@@ -24,10 +27,12 @@ class NameAtomFeedType(Atom1Feed):
 
 
 class NameAtomFeed(Feed):
+    """Atom Feed for Name objects."""
     feed_type = NameAtomFeedType
     link = reverse_lazy("name_feed")
     title = "Name App"
     subtitle = "New Name Records"
+
     author_name = app_settings.NAME_FEED_AUTHOR_NAME
     author_email = app_settings.NAME_FEED_AUTHOR_EMAIL
     author_link = app_settings.NAME_FEED_AUTHOR_LINK
