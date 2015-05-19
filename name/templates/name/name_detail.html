@@ -1,6 +1,5 @@
 {% extends "name/base.html" %}
 {% load staticfiles %}
-{% load markdown_deux_tags %}
 
 {% block title %}{{ name.name }}{% endblock %}
 
@@ -115,7 +114,7 @@
                     {% endif %}
                 </th>
                 <td>
-                    {{ name.biography|markdown }}
+                    {{ name.render_biography|safe }}
                 </td>
             </tr>
         {% endif %}
