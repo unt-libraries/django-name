@@ -18,6 +18,7 @@ Table of Contents
    :maxdepth: 2
 
    installation
+   configuration
    models
    development
 
