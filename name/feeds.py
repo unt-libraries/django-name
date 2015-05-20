@@ -55,7 +55,7 @@ class NameAtomFeed(Feed):
         return obj.get_absolute_url()
 
     def item_location(self, obj):
-        if obj.has_locations() and obj.location_set.current_location:
+        if obj.has_current_location():
             return obj.location_set.current_location.geo_point()
 
     def item_extra_kwargs(self, obj):
