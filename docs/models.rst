@@ -83,7 +83,7 @@ Fields
 
 ``homepage`` - URL to the homepage of the service or website.
 
-There are 14 ``Identifier Types`` that are provided on install. Those types are
+There are 13 ``Identifier Types`` that are provided on install. Those types are
 
 - Academia
 - Facebook
@@ -96,6 +96,5 @@ There are 14 ``Identifier Types`` that are provided on install. Those types are
 - Scopus
 - Tumblr
 - Twitter
-- UNT Faculty
 - VIAF
 - Wikipedia
