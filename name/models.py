@@ -461,9 +461,8 @@ class Name(models.Model):
         """True if the Name has the Suppressed status."""
         return self._is_record_status(SUPPRESSED)
 
-    def has_locations(self):
-        if hasattr(self, 'location_set'):
-            return True
+    def has_current_location(self):
+        return self.location_set.current_location is not None
 
     def save(self, **kwargs):
         if not self.name_id:
