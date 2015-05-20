@@ -400,6 +400,7 @@ class Name(models.Model):
     has_geocode.boolean = True
 
     def render_biography(self):
+        """Render the Markdown biography to HTML."""
         return markdown2.markdown(self.biography)
 
     def get_absolute_url(self):
