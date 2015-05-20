@@ -2,22 +2,27 @@ import pytest
 
 from django.core.urlresolvers import reverse
 
+from name.feeds import NameAtomFeed
 from name.models import Name, Location
 
 pytestmark = pytest.mark.django_db
 
 
-def test_feed_has_georss_namespace(client):
-    response = client.get(reverse('name_feed'))
+def test_feed_has_georss_namespace(rf):
+    request = rf.get(reverse('name_feed'))
+    feed = NameAtomFeed()
+    response = feed(request)
     assert 'xmlns:georss' in response.content
 
 
-def test_feed_response_is_application_xml(client):
-    response = client.get(reverse('name_feed'))
+def test_feed_response_is_application_xml(rf):
+    request = rf.get(reverse('name_feed'))
+    feed = NameAtomFeed()
+    response = feed(request)
     assert response['Content-Type'] == 'application/xml'
 
 
-def test_feed_item_has_location(client):
+def test_feed_item_has_location(rf):
     name = Name.objects.create(name="Test", name_type=0)
 
     Location.objects.create(
@@ -26,5 +31,8 @@ def test_feed_item_has_location(client):
         longitude=-97.148857,
         belong_to_name=name)
 
-    response = client.get(reverse('name_feed'))
+    request = rf.get(reverse('name_feed'))
+    feed = NameAtomFeed()
+    response = feed(request)
+
     assert name.location_set.current_location.geo_point() in response.content
