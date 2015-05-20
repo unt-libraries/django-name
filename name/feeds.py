@@ -14,16 +14,21 @@ class NameAtomFeedType(Atom1Feed):
     set.
     """
     mime_type = 'application/xml'
+    GEO_RSS_NS = 'http://www.georss.org/georss'
 
     def root_attributes(self):
         attrs = super(NameAtomFeedType, self).root_attributes()
-        attrs['xmlns:georss'] = 'http://www.georss.org/georss'
+        attrs['xmlns:georss'] = self.GEO_RSS_NS
         return attrs
 
     def add_item_elements(self, handler, item):
         super(NameAtomFeedType, self).add_item_elements(handler, item)
-        if item.get('location'):
-            handler.addQuickElement('georss:point', item['location'])
+
+        # Add the georss:point element if the item has a geo_point
+        # attribute.
+        geo_point = item.get('geo_point', None)
+        if geo_point:
+            handler.addQuickElement('georss:point', geo_point)
 
 
 class NameAtomFeed(Feed):
@@ -54,4 +59,4 @@ class NameAtomFeed(Feed):
             return obj.location_set.current_location.geo_point()
 
     def item_extra_kwargs(self, obj):
-        return dict(location=self.item_location(obj))
+        return {u'geo_point': self.item_location(obj)}
