@@ -2,7 +2,7 @@
 Configuration
 =============
 
-The Name app provides a few configurable settings.
+The Name App provides a few configurable settings.
 
 Settings
 ========
