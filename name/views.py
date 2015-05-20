@@ -154,7 +154,7 @@ def about(request):
 def stats(request):
     """View for the Stats page."""
     context = dict(
-        total_names=Name.objects.count(),
+        total_names=Name.objects.visible().count(),
         total_identifiers=Identifier.objects.count()
     )
     return render(request, 'name/stats.html', context)
