@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_feed_has_georss_namespace(rf):
-    """Check that the georss namespace is present in the reponse
+    """Check that the georss namespace is present in the response
     content.
     """
     request = rf.get(reverse('name_feed'))
@@ -28,8 +28,8 @@ def test_feed_response_is_application_xml(rf):
 
 
 def test_feed_item_with_location(rf):
-    """Verify that the response is properly returned and that the
-    object's geo point is present in the feed.
+    """Verify that the response returns ok when objects with locations
+    are present in the feed.
     """
     name = Name.objects.create(name="Test", name_type=0)
     name.location_set.create(latitude=33.210241, longitude=-97.148857)
@@ -42,8 +42,8 @@ def test_feed_item_with_location(rf):
 
 
 def test_feed_with_item_without_location(rf):
-    """Checks that an exception is not thrown if the feed includes
-    an object that does not have a current location.
+    """Verify that the response returns ok when objects without
+    locations are present in the feed.
     """
     Name.objects.create(name="Test", name_type=0)
 

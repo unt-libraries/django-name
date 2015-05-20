@@ -462,6 +462,7 @@ class Name(models.Model):
         return self._is_record_status(SUPPRESSED)
 
     def has_current_location(self):
+        """True if the Name has a current location in the location_set."""
         return self.location_set.current_location is not None
 
     def save(self, **kwargs):
