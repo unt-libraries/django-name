@@ -35,4 +35,15 @@ def test_feed_item_has_location(rf):
     feed = NameAtomFeed()
     response = feed(request)
 
+    assert response.status_code == 200
     assert name.location_set.current_location.geo_point() in response.content
+
+
+def test_feed_item_without_location(rf):
+    Name.objects.create(name="Test", name_type=0)
+
+    request = rf.get(reverse('name_feed'))
+    feed = NameAtomFeed()
+    response = feed(request)
+
+    assert response.status_code == 200
