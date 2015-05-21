@@ -15,7 +15,7 @@ Feed
 ``NAME_FEED_AUTHOR_NAME``
 .........................
 
-**Default**: ``None``
+**Default**: ``"Django Name"``
 
 The author's name for the Name feed.
 
