@@ -546,7 +546,7 @@ class Location(models.Model):
         ordering = ["status"]
 
     def geo_point(self):
-        return "%s, %s" % (self.latitude, self.longitude)
+        return "%s %s" % (self.latitude, self.longitude)
 
     def is_current(self):
         """True if the Location has a status of Current."""
