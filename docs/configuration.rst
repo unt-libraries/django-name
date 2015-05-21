@@ -10,7 +10,9 @@ Settings
 Feed
 ----
 
-.. note:: All feed settings are optional.
+.. note:: All feed settings are optional. 
+
+    For the feed to be valid, an ``<author/>`` element containing a ``<name/>`` element is required.
 
 ``NAME_FEED_AUTHOR_NAME``
 .........................
@@ -34,6 +36,3 @@ The author's email for the Name feed.
 **Default**: ``None``
 
 The author's URI for the Name feed.
-
-
-.. warning:: If ``NAME_FEED_AUTHOR_NAME`` is set to ``None``, and ``NAME_FEED_AUTHOR_EMAIL`` and ``NAME_FEED_AUTHOR_LINK`` are not given alternative values, then the `<author/>` element will not be present in the feed and it will not be valid according the ATOM specification.
