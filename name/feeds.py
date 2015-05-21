@@ -54,6 +54,9 @@ class NameAtomFeed(Feed):
     def item_link(self, obj):
         return obj.get_absolute_url()
 
+    def item_updateddate(self, obj):
+        return obj.last_modified
+
     def item_location(self, obj):
         if obj.has_current_location():
             return obj.location_set.current_location.geo_point()
