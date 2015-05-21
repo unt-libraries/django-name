@@ -461,6 +461,10 @@ class Name(models.Model):
         """True if the Name has the Suppressed status."""
         return self._is_record_status(SUPPRESSED)
 
+    def has_current_location(self):
+        """True if the Name has a current location in the location_set."""
+        return self.location_set.current_location is not None
+
     def save(self, **kwargs):
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
@@ -542,7 +546,7 @@ class Location(models.Model):
         ordering = ["status"]
 
     def geo_point(self):
-        return "%s, %s" % (self.latitude, self.longitude)
+        return "%s %s" % (self.latitude, self.longitude)
 
     def is_current(self):
         """True if the Location has a status of Current."""

@@ -20,9 +20,6 @@ INSTALLED_APPS = [
     'name',
     'tests']
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware')
 
 ROOT_URLCONF = 'tests.urls'
 
@@ -38,9 +35,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware')
 
-TEMPLATE_DIRS = (
-    local_path('templates'),
-)
 
 # Minimal template settings for testing Django 1.8.
 TEMPLATES = [
@@ -56,12 +50,4 @@ TEMPLATES = [
     },
 ]
 
-VOCAB_DOMAIN = 'http://localhost/'
-
-MAINTENANCE_MSG = None
-
-MEDIA_URL = '/media/'
-
 STATIC_URL = '/static/'
-
-MEDIA_ROOT = local_path('media')

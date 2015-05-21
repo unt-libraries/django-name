@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from name import views
+from name import views, feeds
 
 
 admin.autodiscover()
@@ -10,7 +10,7 @@ urlpatterns = patterns(
     url(r'stats.json/$', 'name.api.views.stats_json', name='name_stats_json'),
     url(r'stats/$', 'name.views.stats', name='name_stats'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
-    url(r'feed/$', views.AtomSiteNewsFeed(), name='name_feed'),
+    url(r'feed/$', feeds.NameAtomFeed(), name='name_feed'),
     url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
     url(r'map/$', 'name.views.map', name='name_map'),
     url(r'map.json/$', 'name.api.views.map_json', name='name_map_json'),
