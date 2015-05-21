@@ -12,7 +12,7 @@ Feed
 
 .. note:: All feed settings are optional. 
 
-    For the feed to be valid, an ``<author/>`` element containing a ``<name/>`` element is required.
+    For the feed to be valid according to the Atom specification, an ``<author/>`` element containing a ``<name/>`` element is required.
 
 ``NAME_FEED_AUTHOR_NAME``
 .........................
