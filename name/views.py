@@ -31,7 +31,7 @@ def label(request, name_value):
 
     except Name.DoesNotExist:
         return http.HttpResponseNotFound(
-            'No matching term found - authoritative, or variant - for "{0}"'
+            'No matching term found - authoritative or variant - for "{0}"'
             .format(name_value))
 
     except Name.MultipleObjectsReturned:
