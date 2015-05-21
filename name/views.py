@@ -53,7 +53,8 @@ def entry_detail(request, name_id):
         return redirect(name_entry.merged_with)
 
     elif name_entry.is_suppressed():
-        return http.HttpResponseNotFound()
+        return http.HttpResponseNotFound(
+            'The requested record could not be found.')
 
     elif name_entry.is_deleted():
         return http.HttpResponseGone('The requested record has been deleted!')
