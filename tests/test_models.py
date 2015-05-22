@@ -60,13 +60,13 @@ class TestName:
         objects.
         """
         lat, lng = 33.210241, -97.148857
-        with patch('name.models.requests') as mock_requests:
-            mock_requests.get.return_value = mock_response = Mock()
+        with patch('name.models.urlopen') as mock_urlopen:
+            mock_urlopen.return_value = mock_response = Mock()
             mock_response.status_code = 200
 
             # The json payload from map.googleapis.com is expected to
             # look something like this.
-            mock_response.content = json.dumps(
+            mock_response.read.return_value = json.dumps(
                 {
                     'status': "OK",
                     'results': [{

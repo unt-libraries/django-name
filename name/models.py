@@ -1,6 +1,8 @@
 import json
-import requests
 import markdown2
+
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.parse import quote
 
 from django.core.urlresolvers import reverse
 from django.db import models, transaction, connection
@@ -459,21 +461,42 @@ class Name(models.Model):
         """True if the Name has a current location in the location_set."""
         return self.location_set.current_location is not None
 
-    def save(self, **kwargs):
+    def __normalize_name(self):
+        """Normalize the name attribute and assign it the normalized_name
+        attribute.
+        """
+        self.normalized_name = normalizeSimplified(self.name)
+
+    def __find_location(self):
+        """Use the normalized_name attribute and the Location.URL to
+        attempt to find the instance's location.
+
+        A location is only attached if the server responds with a single
+        result.
+        """
+        URL_RESOURCE = 'http://maps.googleapis.com/maps/api/geocode/json'
+        URL_QUERY_TEMPLATE = '?address={address}&sensor=true'
+        URL = URL_RESOURCE + URL_QUERY_TEMPLATE
+
+        url = URL.format(address=quote(self.normalized_name))
+        payload = json.load(urlopen(url))
+
+        if payload.get('status') == "OK" and len(payload.get('results')) == 1:
+            coord = payload['results'][0]['geometry']['location']
+            self.location_set.create(latitude=coord['lat'],
+                                     longitude=coord['lng'])
+
+    def __add_name_id(self):
+        """Use the BaseTicketing object to assign a name_id."""
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
-        self.normalized_name = normalizeSimplified(self.name)
+
+    def save(self, **kwargs):
+        self.__normalize_name()
+        self.__add_name_id()
         super(Name, self).save()
-        if self.is_building() and Location.objects.filter(belong_to_name=self).count() == 0:
-            url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true' % self.normalized_name
-            search_json = json.loads(requests.get(url).content)
-            if search_json['status'] == 'OK' and len(search_json['results']) == 1:
-                geo_location = search_json['results'][0]['geometry']['location']
-                Location.objects.create(
-                    belong_to_name=self,
-                    latitude=geo_location['lat'],
-                    longitude=geo_location['lng']
-                )
+        if self.is_building() and not self.location_set.count():
+            self.__find_location()
 
     def clean(self, *args, **kwargs):
         # Call merged_with_validator here so that we can pass in
