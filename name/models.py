@@ -63,14 +63,14 @@ class Note(models.Model):
     DELETION_INFORMATION = 1
     NONPUBLIC = 2
     SOURCE = 3
-    NOTE_TYPE_OTHER = 4
+    OTHER = 4
 
     NOTE_TYPE_CHOICES = (
         (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
         (DELETION_INFORMATION, 'Deletion Information'),
         (NONPUBLIC, 'Nonpublic'),
         (SOURCE, 'Source'),
-        (NOTE_TYPE_OTHER, 'Other'),
+        (OTHER, 'Other'),
     )
 
     note = models.TextField(help_text='Enter notes about this record here')
@@ -95,14 +95,14 @@ class Variant(models.Model):
     ABBREVIATION = 1
     TRANSLATION = 2
     EXPANSION = 3
-    VARIANT_TYPE_OTHER = 4
+    OTHER = 4
 
     VARIANT_TYPE_CHOICES = (
         (ACRONYM, 'Acronym'),
         (ABBREVIATION, 'Abbreviation'),
         (TRANSLATION, 'Translation'),
         (EXPANSION, 'Expansion'),
-        (VARIANT_TYPE_OTHER, 'Other'),
+        (OTHER, 'Other'),
     )
     belong_to_name = models.ForeignKey('Name')
     variant_type = models.IntegerField(
