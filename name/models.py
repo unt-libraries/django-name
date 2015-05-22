@@ -14,17 +14,16 @@ from .validators import validate_merged_with
 class Identifier_Type(models.Model):
     label = models.CharField(
         max_length=255,
-        help_text='What kind of data is this? Personal website? Twitter?',
-    )
+        help_text='What kind of data is this? Personal website? Twitter?')
+
     icon_path = models.CharField(
         max_length=255,
         blank=True,
-        help_text='Path to icon image?',
-    )
+        help_text='Path to icon image?')
+
     homepage = models.URLField(
         blank=True,
-        help_text='Homepage of label. Twitter.com, Facebook.com, etc',
-    )
+        help_text='Homepage of label. Twitter.com, Facebook.com, etc')
 
     class Meta:
         ordering = ['label']
@@ -37,8 +36,8 @@ class Identifier_Type(models.Model):
 class Identifier(models.Model):
     type = models.ForeignKey(
         'Identifier_Type',
-        help_text="Catagorize this record's identifiers here",
-    )
+        help_text="Catagorize this record's identifiers here")
+
     belong_to_name = models.ForeignKey('Name')
     value = models.CharField(max_length=500)
     visible = models.BooleanField(default=True)
@@ -70,7 +69,7 @@ class Note(models.Model):
         (DELETION_INFORMATION, 'Deletion Information'),
         (NONPUBLIC, 'Nonpublic'),
         (SOURCE, 'Source'),
-        (OTHER, 'Other'),
+        (OTHER, 'Other')
     )
 
     note = models.TextField(help_text='Enter notes about this record here')
@@ -102,23 +101,23 @@ class Variant(models.Model):
         (ABBREVIATION, 'Abbreviation'),
         (TRANSLATION, 'Translation'),
         (EXPANSION, 'Expansion'),
-        (OTHER, 'Other'),
+        (OTHER, 'Other')
     )
+
     belong_to_name = models.ForeignKey('Name')
     variant_type = models.IntegerField(
         max_length=50,
         choices=VARIANT_TYPE_CHOICES,
-        help_text='Choose variant type.',
-    )
+        help_text='Choose variant type.')
+
     variant = models.CharField(
         max_length=255,
-        help_text='Fill in the other name variants, if any.',
-    )
+        help_text='Fill in the other name variants, if any.')
+
     normalized_variant = models.CharField(
         max_length=255,
-        help_text='NACO normalized variant text',
         editable=False,
-    )
+        help_text='NACO normalized variant text')
 
     def get_variant_type_label(self):
         """Returns the label associated with an instance's
@@ -244,7 +243,7 @@ class Name(models.Model):
     RECORD_STATUS_CHOICES = (
         (ACTIVE, 'Active'),
         (DELETED, 'Deleted'),
-        (SUPPRESSED, 'Suppressed'),
+        (SUPPRESSED, 'Suppressed')
     )
 
     PERSONAL = 0
@@ -258,7 +257,7 @@ class Name(models.Model):
         (ORGANIZATION, 'Organization'),
         (EVENT, 'Event'),
         (SOFTWARE, 'Software'),
-        (BUILDING, 'Building'),
+        (BUILDING, 'Building')
     )
 
     DATE_DISPLAY_LABELS = {
@@ -291,102 +290,70 @@ class Name(models.Model):
             'type': None,
             'begin': 'Born/Founded Date',
             'end': 'Died/Defunct Date'
-        },
+        }
     }
 
     NAME_TYPE_SCHEMAS = {
         PERSONAL: 'http://schema.org/Person',
         ORGANIZATION: 'http://schema.org/Organization',
-        BUILDING: 'http://schema.org/Place',
+        BUILDING: 'http://schema.org/Place'
     }
-    # only one name per record
+
     name = models.CharField(
         max_length=255,
-        help_text='Please use the general reverse order: LAST, FIRST',
-    )
+        help_text='Please use the general reverse order: LAST, FIRST')
 
     normalized_name = models.CharField(
         max_length=255,
-        help_text='NACO normalized form of the name',
         editable=False,
-    )
+        help_text='NACO normalized form of the name')
 
-    # the name must be one of a certain type, currently 4 choices
-    name_type = models.IntegerField(
-        max_length=1,
-        choices=NAME_TYPE_CHOICES,
-    )
+    name_type = models.IntegerField(max_length=1, choices=NAME_TYPE_CHOICES)
 
-    # date, month or year of birth or incorporation of the name
+    # Date, month or year of birth or incorporation of the name
     begin = models.CharField(
         max_length=25,
         blank=True,
-        help_text='Conforms to EDTF format YYYY-MM-DD',
-    )
+        help_text='Conforms to EDTF format YYYY-MM-DD')
 
-    # date, month of year of death or un-incorporation of the name
+    # Date, month of year of death or un-incorporation of the name
     end = models.CharField(
         max_length=25,
         blank=True,
-        help_text='Conforms to EDTF format YYYY-MM-DD',
-    )
+        help_text='Conforms to EDTF format YYYY-MM-DD')
 
-    # MusicBrainz derived
     disambiguation = models.CharField(
         max_length=255,
         blank=True,
-        help_text='Clarify to whom or what this record pertains.'
-    )
+        help_text='Clarify to whom or what this record pertains.')
 
-    # bio text - formatted with _markdown_ markup
     biography = models.TextField(
         blank=True,
-        help_text='Compatible with MARKDOWN',
-    )
+        help_text='Compatible with MARKDOWN')
 
-    # record status flag (active / merged / etc)
     record_status = models.IntegerField(
-        choices=RECORD_STATUS_CHOICES,
         default=ACTIVE,
-    )
+        choices=RECORD_STATUS_CHOICES)
 
-    # if marked merged, value is record id of target to merge with
     merged_with = models.ForeignKey(
         'self',
         blank=True,
         null=True,
-        related_name='merged_with_name',
-    )
+        related_name='merged_with_name')
 
-    # automatically generate created date
-    date_created = models.DateTimeField(
-        auto_now_add=True,
-        editable=False,
-    )
-
-    # update when we change the record
-    last_modified = models.DateTimeField(
-        auto_now=True,
-        editable=False,
-    )
-
-    # auto incrementing from nameid
-    name_id = models.CharField(
-        max_length=10,
-        unique=True,
-        editable=False,
-    )
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_modified = models.DateTimeField(auto_now=True, editable=False)
+    name_id = models.CharField(max_length=10, unique=True, editable=False)
 
     objects = NameManager()
 
     def has_geocode(self):
-        l = Location.objects.filter(belong_to_name=self)
-        if len(l) > 0:
+        if self.location_set.count():
             return True
         else:
             return False
 
-    # this enables icon display on the django admin rather than textual "T/F"
+    # Enables icon display on the django admin.
     has_geocode.boolean = True
 
     def render_biography(self):
@@ -532,9 +499,11 @@ class Location(models.Model):
 
     LOCATION_STATUS_CHOICES = (
         (CURRENT, 'current'),
-        (FORMER, 'former'),
+        (FORMER, 'former')
     )
+
     belong_to_name = models.ForeignKey('Name')
+
     latitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
@@ -545,8 +514,9 @@ class Location(models.Model):
             </a>
             : this service might be useful for filling in the lat/long data
         </strong>
-        """,
+        """
     )
+
     longitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
@@ -557,8 +527,9 @@ class Location(models.Model):
             </a>
             : this service might be useful for filling in the lat/long data
         </strong>
-        """,
+        """
     )
+
     status = models.IntegerField(
         max_length=2,
         choices=LOCATION_STATUS_CHOICES,
