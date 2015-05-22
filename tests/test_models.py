@@ -91,6 +91,42 @@ class TestName:
             assert lat == float(locations.first().latitude)
 
     @pytest.mark.django_db
+    def test_saving_name_does_not_create_location(self):
+        """Test that a Location is not created when the API returns
+        more than one resource.
+        """
+        lat, lng = 33.210241, -97.148857
+        with patch('name.models.urlopen') as mock_urlopen:
+            mock_urlopen.return_value = mock_response = Mock()
+            mock_response.status_code = 200
+
+            # The json payload from map.googleapis.com is expected to
+            # look something like this.
+            mock_response.read.return_value = json.dumps(
+                {
+                    'status': "OK",
+                    'results': [
+                        {
+                            'geometry': {
+                                'location': {'lat': lat, 'lng': lng}
+                            }
+                        },
+                        {
+                            'geometry': {
+                                'location': {'lat': lat + 5, 'lng': lng + 5}
+                            }
+                        }
+                    ]
+                }
+            )
+
+            name = models.Name.objects.create(
+                name="Test Location",
+                name_type=4)
+
+            assert 0 == name.location_set.count()
+
+    @pytest.mark.django_db
     def test_has_geocode(self):
         """Test that has_geocode returns True."""
 
