@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from name.api import stats
-from name.models import Name, PERSONAL
+from name.models import Name
 
 
 class TestNameStatisticsType:
@@ -23,7 +23,7 @@ class TestNameStatisticsType:
 
     @pytest.mark.django_db
     def test_get_queryset_members_with_names_created_in_current_month(self):
-        Name.objects.create(name="Test Name", name_type=PERSONAL)
+        Name.objects.create(name="John Smith", name_type=Name.PERSONAL)
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
         gen = name_stats.get_queryset_members()
 
@@ -44,7 +44,7 @@ class TestNameStatisticsType:
         date_created = now - relativedelta(months=5)
         current_month = datetime(now.year, now.month, 1)
 
-        name = Name.objects.create(name="Test Name", name_type=PERSONAL)
+        name = Name.objects.create(name="Test Name", name_type=Name.PERSONAL)
 
         # Manual reset the date_created field so then Name was no longer
         # created in the current month.
@@ -75,8 +75,8 @@ class TestNameStatisticsType:
         now = datetime.now()
         date_created = now - relativedelta(months=2)
 
-        name1 = Name.objects.create(name="Test Name 1", name_type=PERSONAL)
-        Name.objects.create(name="Test Name 2", name_type=PERSONAL)
+        name1 = Name.objects.create(name="John Smith", name_type=Name.PERSONAL)
+        Name.objects.create(name="Jane Doe", name_type=Name.PERSONAL)
 
         name1.date_created = date_created
         name1.save()

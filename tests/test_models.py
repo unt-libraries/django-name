@@ -160,9 +160,9 @@ class TestLocation:
         location3 = models.Location.objects.get(id=loc3)
 
         # The active location should be the last one that was created
-        assert location1.status == models.RECORD_STATUS_CHOICES[1][0]
-        assert location2.status == models.RECORD_STATUS_CHOICES[1][0]
-        assert location3.status == models.RECORD_STATUS_CHOICES[0][0]
+        assert location1.status == models.Name.RECORD_STATUS_CHOICES[1][0]
+        assert location2.status == models.Name.RECORD_STATUS_CHOICES[1][0]
+        assert location3.status == models.Name.RECORD_STATUS_CHOICES[0][0]
 
     @pytest.mark.django_db
     def test_save_updates_current_location_on_save(self, location_fixture):
@@ -185,6 +185,6 @@ class TestLocation:
         location2 = models.Location.objects.get(id=loc2)
         location3 = models.Location.objects.get(id=loc3)
 
-        assert location1.status == models.RECORD_STATUS_CHOICES[0][0]
-        assert location2.status == models.RECORD_STATUS_CHOICES[1][0]
-        assert location3.status == models.RECORD_STATUS_CHOICES[1][0]
+        assert location1.status == models.Name.RECORD_STATUS_CHOICES[0][0]
+        assert location2.status == models.Name.RECORD_STATUS_CHOICES[1][0]
+        assert location3.status == models.Name.RECORD_STATUS_CHOICES[1][0]

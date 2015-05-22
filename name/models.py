@@ -8,106 +8,6 @@ from pynaco.naco import normalizeSimplified
 
 from .validators import validate_merged_with
 
-BIOGRAPHICAL_HISTORICAL = 0
-DELETION_INFORMATION = 1
-NONPUBLIC = 2
-SOURCE = 3
-NOTE_TYPE_OTHER = 4
-
-NOTE_TYPE_CHOICES = (
-    (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
-    (DELETION_INFORMATION, 'Deletion Information'),
-    (NONPUBLIC, 'Nonpublic'),
-    (SOURCE, 'Source'),
-    (NOTE_TYPE_OTHER, 'Other'),
-)
-
-ACTIVE = 0
-DELETED = 1
-SUPPRESSED = 2
-
-RECORD_STATUS_CHOICES = (
-    (ACTIVE, 'Active'),
-    (DELETED, 'Deleted'),
-    (SUPPRESSED, 'Suppressed'),
-)
-
-PERSONAL = 0
-ORGANIZATION = 1
-EVENT = 2
-SOFTWARE = 3
-BUILDING = 4
-
-NAME_TYPE_CHOICES = (
-    (PERSONAL, 'Personal'),
-    (ORGANIZATION, 'Organization'),
-    (EVENT, 'Event'),
-    (SOFTWARE, 'Software'),
-    (BUILDING, 'Building'),
-)
-
-DATE_DISPLAY_LABELS = {
-    PERSONAL: {
-        'type': 'Personal',
-        'begin': 'Date of Birth',
-        'end': 'Date of Death'
-    },
-    ORGANIZATION: {
-        'type': 'Organization',
-        'begin': 'Founded Date',
-        'end': 'Defunct'
-    },
-    EVENT: {
-        'type': 'Event',
-        'begin': 'Begin Date',
-        'end': 'End Date'
-    },
-    SOFTWARE: {
-        'type': 'Software',
-        'begin': 'Begin Date',
-        'end': 'End Date'
-    },
-    BUILDING: {
-        'type': 'Building',
-        'begin': 'Erected Date',
-        'end': 'Demolished Date',
-    },
-    None: {
-        'type': None,
-        'begin': 'Born/Founded Date',
-        'end': 'Died/Defunct Date'
-    },
-}
-
-
-ACRONYM = 0
-ABBREVIATION = 1
-TRANSLATION = 2
-EXPANSION = 3
-VARIANT_TYPE_OTHER = 4
-
-VARIANT_TYPE_CHOICES = (
-    (ACRONYM, 'Acronym'),
-    (ABBREVIATION, 'Abbreviation'),
-    (TRANSLATION, 'Translation'),
-    (EXPANSION, 'Expansion'),
-    (VARIANT_TYPE_OTHER, 'Other'),
-)
-
-CURRENT = 0
-FORMER = 1
-
-LOCATION_STATUS_CHOICES = (
-    (CURRENT, "current"),
-    (FORMER, "former"),
-)
-
-NAME_TYPE_SCHEMAS = {
-    PERSONAL: 'http://schema.org/Person',
-    ORGANIZATION: 'http://schema.org/Organization',
-    BUILDING: 'http://schema.org/Place',
-}
-
 
 class Identifier_Type(models.Model):
     label = models.CharField(
@@ -153,10 +53,24 @@ class NoteManager(models.Manager):
     use_for_related_fields = True
 
     def public_notes(self):
-        return self.get_queryset().exclude(note_type=NONPUBLIC)
+        return self.get_queryset().exclude(note_type=self.model.NONPUBLIC)
 
 
 class Note(models.Model):
+    BIOGRAPHICAL_HISTORICAL = 0
+    DELETION_INFORMATION = 1
+    NONPUBLIC = 2
+    SOURCE = 3
+    NOTE_TYPE_OTHER = 4
+
+    NOTE_TYPE_CHOICES = (
+        (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
+        (DELETION_INFORMATION, 'Deletion Information'),
+        (NONPUBLIC, 'Nonpublic'),
+        (SOURCE, 'Source'),
+        (NOTE_TYPE_OTHER, 'Other'),
+    )
+
     note = models.TextField(help_text="Enter notes about this record here")
     note_type = models.IntegerField(choices=NOTE_TYPE_CHOICES)
     belong_to_name = models.ForeignKey("Name")
@@ -167,7 +81,7 @@ class Note(models.Model):
         """Returns the label associated with an instance's
         note_type.
         """
-        id, note_type = NOTE_TYPE_CHOICES[self.note_type]
+        id, note_type = self.NOTE_TYPE_CHOICES[self.note_type]
         return note_type
 
     def __unicode__(self):
@@ -175,6 +89,19 @@ class Note(models.Model):
 
 
 class Variant(models.Model):
+    ACRONYM = 0
+    ABBREVIATION = 1
+    TRANSLATION = 2
+    EXPANSION = 3
+    VARIANT_TYPE_OTHER = 4
+
+    VARIANT_TYPE_CHOICES = (
+        (ACRONYM, 'Acronym'),
+        (ABBREVIATION, 'Abbreviation'),
+        (TRANSLATION, 'Translation'),
+        (EXPANSION, 'Expansion'),
+        (VARIANT_TYPE_OTHER, 'Other'),
+    )
     belong_to_name = models.ForeignKey("Name")
     variant_type = models.IntegerField(
         max_length=50,
@@ -195,7 +122,7 @@ class Variant(models.Model):
         """Returns the label associated with an instance's
         variant_type.
         """
-        id, variant_type = VARIANT_TYPE_CHOICES[self.variant_type]
+        id, variant_type = self.VARIANT_TYPE_CHOICES[self.variant_type]
         return variant_type
 
     def save(self):
@@ -252,7 +179,7 @@ class NameManager(models.Manager):
         and are not merged with any other Name objects.
         """
         return self.get_queryset().filter(
-            record_status=ACTIVE, merged_with=None)
+            record_status=self.model.ACTIVE, merged_with=None)
 
     def active_type_counts(self):
         """Calculates counts of Name objects by Name Type.
@@ -308,7 +235,68 @@ class Name(models.Model):
     Each record has a unique name identifier associated with it which is
     implemented as UUID.
     """
+    ACTIVE = 0
+    DELETED = 1
+    SUPPRESSED = 2
 
+    RECORD_STATUS_CHOICES = (
+        (ACTIVE, 'Active'),
+        (DELETED, 'Deleted'),
+        (SUPPRESSED, 'Suppressed'),
+    )
+
+    PERSONAL = 0
+    ORGANIZATION = 1
+    EVENT = 2
+    SOFTWARE = 3
+    BUILDING = 4
+
+    NAME_TYPE_CHOICES = (
+        (PERSONAL, 'Personal'),
+        (ORGANIZATION, 'Organization'),
+        (EVENT, 'Event'),
+        (SOFTWARE, 'Software'),
+        (BUILDING, 'Building'),
+    )
+
+    DATE_DISPLAY_LABELS = {
+        PERSONAL: {
+            'type': 'Personal',
+            'begin': 'Date of Birth',
+            'end': 'Date of Death'
+        },
+        ORGANIZATION: {
+            'type': 'Organization',
+            'begin': 'Founded Date',
+            'end': 'Defunct'
+        },
+        EVENT: {
+            'type': 'Event',
+            'begin': 'Begin Date',
+            'end': 'End Date'
+        },
+        SOFTWARE: {
+            'type': 'Software',
+            'begin': 'Begin Date',
+            'end': 'End Date'
+        },
+        BUILDING: {
+            'type': 'Building',
+            'begin': 'Erected Date',
+            'end': 'Demolished Date',
+        },
+        None: {
+            'type': None,
+            'begin': 'Born/Founded Date',
+            'end': 'Died/Defunct Date'
+        },
+    }
+
+    NAME_TYPE_SCHEMAS = {
+        PERSONAL: 'http://schema.org/Person',
+        ORGANIZATION: 'http://schema.org/Organization',
+        BUILDING: 'http://schema.org/Place',
+    }
     # only one name per record
     name = models.CharField(
         max_length=255,
@@ -357,7 +345,7 @@ class Name(models.Model):
     # record status flag (active / merged / etc)
     record_status = models.IntegerField(
         choices=RECORD_STATUS_CHOICES,
-        default="0",
+        default=ACTIVE,
     )
 
     # if marked merged, value is record id of target to merge with
@@ -410,14 +398,14 @@ class Name(models.Model):
         return self.get_schema_url() is not None
 
     def get_schema_url(self):
-        return NAME_TYPE_SCHEMAS.get(self.name_type, None)
+        return self.NAME_TYPE_SCHEMAS.get(self.name_type, None)
 
     def get_name_type_label(self):
-        id, name_type = NAME_TYPE_CHOICES[self.name_type]
+        id, name_type = self.NAME_TYPE_CHOICES[self.name_type]
         return name_type
 
     def get_date_display(self):
-        return DATE_DISPLAY_LABELS.get(self.name_type)
+        return self.DATE_DISPLAY_LABELS.get(self.name_type)
 
     def _is_name_type(self, type_id):
         """Test if the instance of Name is a certain
@@ -429,23 +417,23 @@ class Name(models.Model):
 
     def is_personal(self):
         """True if the Name has the Name Type Personal."""
-        return self._is_name_type(PERSONAL)
+        return self._is_name_type(self.PERSONAL)
 
     def is_organization(self):
         """True if the Name has the Name Type Organization."""
-        return self._is_name_type(ORGANIZATION)
+        return self._is_name_type(self.ORGANIZATION)
 
     def is_event(self):
         """True if the Name has the Name Type Event."""
-        return self._is_name_type(EVENT)
+        return self._is_name_type(self.EVENT)
 
     def is_software(self):
         """True if the Name has the Name Type Software."""
-        return self._is_name_type(SOFTWARE)
+        return self._is_name_type(self.SOFTWARE)
 
     def is_building(self):
         """True if the Name has the Name Type Building."""
-        return self._is_name_type(BUILDING)
+        return self._is_name_type(self.BUILDING)
 
     def _is_record_status(self, status_id):
         """Test if the instance of Name has a particular
@@ -457,15 +445,15 @@ class Name(models.Model):
 
     def is_active(self):
         """True if the Name has the Active status."""
-        return self._is_record_status(ACTIVE)
+        return self._is_record_status(self.ACTIVE)
 
     def is_deleted(self):
         """True if the Name has the Deleted status."""
-        return self._is_record_status(DELETED)
+        return self._is_record_status(self.DELETED)
 
     def is_suppressed(self):
         """True if the Name has the Suppressed status."""
-        return self._is_record_status(SUPPRESSED)
+        return self._is_record_status(self.SUPPRESSED)
 
     def has_current_location(self):
         """True if the Name has a current location in the location_set."""
@@ -508,7 +496,7 @@ class LocationManager(models.Manager):
         """Filters through a Name objects related locations and
         returns the one marked as current.
         """
-        return self.get_queryset().filter(status=CURRENT).first()
+        return self.get_queryset().filter(status=self.model.CURRENT).first()
 
     # Makes the current location available as a property on
     # the RelatedManager.
@@ -516,6 +504,13 @@ class LocationManager(models.Manager):
 
 
 class Location(models.Model):
+    CURRENT = 0
+    FORMER = 1
+
+    LOCATION_STATUS_CHOICES = (
+        (CURRENT, "current"),
+        (FORMER, "former"),
+    )
     belong_to_name = models.ForeignKey("Name")
     latitude = models.DecimalField(
         max_digits=13,
@@ -556,7 +551,7 @@ class Location(models.Model):
 
     def is_current(self):
         """True if the Location has a status of Current."""
-        return CURRENT == self.status
+        return self.CURRENT == self.status
 
     def save(self, **kwargs):
         super(Location, self).save()

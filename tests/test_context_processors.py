@@ -1,7 +1,7 @@
 import pytest
 
 from name.context_processors import name_types
-from name.models import NAME_TYPE_CHOICES
+from name.models import Name
 
 
 def test_name_types(rf):
@@ -10,7 +10,7 @@ def test_name_types(rf):
     """
     request = rf.get('/')
     context = name_types(request)
-    assert dict(NAME_TYPE_CHOICES) == context['name_types']
+    assert dict(Name.NAME_TYPE_CHOICES) == context['name_types']
 
 
 @pytest.mark.django_db
@@ -25,4 +25,4 @@ def test_name_types_in_request(client):
     that has already processed.
     """
     request = client.get('/name/')
-    assert dict(NAME_TYPE_CHOICES) == request.context['name_types']
+    assert dict(Name.NAME_TYPE_CHOICES) == request.context['name_types']
