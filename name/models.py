@@ -171,7 +171,7 @@ class BaseTicketing(models.Model):
         return self.id
 
     def __unicode__(self):
-        return u'nm%07d' % self.ticket
+        return u'nm{ticket:07d}'.format(ticket=self.ticket)
 
 
 class NameManager(models.Manager):
