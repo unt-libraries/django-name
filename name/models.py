@@ -403,7 +403,7 @@ class Name(models.Model):
             return True
         else:
             return False
-    has_geocode.boolean = True  # Enables icon display on the django admin.
+    has_geocode.boolean = True  # Enables icon display in the Django admin.
 
     def has_schema_url(self):
         """True if the instance has a schema url."""
