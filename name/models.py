@@ -71,7 +71,7 @@ class NoteManager(models.Manager):
 
 
 class Note(models.Model):
-    """Additional notes regarding a related Name model instance."""
+    """A note regarding the related Name model instance."""
     BIOGRAPHICAL_HISTORICAL = 0
     DELETION_INFORMATION = 1
     NONPUBLIC = 2
@@ -170,7 +170,7 @@ class BaseTicketing(models.Model):
     """Creates a custom app-level identifier.
 
     This leverages the autoincrement primary key field to
-    create custom unique identifier. And example identifier
+    create custom unique identifier. An example identifier
     would be `nm0000001`.
     """
     # Explicitly set the id of the model, even though it is the same
