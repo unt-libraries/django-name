@@ -372,27 +372,12 @@ class Name(models.Model):
 
     objects = NameManager()
 
-    def has_geocode(self):
-        if self.location_set.count():
-            return True
-        else:
-            return False
-
-    # Enables icon display on the django admin.
-    has_geocode.boolean = True
-
-    def render_biography(self):
-        """Render the Markdown biography to HTML."""
-        return markdown2.markdown(self.biography)
-
     def get_absolute_url(self):
         """Get the absolute url to the Name detail page."""
         return reverse('name_entry_detail', args=[self.name_id])
 
-    def has_schema_url(self):
-        return self.get_schema_url() is not None
-
     def get_schema_url(self):
+        """Get the appropriate schema url based on the name type."""
         return self.NAME_TYPE_SCHEMAS.get(self.name_type, None)
 
     def get_name_type_label(self):
@@ -407,6 +392,22 @@ class Name(models.Model):
         See Name.DATE_DISPLAY_LABELS
         """
         return self.DATE_DISPLAY_LABELS.get(self.name_type)
+
+    def has_current_location(self):
+        """True if the Name has a current location in the location_set."""
+        return self.location_set.current_location is not None
+
+    def has_geocode(self):
+        """True if the instance has one or more related Locations."""
+        if self.location_set.count():
+            return True
+        else:
+            return False
+    has_geocode.boolean = True  # Enables icon display on the django admin.
+
+    def has_schema_url(self):
+        """True if the instance has a schema url."""
+        return self.get_schema_url() is not None
 
     def _is_name_type(self, type_id):
         """Test if the instance of Name is a certain
@@ -456,9 +457,9 @@ class Name(models.Model):
         """True if the Name has the Suppressed status."""
         return self._is_record_status(self.SUPPRESSED)
 
-    def has_current_location(self):
-        """True if the Name has a current location in the location_set."""
-        return self.location_set.current_location is not None
+    def render_biography(self):
+        """Render the Markdown biography to HTML."""
+        return markdown2.markdown(self.biography)
 
     def __normalize_name(self):
         """Normalize the name attribute and assign it the normalized_name
