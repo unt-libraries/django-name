@@ -197,7 +197,7 @@ class NameManager(models.Manager):
             'organization': len(filter(lambda n: n.is_organization(), names)),
             'event': len(filter(lambda n: n.is_event(), names)),
             'software': len(filter(lambda n: n.is_software(), names)),
-            'building': len(filter(lambda n: n.is_building(), names)),
+            'building': len(filter(lambda n: n.is_building(), names))
         }
 
     def _counts_per_month(self, date_column):
@@ -361,6 +361,7 @@ class Name(models.Model):
         return markdown2.markdown(self.biography)
 
     def get_absolute_url(self):
+        """Get the absolute url to the Name detail page."""
         return reverse('name_entry_detail', args=[self.name_id])
 
     def has_schema_url(self):
@@ -370,10 +371,16 @@ class Name(models.Model):
         return self.NAME_TYPE_SCHEMAS.get(self.name_type, None)
 
     def get_name_type_label(self):
+        """Get the string form of the Name's name type."""
         id, name_type = self.NAME_TYPE_CHOICES[self.name_type]
         return name_type
 
     def get_date_display(self):
+        """Get the date display labels according to the Name's
+        name type
+
+        See Name.DATE_DISPLAY_LABELS
+        """
         return self.DATE_DISPLAY_LABELS.get(self.name_type)
 
     def _is_name_type(self, type_id):
@@ -448,19 +455,21 @@ class Name(models.Model):
         url = URL.format(address=quote(self.normalized_name))
         payload = json.load(urlopen(url))
 
+        # Only add the location if the Name matched one and only one
+        # location from the API.
         if payload.get('status') == "OK" and len(payload.get('results')) == 1:
-            coord = payload['results'][0]['geometry']['location']
-            self.location_set.create(latitude=coord['lat'],
-                                     longitude=coord['lng'])
+            coordinate = payload['results'][0]['geometry']['location']
+            self.location_set.create(latitude=coordinate['lat'],
+                                     longitude=coordinate['lng'])
 
-    def __add_name_id(self):
+    def __assign_name_id(self):
         """Use the BaseTicketing object to assign a name_id."""
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
 
     def save(self, **kwargs):
         self.__normalize_name()
-        self.__add_name_id()
+        self.__assign_name_id()
         super(Name, self).save()
         if self.is_building() and not self.location_set.count():
             self.__find_location()
@@ -502,38 +511,31 @@ class Location(models.Model):
         (FORMER, 'former')
     )
 
+    HELP_TEXT = """
+    <strong>
+        <a target="_blank" href="http://itouchmap.com/latlong.html">
+            iTouchMap
+        </a>
+        : this service might be useful for filling in the lat/long data
+    </strong>
+    """
+
     belong_to_name = models.ForeignKey('Name')
 
     latitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
-        help_text="""
-        <strong>
-            <a target="_blank" href="http://itouchmap.com/latlong.html">
-                iTouchMap
-            </a>
-            : this service might be useful for filling in the lat/long data
-        </strong>
-        """
-    )
+        help_text=HELP_TEXT)
 
     longitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
-        help_text="""
-        <strong>
-            <a target="_blank" href="http://itouchmap.com/latlong.html">
-                iTouchMap
-            </a>
-            : this service might be useful for filling in the lat/long data
-        </strong>
-        """
-    )
+        help_text=HELP_TEXT)
 
     status = models.IntegerField(
         max_length=2,
         choices=LOCATION_STATUS_CHOICES,
-        default=0)
+        default=CURRENT)
 
     objects = LocationManager()
 
@@ -549,13 +551,12 @@ class Location(models.Model):
 
     def save(self, **kwargs):
         super(Location, self).save()
-        # if we change this location to the current location, all other
+        # If we change this location to the current location, all other
         # locations that belong to the same name should be changed to former.
         if self.is_current():
-            former_locs = Location.objects.filter(
-                belong_to_name=self.belong_to_name).exclude(pk=self.pk)
+            former_locs = self.belong_to_name.location_set.exclude(id=self.id)
             for l in former_locs:
-                l.status = 1
+                l.status = self.FORMER
                 l.save()
 
     def __unicode__(self):
