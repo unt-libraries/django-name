@@ -579,8 +579,8 @@ class Location(models.Model):
 
     def save(self, **kwargs):
         super(Location, self).save()
-        # If we change this location to the current location, all other
-        # locations that belong to the same name should be changed to former.
+        # When this instance's status is CURRENT, get all other locations
+        # related the belong_to_name, and set the status to FORMER.
         if self.is_current():
             former_locs = self.belong_to_name.location_set.exclude(id=self.id)
             for l in former_locs:
