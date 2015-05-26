@@ -14,7 +14,7 @@ from .validators import validate_merged_with
 class Identifier_Type(models.Model):
     """Custom Identifier Type.
 
-    Used in conjunction with the Identifier Model.
+    Used in conjunction with the Identifier model.
     """
     label = models.CharField(
         max_length=255,
@@ -195,7 +195,7 @@ class BaseTicketing(models.Model):
 
 
 class NameManager(models.Manager):
-    """Custom Manager for the Name Model.
+    """Custom Manager for the Name model.
 
     Provides additional methods that are useful in calculating
     statistics on Name model instances.
