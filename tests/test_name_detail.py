@@ -17,7 +17,7 @@ def test_person_itemprops(client):
         - Birth Date
     """
     name = Name.objects.create(name='test person',
-                               name_type=0, begin='2012-01-12')
+                               name_type=Name.PERSONAL, begin='2012-01-12')
     response = client.get(
         reverse('name_entry_detail', args=[name.name_id]))
 
@@ -36,7 +36,7 @@ def test_building_itemprops(client):
         - Erected Date
     """
     name = Name.objects.create(name='test building',
-                               name_type=4, begin='2000-01-12')
+                               name_type=Name.BUILDING, begin='2000-01-12')
     response = client.get(
         reverse('name_entry_detail', args=[name.name_id]))
 
@@ -54,8 +54,8 @@ def test_organization_itemprops(client):
         - URL
         - Founding Date
     """
-    name = Name.objects.create(name='test organization',
-                               name_type=1, begin='2000-01-12')
+    name = Name.objects.create(name='test organization', begin='2000-01-12',
+                               name_type=Name.ORGANIZATION)
     response = client.get(
         reverse('name_entry_detail', args=[name.name_id]))
 
@@ -74,7 +74,7 @@ def test_event_itemprops(client):
         - Starting Date
     """
     name = Name.objects.create(name='test event',
-                               name_type=2, begin='2500-01-12')
+                               name_type=Name.EVENT, begin='2500-01-12')
     response = client.get(
         reverse('name_entry_detail', args=[name.name_id]))
 

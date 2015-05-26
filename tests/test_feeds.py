@@ -31,7 +31,7 @@ def test_feed_item_with_location(rf):
     """Verify that the response returns ok when objects with locations
     are present in the feed.
     """
-    name = Name.objects.create(name="Test", name_type=0)
+    name = Name.objects.create(name="Test", name_type=Name.PERSONAL)
     name.location_set.create(latitude=33.210241, longitude=-97.148857)
 
     request = rf.get(reverse('name_feed'))
@@ -45,7 +45,7 @@ def test_feed_with_item_without_location(rf):
     """Verify that the response returns ok when objects without
     locations are present in the feed.
     """
-    Name.objects.create(name="Test", name_type=0)
+    Name.objects.create(name="Test", name_type=Name.PERSONAL)
 
     request = rf.get(reverse('name_feed'))
     feed = NameAtomFeed()
@@ -58,7 +58,7 @@ def test_feed_item_without_location_has_georss_element(rf):
     """Verify that the <georss:point> element is present for the
     feed entry.
     """
-    name = Name.objects.create(name="Test", name_type=0)
+    name = Name.objects.create(name="Test", name_type=Name.PERSONAL)
     name.location_set.create(latitude=33.210241, longitude=-97.148857)
 
     request = rf.get(reverse('name_feed'))
@@ -73,7 +73,7 @@ def test_feed_item_without_location_does_not_have_georss_element(rf):
     """Verify that the <georss:point> element is not present for the
     feed entry.
     """
-    Name.objects.create(name="Test", name_type=0)
+    Name.objects.create(name="Test", name_type=Name.PERSONAL)
 
     request = rf.get(reverse('name_feed'))
     feed = NameAtomFeed()
