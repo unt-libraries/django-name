@@ -6,13 +6,14 @@ from name.models import Name
 from name.validators import validate_merged_with
 
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
+
 def test_validate_merged_with_passes_without_merged_with():
     name = Name.objects.create(name='John Smith', name_type=0)
     validate_merged_with(name)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_fails_with_unsaved_name():
     name = Name.objects.create(name='John Smith', name_type=0)
     not_saved = Name(id=13, name='John Doe', name_type=0)
@@ -23,7 +24,6 @@ def test_validate_merged_with_fails_with_unsaved_name():
         validate_merged_with(name)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_passes():
     john = Name.objects.create(name='John Smith', name_type=0)
     jane = Name.objects.create(name='Jane Doe', name_type=0)
@@ -33,7 +33,6 @@ def test_validate_merged_with_passes():
     validate_merged_with(jane)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_fails():
     """Checks that validate_merged_with fails.
 
@@ -52,7 +51,6 @@ def test_validate_merged_with_fails():
         validate_merged_with(john)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_fails_when_name_merges_with_itself():
     """Check that validate_merged_with fails when we try to merge
     a name into itself.
@@ -66,7 +64,6 @@ def test_validate_merged_with_fails_when_name_merges_with_itself():
         validate_merged_with(name)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_when_name_changed_merged_with_to_new_name():
     """Check that validation does not alter when a name has a
     merged_with model, but is then changed to another name instance.
@@ -86,7 +83,6 @@ def test_validate_merged_with_when_name_changed_merged_with_to_new_name():
     validate_merged_with(john)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_when_name_changed_merged_with_to_invalid_name():
     """Check that validation works properly when a valid merged_with
     related model is changed to an invalid related model.
@@ -106,7 +102,6 @@ def test_validate_merged_with_when_name_changed_merged_with_to_invalid_name():
         validate_merged_with(john)
 
 
-@pytest.mark.django_db
 def test_validate_merged_with_fails_with_more_than_two_names():
     """Checks that a merge loop constisting of more than two name
     also fails validation.

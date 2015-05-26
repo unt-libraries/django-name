@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 # All test need access to the database in this file.
 pytestmark = pytest.mark.django
 
-
 query_template = '?q_type={0}&q={1}'
 
 
