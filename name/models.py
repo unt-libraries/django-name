@@ -1,8 +1,8 @@
 import json
 import markdown2
 
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.parse import quote
+from django.utils.six.moves.urllib.request import urlopen
+from django.utils.six.moves.urllib.parse import quote
 
 from django.core.urlresolvers import reverse
 from django.db import models, transaction, connection
