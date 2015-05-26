@@ -4,10 +4,12 @@ from dateutil.relativedelta import relativedelta
 from name.api import stats
 from name.models import Name, PERSONAL
 
+# Give all tests access to the database.
+pytestmark = pytest.mark.django_db
+
 
 class TestNameStatisticsType:
 
-    @pytest.mark.django_db
     def test_get_queryset_members_returns_none_with_empty_queryset(self):
         """Check the behaviour of get_queryset_member when no objects
         are contained in the queryset passed to NameStatisticsType.
@@ -21,7 +23,6 @@ class TestNameStatisticsType:
         with pytest.raises(StopIteration):
             next(result)
 
-    @pytest.mark.django_db
     def test_get_queryset_members_with_names_created_in_current_month(self):
         Name.objects.create(name="Test Name", name_type=PERSONAL)
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
@@ -34,7 +35,6 @@ class TestNameStatisticsType:
         assert result['count'] == 1
         assert result['month'] == expected_month
 
-    @pytest.mark.django_db
     def test_get_queryset_members_with_no_names_created_in_current_month(self):
         """Check that get_queryset_members generates the correct data
         when the queryset is empty but the generator has not yet raised
@@ -63,14 +63,12 @@ class TestNameStatisticsType:
         assert last_result['count'] == 0
         assert last_result['month'] == current_month
 
-    @pytest.mark.django_db
     def test_calculate_with_empty_queryset(self):
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
         result = name_stats.calculate()
         assert isinstance(result, list)
         assert len(result) == 0
 
-    @pytest.mark.django_db
     def test_calculate_counts(self):
         now = datetime.now()
         date_created = now - relativedelta(months=2)
@@ -108,14 +106,12 @@ class TestNameStatisticsMonth:
 
 
 class TestNameStatistics:
-    @pytest.mark.django_db
     def test_available_instance_variables(self):
         name_stats = stats.NameStatistics()
         assert hasattr(name_stats, 'created')
         assert hasattr(name_stats, 'modified')
         assert hasattr(name_stats, 'name_type_totals')
 
-    @pytest.mark.django_db
     def test_has_statistics(self, twenty_name_fixtures):
         name_stats = stats.NameStatistics()
         assert len(name_stats.created.stats) > 0
