@@ -12,6 +12,10 @@ from .validators import validate_merged_with
 
 
 class Identifier_Type(models.Model):
+    """Custom Identifier Type.
+
+    Used in conjunction with the Identifier Model.
+    """
     label = models.CharField(
         max_length=255,
         help_text='What kind of data is this? Personal website? Twitter?')
@@ -34,6 +38,14 @@ class Identifier_Type(models.Model):
 
 
 class Identifier(models.Model):
+    """An Identifier for a Name models instance. Most commonly
+    represented as a permalink.
+
+    This is used in conjunction with the Identifier Type model to
+    specify the type of Identifier the instance represents. An example
+    instance would have an Identifier Type of `Twitter` and the value
+    field would have the permalink to the Name's Twitter profile page.
+    """
     type = models.ForeignKey(
         'Identifier_Type',
         help_text="Catagorize this record's identifiers here")
@@ -51,6 +63,7 @@ class Identifier(models.Model):
 
 
 class NoteManager(models.Manager):
+    """Custom Model Manager for the Note model."""
     use_for_related_fields = True
 
     def public_notes(self):
@@ -58,6 +71,7 @@ class NoteManager(models.Manager):
 
 
 class Note(models.Model):
+    """Additional notes regarding a related Name model instance."""
     BIOGRAPHICAL_HISTORICAL = 0
     DELETION_INFORMATION = 1
     NONPUBLIC = 2
@@ -90,6 +104,7 @@ class Note(models.Model):
 
 
 class Variant(models.Model):
+    """Defines an alternative form that a Name may be displayed."""
     ACRONYM = 0
     ABBREVIATION = 1
     TRANSLATION = 2
@@ -152,7 +167,12 @@ class TicketingManager(models.Manager):
 
 
 class BaseTicketing(models.Model):
+    """Creates a custom app-level identifier.
 
+    This leverages the autoincrement primary key field to
+    create custom unique identifier. And example identifier
+    would be `nm0000001`.
+    """
     # Explicitly set the id of the model, even though it is the same
     # as the one Django gives it.
     id = models.AutoField(null=False, primary_key=True)
@@ -175,6 +195,12 @@ class BaseTicketing(models.Model):
 
 
 class NameManager(models.Manager):
+    """Custom Manager for the Name Model.
+
+    Provides additional methods that are useful in calculating
+    statistics on Name model instances.
+    """
+
     def visible(self):
         """Retrieves all Name objects that have an Active record status
         and are not merged with any other Name objects.
@@ -231,10 +257,9 @@ class NameManager(models.Manager):
 
 
 class Name(models.Model):
-    """
-    The record model defines the information stored by the name app
-    Each record has a unique name identifier associated with it which is
-    implemented as UUID.
+    """The authorized version of a name that is used to unambiguously
+    refer to a person, organization, event, building or piece of
+    software.
     """
     ACTIVE = 0
     DELETED = 1
@@ -489,10 +514,11 @@ class Name(models.Model):
 
 
 class LocationManager(models.Manager):
+    """Custom Manager for the Location model."""
     use_for_related_fields = True
 
     def _get_current_location(self):
-        """Filters through a Name objects related locations and
+        """Filters through a Name object's related locations and
         returns the one marked as current.
         """
         return self.get_queryset().filter(status=self.model.CURRENT).first()
@@ -503,6 +529,7 @@ class LocationManager(models.Manager):
 
 
 class Location(models.Model):
+    """Defines the location of a related Name model instance."""
     CURRENT = 0
     FORMER = 1
 
