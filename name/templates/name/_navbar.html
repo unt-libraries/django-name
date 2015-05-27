@@ -35,6 +35,7 @@
                         {% endfor %}
                     </select>
                     <input class="form-control" type="text" name="q" id="names" value="{{ q }}">
+                    <input type="hidden" value="{% url "name_names" %}" id="autocomplete">
                     <button class="btn btn-default" type="submit">Submit</button>
                 </div>
             </form>

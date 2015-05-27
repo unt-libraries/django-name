@@ -1,9 +1,14 @@
 $(function() {
-    $("#names").autocomplete({
-        source: function(request, response){
-            // FIXME: Remove hardcoded URL
-            $.getJSON("/name/search.json", {q_type: $('#q_type').val(), q: request.term}, response);
-        },
-        minLength: 2
-    });
+  "use strict;"
+  $("#names").autocomplete({
+    source: function(request, response){
+      var query = {
+        q_type: $('#q_type').val(),
+        q: request.term
+      };
+
+      $.getJSON($("#autocomplete").val(), query, response);
+    },
+    minLength: 2
+  });
 });
