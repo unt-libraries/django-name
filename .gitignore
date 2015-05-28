@@ -2,6 +2,7 @@
 *.swp
 *.swo
 *.egg-info
+dist/
 .tox
 db.sqlite3
 tests/__pycache__
