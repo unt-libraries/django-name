@@ -17,9 +17,11 @@ FLAKE8_ARGS = ['name', 'tests', '--ignore=F403,E501']
 
 sys.path.append(os.path.dirname(__file__))
 
+
 def exit_on_failure(ret, message=None):
     if ret:
         sys.exit(ret)
+
 
 def flake8_main(args):
     print('Running flake8 code linting')
@@ -27,13 +29,16 @@ def flake8_main(args):
     print('flake8 failed' if ret else 'flake8 passed')
     return ret
 
+
 def split_class_and_function(string):
     class_string, function_string = string.split('.', 1)
     return "%s and %s" % (class_string, function_string)
 
+
 def is_function(string):
     # `True` if it looks like a test function is included in the string.
     return string.startswith('test_') or '.test_' in string
+
 
 def is_class(string):
     # `True` if first character is uppercase - assume it's a class name.
@@ -74,7 +79,7 @@ if __name__ == "__main__":
             expression = split_class_and_function(first_arg)
             pytest_args = ['tests', '-k', expression] + pytest_args[1:]
         elif is_class(first_arg) or is_function(first_arg):
-            # `runtests.py TestCase [flags]` 
+            # `runtests.py TestCase [flags]`
             # `runtests.py test_function [flags]`
             pytest_args = ['tests', '-k', pytest_args[0]] + pytest_args[1:]
     else:
