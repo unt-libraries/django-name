@@ -1,1 +1,4 @@
+# Packages that are required by multiple environments.
+
+# PyMySQL is required by the dev and test environments.
 PyMySQL==0.6.6

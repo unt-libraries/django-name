@@ -1,5 +1,10 @@
+# Tox to make it available in the Docker container.
 tox==1.8.1
+
+# Pytest packages.
 pytest-django==2.8.0
 pytest==2.6.4
 pytest-cov==1.8.1
+
+# Test packages.
 mock==1.0.1
