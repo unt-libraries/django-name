@@ -77,8 +77,8 @@ def test_label_returns_not_found_with_query(client):
 
 def test_label_returns_not_found_multiple_names_found(client):
     name_name = "John Smith"
-    Name.objects.create(name=name_name, name_type=0)
-    Name.objects.create(name=name_name, name_type=0)
+    Name.objects.create(name=name_name, name_type=Name.PERSONAL)
+    Name.objects.create(name=name_name, name_type=Name.PERSONAL)
 
     response = client.get(
         reverse('name_label', args=[name_name]))
@@ -180,7 +180,7 @@ def test_map_returns_ok(client):
 
 
 def test_map_json_xhr_returns_payload(client):
-    name = Name.objects.create(name="Test", name_type=0)
+    name = Name.objects.create(name="Test", name_type=Name.PERSONAL)
 
     Location.objects.create(
         status=0,

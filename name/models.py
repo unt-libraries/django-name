@@ -1,6 +1,8 @@
 import json
-import requests
 import markdown2
+
+from django.utils.six.moves.urllib.request import urlopen
+from django.utils.six.moves.urllib.parse import quote
 
 from django.core.urlresolvers import reverse
 from django.db import models, transaction, connection
@@ -8,158 +10,85 @@ from pynaco.naco import normalizeSimplified
 
 from .validators import validate_merged_with
 
-BIOGRAPHICAL_HISTORICAL = 0
-DELETION_INFORMATION = 1
-NONPUBLIC = 2
-SOURCE = 3
-NOTE_TYPE_OTHER = 4
-
-NOTE_TYPE_CHOICES = (
-    (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
-    (DELETION_INFORMATION, 'Deletion Information'),
-    (NONPUBLIC, 'Nonpublic'),
-    (SOURCE, 'Source'),
-    (NOTE_TYPE_OTHER, 'Other'),
-)
-
-ACTIVE = 0
-DELETED = 1
-SUPPRESSED = 2
-
-RECORD_STATUS_CHOICES = (
-    (ACTIVE, 'Active'),
-    (DELETED, 'Deleted'),
-    (SUPPRESSED, 'Suppressed'),
-)
-
-PERSONAL = 0
-ORGANIZATION = 1
-EVENT = 2
-SOFTWARE = 3
-BUILDING = 4
-
-NAME_TYPE_CHOICES = (
-    (PERSONAL, 'Personal'),
-    (ORGANIZATION, 'Organization'),
-    (EVENT, 'Event'),
-    (SOFTWARE, 'Software'),
-    (BUILDING, 'Building'),
-)
-
-DATE_DISPLAY_LABELS = {
-    PERSONAL: {
-        'type': 'Personal',
-        'begin': 'Date of Birth',
-        'end': 'Date of Death'
-    },
-    ORGANIZATION: {
-        'type': 'Organization',
-        'begin': 'Founded Date',
-        'end': 'Defunct'
-    },
-    EVENT: {
-        'type': 'Event',
-        'begin': 'Begin Date',
-        'end': 'End Date'
-    },
-    SOFTWARE: {
-        'type': 'Software',
-        'begin': 'Begin Date',
-        'end': 'End Date'
-    },
-    BUILDING: {
-        'type': 'Building',
-        'begin': 'Erected Date',
-        'end': 'Demolished Date',
-    },
-    None: {
-        'type': None,
-        'begin': 'Born/Founded Date',
-        'end': 'Died/Defunct Date'
-    },
-}
-
-
-ACRONYM = 0
-ABBREVIATION = 1
-TRANSLATION = 2
-EXPANSION = 3
-VARIANT_TYPE_OTHER = 4
-
-VARIANT_TYPE_CHOICES = (
-    (ACRONYM, 'Acronym'),
-    (ABBREVIATION, 'Abbreviation'),
-    (TRANSLATION, 'Translation'),
-    (EXPANSION, 'Expansion'),
-    (VARIANT_TYPE_OTHER, 'Other'),
-)
-
-CURRENT = 0
-FORMER = 1
-
-LOCATION_STATUS_CHOICES = (
-    (CURRENT, "current"),
-    (FORMER, "former"),
-)
-
-NAME_TYPE_SCHEMAS = {
-    PERSONAL: 'http://schema.org/Person',
-    ORGANIZATION: 'http://schema.org/Organization',
-    BUILDING: 'http://schema.org/Place',
-}
-
 
 class Identifier_Type(models.Model):
+    """Custom Identifier Type.
+
+    Used in conjunction with the Identifier model.
+    """
     label = models.CharField(
         max_length=255,
-        help_text="What kind of data is this? Personal website? Twitter?",
-    )
+        help_text='What kind of data is this? Personal website? Twitter?')
+
     icon_path = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Path to icon image?",
-    )
+        help_text='Path to icon image?')
+
     homepage = models.URLField(
         blank=True,
-        help_text="Homepage of label. Twitter.com, Facebook.com, etc",
-    )
+        help_text='Homepage of label. Twitter.com, Facebook.com, etc')
 
     class Meta:
-        ordering = ["label"]
-        verbose_name = "Identifier Type"
+        ordering = ['label']
+        verbose_name = 'Identifier Type'
 
     def __unicode__(self):
         return self.label
 
 
 class Identifier(models.Model):
+    """An Identifier for a Name models instance. Most commonly
+    represented as a permalink.
+
+    This is used in conjunction with the Identifier Type model to
+    specify the type of Identifier the instance represents. An example
+    instance would have an Identifier Type of `Twitter` and the value
+    field would have the permalink to the Name's Twitter profile page.
+    """
     type = models.ForeignKey(
-        "Identifier_Type",
-        help_text="Catagorize this record's identifiers here",
-    )
-    belong_to_name = models.ForeignKey("Name")
+        'Identifier_Type',
+        help_text="Catagorize this record's identifiers here")
+
+    belong_to_name = models.ForeignKey('Name')
     value = models.CharField(max_length=500)
     visible = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ["order", "type"]
+        ordering = ['order', 'type']
 
     def __unicode__(self):
         return self.value
 
 
 class NoteManager(models.Manager):
+    """Custom Model Manager for the Note model."""
     use_for_related_fields = True
 
     def public_notes(self):
-        return self.get_queryset().exclude(note_type=NONPUBLIC)
+        return self.get_queryset().exclude(note_type=self.model.NONPUBLIC)
 
 
 class Note(models.Model):
-    note = models.TextField(help_text="Enter notes about this record here")
+    """A note regarding the related Name model instance."""
+    BIOGRAPHICAL_HISTORICAL = 0
+    DELETION_INFORMATION = 1
+    NONPUBLIC = 2
+    SOURCE = 3
+    OTHER = 4
+
+    NOTE_TYPE_CHOICES = (
+        (BIOGRAPHICAL_HISTORICAL, 'Biographical/Historical'),
+        (DELETION_INFORMATION, 'Deletion Information'),
+        (NONPUBLIC, 'Nonpublic'),
+        (SOURCE, 'Source'),
+        (OTHER, 'Other')
+    )
+
+    note = models.TextField(help_text='Enter notes about this record here')
     note_type = models.IntegerField(choices=NOTE_TYPE_CHOICES)
-    belong_to_name = models.ForeignKey("Name")
+    belong_to_name = models.ForeignKey('Name')
 
     objects = NoteManager()
 
@@ -167,7 +96,7 @@ class Note(models.Model):
         """Returns the label associated with an instance's
         note_type.
         """
-        id, note_type = NOTE_TYPE_CHOICES[self.note_type]
+        id, note_type = self.NOTE_TYPE_CHOICES[self.note_type]
         return note_type
 
     def __unicode__(self):
@@ -175,27 +104,41 @@ class Note(models.Model):
 
 
 class Variant(models.Model):
-    belong_to_name = models.ForeignKey("Name")
+    """Defines an alternative form that a Name may be displayed."""
+    ACRONYM = 0
+    ABBREVIATION = 1
+    TRANSLATION = 2
+    EXPANSION = 3
+    OTHER = 4
+
+    VARIANT_TYPE_CHOICES = (
+        (ACRONYM, 'Acronym'),
+        (ABBREVIATION, 'Abbreviation'),
+        (TRANSLATION, 'Translation'),
+        (EXPANSION, 'Expansion'),
+        (OTHER, 'Other')
+    )
+
+    belong_to_name = models.ForeignKey('Name')
     variant_type = models.IntegerField(
         max_length=50,
         choices=VARIANT_TYPE_CHOICES,
-        help_text="Choose variant type.",
-    )
+        help_text='Choose variant type.')
+
     variant = models.CharField(
         max_length=255,
-        help_text="Fill in the other name variants, if any.",
-    )
+        help_text='Fill in the other name variants, if any.')
+
     normalized_variant = models.CharField(
         max_length=255,
-        help_text="NACO normalized variant text",
         editable=False,
-    )
+        help_text='NACO normalized variant text')
 
     def get_variant_type_label(self):
         """Returns the label associated with an instance's
         variant_type.
         """
-        id, variant_type = VARIANT_TYPE_CHOICES[self.variant_type]
+        id, variant_type = self.VARIANT_TYPE_CHOICES[self.variant_type]
         return variant_type
 
     def save(self):
@@ -224,7 +167,12 @@ class TicketingManager(models.Manager):
 
 
 class BaseTicketing(models.Model):
+    """Creates a custom app-level identifier.
 
+    This leverages the autoincrement primary key field to
+    create custom unique identifier. An example identifier
+    would be `nm0000001`.
+    """
     # Explicitly set the id of the model, even though it is the same
     # as the one Django gives it.
     id = models.AutoField(null=False, primary_key=True)
@@ -243,16 +191,22 @@ class BaseTicketing(models.Model):
         return self.id
 
     def __unicode__(self):
-        return u'nm%07d' % self.ticket
+        return u'nm{ticket:07d}'.format(ticket=self.ticket)
 
 
 class NameManager(models.Manager):
+    """Custom Manager for the Name model.
+
+    Provides additional methods that are useful in calculating
+    statistics on Name model instances.
+    """
+
     def visible(self):
         """Retrieves all Name objects that have an Active record status
         and are not merged with any other Name objects.
         """
         return self.get_queryset().filter(
-            record_status=ACTIVE, merged_with=None)
+            record_status=self.model.ACTIVE, merged_with=None)
 
     def active_type_counts(self):
         """Calculates counts of Name objects by Name Type.
@@ -269,7 +223,7 @@ class NameManager(models.Manager):
             'organization': len(filter(lambda n: n.is_organization(), names)),
             'event': len(filter(lambda n: n.is_event(), names)),
             'software': len(filter(lambda n: n.is_software(), names)),
-            'building': len(filter(lambda n: n.is_building(), names)),
+            'building': len(filter(lambda n: n.is_building(), names))
         }
 
     def _counts_per_month(self, date_column):
@@ -303,121 +257,157 @@ class NameManager(models.Manager):
 
 
 class Name(models.Model):
+    """The authorized version of a name that is used to unambiguously
+    refer to a person, organization, event, building or piece of
+    software.
     """
-    The record model defines the information stored by the name app
-    Each record has a unique name identifier associated with it which is
-    implemented as UUID.
-    """
+    ACTIVE = 0
+    DELETED = 1
+    SUPPRESSED = 2
 
-    # only one name per record
+    RECORD_STATUS_CHOICES = (
+        (ACTIVE, 'Active'),
+        (DELETED, 'Deleted'),
+        (SUPPRESSED, 'Suppressed')
+    )
+
+    PERSONAL = 0
+    ORGANIZATION = 1
+    EVENT = 2
+    SOFTWARE = 3
+    BUILDING = 4
+
+    NAME_TYPE_CHOICES = (
+        (PERSONAL, 'Personal'),
+        (ORGANIZATION, 'Organization'),
+        (EVENT, 'Event'),
+        (SOFTWARE, 'Software'),
+        (BUILDING, 'Building')
+    )
+
+    DATE_DISPLAY_LABELS = {
+        PERSONAL: {
+            'type': 'Personal',
+            'begin': 'Date of Birth',
+            'end': 'Date of Death'
+        },
+        ORGANIZATION: {
+            'type': 'Organization',
+            'begin': 'Founded Date',
+            'end': 'Defunct'
+        },
+        EVENT: {
+            'type': 'Event',
+            'begin': 'Begin Date',
+            'end': 'End Date'
+        },
+        SOFTWARE: {
+            'type': 'Software',
+            'begin': 'Begin Date',
+            'end': 'End Date'
+        },
+        BUILDING: {
+            'type': 'Building',
+            'begin': 'Erected Date',
+            'end': 'Demolished Date',
+        },
+        None: {
+            'type': None,
+            'begin': 'Born/Founded Date',
+            'end': 'Died/Defunct Date'
+        }
+    }
+
+    NAME_TYPE_SCHEMAS = {
+        PERSONAL: 'http://schema.org/Person',
+        ORGANIZATION: 'http://schema.org/Organization',
+        BUILDING: 'http://schema.org/Place'
+    }
+
     name = models.CharField(
         max_length=255,
-        help_text="Please use the general reverse order: LAST, FIRST",
-    )
+        help_text='Please use the general reverse order: LAST, FIRST')
 
     normalized_name = models.CharField(
         max_length=255,
-        help_text="NACO normalized form of the name",
         editable=False,
-    )
+        help_text='NACO normalized form of the name')
 
-    # the name must be one of a certain type, currently 4 choices
-    name_type = models.IntegerField(
-        max_length=1,
-        choices=NAME_TYPE_CHOICES,
-    )
+    name_type = models.IntegerField(max_length=1, choices=NAME_TYPE_CHOICES)
 
-    # date, month or year of birth or incorporation of the name
+    # Date, month or year of birth or incorporation of the name
     begin = models.CharField(
         max_length=25,
         blank=True,
-        help_text="Conforms to EDTF format YYYY-MM-DD",
-    )
+        help_text='Conforms to EDTF format YYYY-MM-DD')
 
-    # date, month of year of death or un-incorporation of the name
+    # Date, month of year of death or un-incorporation of the name
     end = models.CharField(
         max_length=25,
         blank=True,
-        help_text="Conforms to EDTF format YYYY-MM-DD",
-    )
+        help_text='Conforms to EDTF format YYYY-MM-DD')
 
-    # MusicBrainz derived
     disambiguation = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Clarify to whom or what this record pertains."
-    )
+        help_text='Clarify to whom or what this record pertains.')
 
-    # bio text - formatted with _markdown_ markup
     biography = models.TextField(
         blank=True,
-        help_text="Compatible with MARKDOWN",
-    )
+        help_text='Compatible with MARKDOWN')
 
-    # record status flag (active / merged / etc)
     record_status = models.IntegerField(
-        choices=RECORD_STATUS_CHOICES,
-        default="0",
-    )
+        default=ACTIVE,
+        choices=RECORD_STATUS_CHOICES)
 
-    # if marked merged, value is record id of target to merge with
     merged_with = models.ForeignKey(
-        "self",
+        'self',
         blank=True,
         null=True,
-        related_name='merged_with_name',
-    )
+        related_name='merged_with_name')
 
-    # automatically generate created date
-    date_created = models.DateTimeField(
-        auto_now_add=True,
-        editable=False,
-    )
-
-    # update when we change the record
-    last_modified = models.DateTimeField(
-        auto_now=True,
-        editable=False,
-    )
-
-    # auto incrementing from nameid
-    name_id = models.CharField(
-        max_length=10,
-        unique=True,
-        editable=False,
-    )
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_modified = models.DateTimeField(auto_now=True, editable=False)
+    name_id = models.CharField(max_length=10, unique=True, editable=False)
 
     objects = NameManager()
 
-    def has_geocode(self):
-        l = Location.objects.filter(belong_to_name=self)
-        if len(l) > 0:
-            return True
-        else:
-            return False
-
-    # this enables icon display on the django admin rather than textual "T/F"
-    has_geocode.boolean = True
-
-    def render_biography(self):
-        """Render the Markdown biography to HTML."""
-        return markdown2.markdown(self.biography)
-
     def get_absolute_url(self):
+        """Get the absolute url to the Name detail page."""
         return reverse('name_entry_detail', args=[self.name_id])
 
-    def has_schema_url(self):
-        return self.get_schema_url() is not None
-
     def get_schema_url(self):
-        return NAME_TYPE_SCHEMAS.get(self.name_type, None)
+        """Get the appropriate schema url based on the name type."""
+        return self.NAME_TYPE_SCHEMAS.get(self.name_type, None)
 
     def get_name_type_label(self):
-        id, name_type = NAME_TYPE_CHOICES[self.name_type]
+        """Get the string form of the Name's name type."""
+        id, name_type = self.NAME_TYPE_CHOICES[self.name_type]
         return name_type
 
     def get_date_display(self):
-        return DATE_DISPLAY_LABELS.get(self.name_type)
+        """Get the date display labels according to the Name's
+        name type
+
+        See Name.DATE_DISPLAY_LABELS
+        """
+        return self.DATE_DISPLAY_LABELS.get(self.name_type)
+
+    def has_current_location(self):
+        """True if the Name has a current location in the location_set."""
+        return self.location_set.current_location is not None
+
+    def has_geocode(self):
+        """True if the instance has one or more related Locations."""
+        if self.location_set.count():
+            return True
+        else:
+            return False
+    has_geocode.boolean = True  # Enables icon display in the Django admin.
+
+    def has_schema_url(self):
+        """True if the instance has a schema url."""
+        return self.get_schema_url() is not None
 
     def _is_name_type(self, type_id):
         """Test if the instance of Name is a certain
@@ -429,23 +419,23 @@ class Name(models.Model):
 
     def is_personal(self):
         """True if the Name has the Name Type Personal."""
-        return self._is_name_type(PERSONAL)
+        return self._is_name_type(self.PERSONAL)
 
     def is_organization(self):
         """True if the Name has the Name Type Organization."""
-        return self._is_name_type(ORGANIZATION)
+        return self._is_name_type(self.ORGANIZATION)
 
     def is_event(self):
         """True if the Name has the Name Type Event."""
-        return self._is_name_type(EVENT)
+        return self._is_name_type(self.EVENT)
 
     def is_software(self):
         """True if the Name has the Name Type Software."""
-        return self._is_name_type(SOFTWARE)
+        return self._is_name_type(self.SOFTWARE)
 
     def is_building(self):
         """True if the Name has the Name Type Building."""
-        return self._is_name_type(BUILDING)
+        return self._is_name_type(self.BUILDING)
 
     def _is_record_status(self, status_id):
         """Test if the instance of Name has a particular
@@ -457,35 +447,58 @@ class Name(models.Model):
 
     def is_active(self):
         """True if the Name has the Active status."""
-        return self._is_record_status(ACTIVE)
+        return self._is_record_status(self.ACTIVE)
 
     def is_deleted(self):
         """True if the Name has the Deleted status."""
-        return self._is_record_status(DELETED)
+        return self._is_record_status(self.DELETED)
 
     def is_suppressed(self):
         """True if the Name has the Suppressed status."""
-        return self._is_record_status(SUPPRESSED)
+        return self._is_record_status(self.SUPPRESSED)
 
-    def has_current_location(self):
-        """True if the Name has a current location in the location_set."""
-        return self.location_set.current_location is not None
+    def render_biography(self):
+        """Render the Markdown biography to HTML."""
+        return markdown2.markdown(self.biography)
 
-    def save(self, **kwargs):
+    def __normalize_name(self):
+        """Normalize the name attribute and assign it the normalized_name
+        attribute.
+        """
+        self.normalized_name = normalizeSimplified(self.name)
+
+    def __find_location(self):
+        """Use the normalized_name attribute and the Location.URL to
+        attempt to find the instance's location.
+
+        A location is only attached if the server responds with a single
+        result.
+        """
+        URL_RESOURCE = 'http://maps.googleapis.com/maps/api/geocode/json'
+        URL_QUERY_TEMPLATE = '?address={address}&sensor=true'
+        URL = URL_RESOURCE + URL_QUERY_TEMPLATE
+
+        url = URL.format(address=quote(self.normalized_name))
+        payload = json.load(urlopen(url))
+
+        # Only add the location if the Name matched one and only one
+        # location from the API.
+        if payload.get('status') == "OK" and len(payload.get('results')) == 1:
+            coordinate = payload['results'][0]['geometry']['location']
+            self.location_set.create(latitude=coordinate['lat'],
+                                     longitude=coordinate['lng'])
+
+    def __assign_name_id(self):
+        """Use the BaseTicketing object to assign a name_id."""
         if not self.name_id:
             self.name_id = unicode(BaseTicketing.objects.create())
-        self.normalized_name = normalizeSimplified(self.name)
+
+    def save(self, **kwargs):
+        self.__normalize_name()
+        self.__assign_name_id()
         super(Name, self).save()
-        if self.is_building() and Location.objects.filter(belong_to_name=self).count() == 0:
-            url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true' % self.normalized_name
-            search_json = json.loads(requests.get(url).content)
-            if search_json['status'] == 'OK' and len(search_json['results']) == 1:
-                geo_location = search_json['results'][0]['geometry']['location']
-                Location.objects.create(
-                    belong_to_name=self,
-                    latitude=geo_location['lat'],
-                    longitude=geo_location['lng']
-                )
+        if self.is_building() and not self.location_set.count():
+            self.__find_location()
 
     def clean(self, *args, **kwargs):
         # Call merged_with_validator here so that we can pass in
@@ -497,18 +510,19 @@ class Name(models.Model):
         return self.name_id
 
     class Meta:
-        ordering = ["name"]
+        ordering = ['name']
         unique_together = (('name', 'name_id'),)
 
 
 class LocationManager(models.Manager):
+    """Custom Manager for the Location model."""
     use_for_related_fields = True
 
     def _get_current_location(self):
-        """Filters through a Name objects related locations and
+        """Filters through a Name object's related locations and
         returns the one marked as current.
         """
-        return self.get_queryset().filter(status=CURRENT).first()
+        return self.get_queryset().filter(status=self.model.CURRENT).first()
 
     # Makes the current location available as a property on
     # the RelatedManager.
@@ -516,57 +530,61 @@ class LocationManager(models.Manager):
 
 
 class Location(models.Model):
-    belong_to_name = models.ForeignKey("Name")
+    """Defines the location of a related Name model instance."""
+    CURRENT = 0
+    FORMER = 1
+
+    LOCATION_STATUS_CHOICES = (
+        (CURRENT, 'current'),
+        (FORMER, 'former')
+    )
+
+    HELP_TEXT = """
+    <strong>
+        <a target="_blank" href="http://itouchmap.com/latlong.html">
+            iTouchMap
+        </a>
+        : this service might be useful for filling in the lat/long data
+    </strong>
+    """
+
+    belong_to_name = models.ForeignKey('Name')
+
     latitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
-        help_text="""
-        <strong>
-            <a target="_blank" href="http://itouchmap.com/latlong.html">
-                iTouchMap
-            </a>
-            : this service might be useful for filling in the lat/long data
-        </strong>
-        """,
-    )
+        help_text=HELP_TEXT)
+
     longitude = models.DecimalField(
         max_digits=13,
         decimal_places=10,
-        help_text="""
-        <strong>
-            <a target="_blank" href="http://itouchmap.com/latlong.html">
-                iTouchMap
-            </a>
-            : this service might be useful for filling in the lat/long data
-        </strong>
-        """,
-    )
+        help_text=HELP_TEXT)
+
     status = models.IntegerField(
         max_length=2,
         choices=LOCATION_STATUS_CHOICES,
-        default=0)
+        default=CURRENT)
 
     objects = LocationManager()
 
     class Meta:
-        ordering = ["status"]
+        ordering = ['status']
 
     def geo_point(self):
-        return "%s %s" % (self.latitude, self.longitude)
+        return '{lat} {lng}'.format(lat=self.latitude, lng=self.longitude)
 
     def is_current(self):
         """True if the Location has a status of Current."""
-        return CURRENT == self.status
+        return self.CURRENT == self.status
 
     def save(self, **kwargs):
         super(Location, self).save()
-        # if we change this location to the current location, all other
-        # locations that belong to the same name should be changed to former.
+        # When this instance's status is CURRENT, get all other locations
+        # related the belong_to_name, and set the status to FORMER.
         if self.is_current():
-            former_locs = Location.objects.filter(
-                belong_to_name=self.belong_to_name).exclude(pk=self.pk)
+            former_locs = self.belong_to_name.location_set.exclude(id=self.id)
             for l in former_locs:
-                l.status = 1
+                l.status = self.FORMER
                 l.save()
 
     def __unicode__(self):
