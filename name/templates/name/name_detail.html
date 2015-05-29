@@ -5,7 +5,7 @@
 {% block title %}{{ name.name }}{% endblock %}
 
 {% block head-extra %}
-    <link rel="canonical" href="{% absolute_url "name_entry_detail" name.name_id %}">
+    <link rel="canonical" href="{% absolute_url "name_entry_detail" name %}">
     <link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" name %}">
     <link rel="alternate" type="application/json" href="{% url "name_json" name %}">
 {% endblock head-extra %}
