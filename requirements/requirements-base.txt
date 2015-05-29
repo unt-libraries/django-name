@@ -1,9 +1,5 @@
 # Packages that are required by the app.
-
-# Packages from PyPI.
-dateutils==0.6.6
+python-dateutil==2.4.2
 markdown2==2.3.0
 djangorestframework>=3.1
-
-# Packages from Github.
-git+git://github.com/unt-libraries/pynaco@0.1.0
+pynaco==0.1.0
