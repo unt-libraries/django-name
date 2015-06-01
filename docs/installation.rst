@@ -35,5 +35,5 @@ Installation
 
     urlpatterns = [
         ...
-        url(r'^name/', include('name.urls'))
+        url(r'^name/', include('name.urls', namespace='name'))
     ]
