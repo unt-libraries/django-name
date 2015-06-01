@@ -128,7 +128,7 @@ def landing(request):
     return render(request, 'name/landing.html', counts)
 
 
-def map(request):
+def locations(request):
     """View for the Map page."""
     return render(request, 'name/map.html')
 
