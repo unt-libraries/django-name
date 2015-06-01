@@ -1,34 +1,26 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
-from name import views, feeds
+
+from . import views, feeds
+from .api import views as api
 
 
 admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
-    url(r'stats.json/$', 'name.api.views.stats_json', name='name_stats_json'),
-    url(r'stats/$', 'name.views.stats', name='name_stats'),
-    url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
-    url(r'feed/$', feeds.NameAtomFeed(), name='name_feed'),
-    url(r'label/(?P<name_value>.*)$', 'name.views.label', name='name_label'),
-    url(r'map/$', 'name.views.map', name='name_map'),
-    url(r'map.json/$', 'name.api.views.map_json', name='name_map_json'),
-    url(r'^$', 'name.views.landing', name='name_landing'),
-    url(r'export/$', 'name.views.export', name='name_export'),
-    url(r'search/$', views.SearchView.as_view(), name='name_search'),
-    url(r'search.json$', 'name.api.views.get_names', name="name_names"),
-    url(r'about/$', 'name.views.about', name='name_about'),
-    url(r'(?P<name_id>.*).json$', 'name.api.views.name_json', name='name_json'),
-    url(r'opensearch.xml$', 'name.views.opensearch', name='name_opensearch'),
-    url(
-        r'(?P<name_id>.*).mads.xml$',
-        'name.views.mads_serialize',
-        name='name_mads_serialize'
-    ),
-    url(
-        r'(?P<name_id>[^/]+)/',
-        'name.views.entry_detail',
-        name='name_entry_detail'
-    ),
-)
+urlpatterns = [
+    url(r'^$', views.landing, name='landing'),
+    url(r'about/$', views.about, name='about'),
+    url(r'export/$', views.export, name='export'),
+    url(r'feed/$', feeds.NameAtomFeed(), name='feed'),
+    url(r'label/(?P<name_value>.*)$', views.label, name='label'),
+    url(r'locations.json/$', api.locations_json, name='locations-json'),
+    url(r'map/$', views.locations, name='map'),
+    url(r'opensearch.xml$', views.opensearch, name='opensearch'),
+    url(r'search/$', views.SearchView.as_view(), name='search'),
+    url(r'search.json$', api.search_json, name="search-json"),
+    url(r'stats.json/$', api.stats_json, name='stats-json'),
+    url(r'stats/$', views.stats, name='stats'),
+    url(r'(?P<name_id>.*).json$', api.name_json, name='detail-json'),
+    url(r'(?P<name_id>.*).mads.xml$', views.mads_serialize, name='mads-serialize'),
+    url(r'(?P<name_id>[^/]+)/', views.detail, name='detail')
+]

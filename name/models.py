@@ -374,7 +374,7 @@ class Name(models.Model):
 
     def get_absolute_url(self):
         """Get the absolute url to the Name detail page."""
-        return reverse('name_entry_detail', args=[self.name_id])
+        return reverse('name:detail', args=[self.name_id])
 
     def get_schema_url(self):
         """Get the appropriate schema url based on the name type."""

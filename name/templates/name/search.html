@@ -8,7 +8,7 @@
             <div class="col-sm-12">
                 <div class="text-center">
                     <h3>Search the Name App</h3>
-                    <form class="form form-inline" action="{% url "name_search" %}">
+                    <form class="form form-inline" action="{% url "name:search" %}">
                         <select class="form-control" name="q_type" id="large_q_type">
                             {% for k, v in name_types.items %}
                                 {% if request.GET.q_type == v %}
@@ -67,7 +67,7 @@
                             {% if entry.is_active and entry.merged_with == None %}
                                 <tr>
                                     <td>
-                                        <a href='{% url "name_entry_detail" entry %}'>{{ entry.name }}</a>
+                                        <a href='{% url "name:detail" entry %}'>{{ entry.name }}</a>
 
                                         {# If disambiguation exists, show as small print #}
                                         {% if entry.disambiguation %}

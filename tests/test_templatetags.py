@@ -4,10 +4,10 @@ from django.template import Template, RequestContext
 
 
 @pytest.mark.parametrize('url_name,arg', [
-    ("name_label", "test-label"),
-    ("name_json", "nm000002"),
-    ("name_mads_serialize", "nm000002"),
-    ("name_entry_detail", "nm000002"),
+    ("name:label", "test-label"),
+    ("name:detail-json", "nm000002"),
+    ("name:mads-serialize", "nm000002"),
+    ("name:detail", "nm000002"),
 ])
 def test_absolute_url_with_argument(rf, url_name, arg):
     request = rf.get("/")
@@ -24,15 +24,15 @@ def test_absolute_url_with_argument(rf, url_name, arg):
 
 
 @pytest.mark.parametrize('url_name', [
-    'name_stats',
-    'name_feed',
-    'name_map',
-    'name_landing',
-    'name_export',
-    'name_search',
-    'name_names',
-    'name_about',
-    'name_opensearch',
+    'name:stats',
+    'name:feed',
+    'name:map',
+    'name:landing',
+    'name:export',
+    'name:search',
+    'name:search-json',
+    'name:about',
+    'name:opensearch',
 ])
 def test_absolute_url_without_argument(rf, url_name):
     request = rf.get("/")
@@ -54,9 +54,9 @@ def test_absolute_url_handles_empty_arguments(rf):
     template = '{{% load name_extras %}}{{% absolute_url "{name}" "" "" %}}'
 
     rendered = (
-        Template(template.format(name="name_landing"))
+        Template(template.format(name="name:landing"))
         .render(context)
     )
 
-    expected = request.build_absolute_uri(reverse("name_landing"))
+    expected = request.build_absolute_uri(reverse("name:landing"))
     assert expected, rendered

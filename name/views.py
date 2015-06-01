@@ -15,7 +15,7 @@ def label(request, name_value):
     """Find a name by label.
 
     If the label matches a single name, users are redirected
-    to the name_entry_detail page. Otherwise, if the label
+    to the name detail page. Otherwise, if the label
     does not exist, or the specified label matches multiple Name
     objects, a status code 404 is returned.
     """
@@ -27,7 +27,7 @@ def label(request, name_value):
         name = Name.objects.get(normalized_name=normalized_name)
 
         return http.HttpResponseRedirect(
-            reverse('name_entry_detail', args=[name.name_id]))
+            reverse('name:detail', args=[name.name_id]))
 
     except Name.DoesNotExist:
         return http.HttpResponseNotFound(
@@ -40,7 +40,7 @@ def label(request, name_value):
             .format(normalized_name))
 
 
-def entry_detail(request, name_id):
+def detail(request, name_id):
     """View for the Name detail page."""
     queryset = (
         Name.objects.select_related().
@@ -94,8 +94,8 @@ def opensearch(request):
     search_json_query = '{0}?q={{searchTerms}}'
 
     # Build the absolute URLs.
-    search_url = request.build_absolute_uri(reverse('name_search'))
-    search_json_url = request.build_absolute_uri(reverse('name_names'))
+    search_url = request.build_absolute_uri(reverse('name:search'))
+    search_json_url = request.build_absolute_uri(reverse('name:search-json'))
 
     # Compose the full URLs that will be sent to the template.
     search = search_query.format(search_url)
@@ -128,7 +128,7 @@ def landing(request):
     return render(request, 'name/landing.html', counts)
 
 
-def map(request):
+def locations(request):
     """View for the Map page."""
     return render(request, 'name/map.html')
 
