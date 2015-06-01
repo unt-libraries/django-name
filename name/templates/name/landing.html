@@ -4,7 +4,7 @@
 {% load name_extras %}
 
 {%  block head-extra %}
-    <link rel="canonical" href="{% absolute_url "name_landing" %}">
+    <link rel="canonical" href="{% absolute_url "name:landing" %}">
 {% endblock head-extra %}
 
 {% block content %}
@@ -24,7 +24,7 @@
                     <tr>
                         <th>Personal Names:</th>
                         <td>
-                            <a href="{% url "name_search" %}?q_type=Personal&amp;q=">{{ counts.personal|intcomma }}</a>
+                            <a href="{% url "name:search" %}?q_type=Personal&amp;q=">{{ counts.personal|intcomma }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -32,7 +32,7 @@
                     <tr>
                         <th>Organization Names:</th>
                         <td>
-                            <a href="{% url "name_search" %}?q_type=Organization&amp;q">{{ counts.organization|intcomma }}</a>
+                            <a href="{% url "name:search" %}?q_type=Organization&amp;q">{{ counts.organization|intcomma }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -40,7 +40,7 @@
                     <tr>
                         <th>Event Names:</th>
                         <td>
-                            <a href="{% url "name_search" %}?q_type=Event&amp;q=">{{ counts.event|intcomma }}</a>
+                            <a href="{% url "name:search" %}?q_type=Event&amp;q=">{{ counts.event|intcomma }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -48,7 +48,7 @@
                     <tr>
                         <th>Software Names:</th>
                         <td>
-                            <a href="{% url "name_search" %}?q_type=Software&amp;q=">{{ counts.software|intcomma }}</a>
+                            <a href="{% url "name:search" %}?q_type=Software&amp;q=">{{ counts.software|intcomma }}</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -56,7 +56,7 @@
                     <tr>
                         <th>Building Names:</th>
                         <td>
-                            <a href="{% url "name_search" %}?q_type=Building&amp;q=">{{ counts.building|intcomma }}</a>
+                            <a href="{% url "name:search" %}?q_type=Building&amp;q=">{{ counts.building|intcomma }}</a>
                         </td>
                     </tr>
                 {% endif %}

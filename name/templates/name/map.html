@@ -15,7 +15,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <form name="map" action="{% url "name_map_json" %}">
+            <form name="map" action="{% url "name:locations-json" %}">
                 <span id="attribution" class="hidden">&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</span>
             </form>
             <div id="map" style="width: 100%; height: 800px"></div>

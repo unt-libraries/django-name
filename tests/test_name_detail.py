@@ -19,7 +19,7 @@ def test_person_itemprops(client):
     name = Name.objects.create(name='test person',
                                name_type=Name.PERSONAL, begin='2012-01-12')
     response = client.get(
-        reverse('name_entry_detail', args=[name.name_id]))
+        reverse('name:detail', args=[name.name_id]))
 
     assert 'itemprop=\"name\"' in response.content
     assert 'itemprop=\'url\'' in response.content
@@ -38,7 +38,7 @@ def test_building_itemprops(client):
     name = Name.objects.create(name='test building',
                                name_type=Name.BUILDING, begin='2000-01-12')
     response = client.get(
-        reverse('name_entry_detail', args=[name.name_id]))
+        reverse('name:detail', args=[name.name_id]))
 
     assert 'itemprop=\"name\"' in response.content
     assert 'itemprop=\'url\'' in response.content
@@ -57,7 +57,7 @@ def test_organization_itemprops(client):
     name = Name.objects.create(name='test organization', begin='2000-01-12',
                                name_type=Name.ORGANIZATION)
     response = client.get(
-        reverse('name_entry_detail', args=[name.name_id]))
+        reverse('name:detail', args=[name.name_id]))
 
     assert 'itemprop=\"name\"' in response.content
     assert 'itemprop=\'url\'' in response.content
@@ -76,7 +76,7 @@ def test_event_itemprops(client):
     name = Name.objects.create(name='test event',
                                name_type=Name.EVENT, begin='2500-01-12')
     response = client.get(
-        reverse('name_entry_detail', args=[name.name_id]))
+        reverse('name:detail', args=[name.name_id]))
 
     assert 'itemprop=\"name\"' in response.content
     assert 'itemprop=\'url\'' in response.content

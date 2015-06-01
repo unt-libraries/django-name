@@ -32,7 +32,7 @@ def stats_json(request):
 
 
 @jsonp
-def get_names(request):
+def search_json(request):
     """Gets the JSON encoded version of the Names matching
     the query parameters.
 
@@ -56,7 +56,7 @@ def get_names(request):
     return response
 
 
-def map_json(request):
+def locations_json(request):
     """Presents the Locations and related Names serialized into JSON."""
     if request.is_ajax():
         locations = Location.objects.filter(status=0)

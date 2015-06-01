@@ -29,7 +29,7 @@
         <recordInfo>
             <recordCreationDate>{{ name.date_created|date:"Y-m-d" }}T{{ name.date_created|time:"H:i:s"}}</recordCreationDate>
             <recordChangeDate>{{ name.last_modified|date:"Y-m-d" }}T{{ name.last_modified|time:"H:i:s"}}</recordChangeDate>
-            <recordIdentifier>{% absolute_url "name_entry_detail" name.name_id %}</recordIdentifier>
+            <recordIdentifier>{% absolute_url "name:detail" name.name_id %}</recordIdentifier>
         </recordInfo>
         {% if name.note_set.exists %}
             {% for note in name.note_set.public_notes %}
@@ -41,6 +41,6 @@
                 <url displayLabel="{{ identifier.type.label }}">{{ identifier.value }}</url>
             {% endfor %}
         {% endif %}
-        <identifier type="URL">{% absolute_url "name_entry_detail" name.name_id %}</identifier>
+        <identifier type="URL">{% absolute_url "name:detail" name.name_id %}</identifier>
     </mads>
 {% endspaceless %}

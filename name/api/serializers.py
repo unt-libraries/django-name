@@ -78,7 +78,7 @@ class NameSerializer(serializers.ModelSerializer):
         begin_date -> name.begin
         end_date -> name.end
 
-    The identifier field is the absolute url to the name_entry_detail
+    The identifier field is the absolute url to the name detail
     page for the model instance.
     """
     authoritative_name = serializers.CharField(source='name')
@@ -89,7 +89,7 @@ class NameSerializer(serializers.ModelSerializer):
     notes = NoteSerializer(many=True, source='note_set')
     variants = VariantSerializer(many=True, source='variant_set')
     identifier = serializers.HyperlinkedIdentityField(
-        view_name='name_entry_detail', lookup_field='name_id')
+        view_name='name:detail', lookup_field='name_id')
 
     class Meta:
         model = models.Name
@@ -115,14 +115,14 @@ class NameSearchSerializer(serializers.ModelSerializer):
         type -> name.get_name_type_label()
         label -> Formats name.name and name.disambiguation.
 
-    The URL field is the absolute url to the name_entry_detail page for
+    The URL field is the absolute url to the name detail page for
     the model instance.
     """
     begin_date = serializers.CharField(source='begin')
     type = serializers.SerializerMethodField()
     label = serializers.SerializerMethodField()
     URL = serializers.HyperlinkedIdentityField(
-        view_name='name_entry_detail', lookup_field='name_id')
+        view_name='name:detail', lookup_field='name_id')
 
     class Meta:
         model = models.Name

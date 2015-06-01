@@ -5,9 +5,9 @@
 {% block title %}{{ name.name }}{% endblock %}
 
 {% block head-extra %}
-    <link rel="canonical" href="{% absolute_url "name_entry_detail" name %}">
-    <link rel="alternate" type="application/xml" href="{% url "name_mads_serialize" name %}">
-    <link rel="alternate" type="application/json" href="{% url "name_json" name %}">
+    <link rel="canonical" href="{% absolute_url "name:detail" name %}">
+    <link rel="alternate" type="application/xml" href="{% url "name:mads-serialize" name %}">
+    <link rel="alternate" type="application/json" href="{% url "name:detail-json" name %}">
 {% endblock head-extra %}
 
 {% block content %}
@@ -201,7 +201,7 @@
 
     <h3>Alternate Formats</h3>
     <div>
-        <a class="btn btn-default" href="{% url "name_mads_serialize" name.name_id %}">MADS/XML</a>
-        <a class="btn btn-default" href="{% url "name_json" name.name_id %}">JSON</a>
+        <a class="btn btn-default" href="{% url "name:mads-serialize" name.name_id %}">MADS/XML</a>
+        <a class="btn btn-default" href="{% url "name:detail-json" name.name_id %}">JSON</a>
     </div>
 {% endblock content %}
