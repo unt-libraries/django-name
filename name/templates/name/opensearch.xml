@@ -1,7 +1,7 @@
 {% spaceless %}
     <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-        <ShortName>Name App</ShortName>
-        <Description>Search Name App Entries</Description>
+        <ShortName>{{ name_app_title }}</ShortName>
+        <Description>Search {{ name_app_title }} Entries</Description>
         <Image height="16" width="16">{{ image }}</Image>
         <Url template="{{ search }}" type="text/html"/>
         <Url template="{{ search_json }}" type="application/x-suggestions+json"/>

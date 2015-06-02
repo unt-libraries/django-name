@@ -117,7 +117,7 @@
             <strong>callback</strong>: <em>Optional</em> - the text representation of the jsonp callback wrapper.
 
             <h3>Label API</h3>
-            <p>The second method of searching is with the label API. The label API is essentially a quick way to determine if an authorized name exists in the Name App. The only two responses to this API are a 404 Not Found or a 302 Redirect.</p>
+            <p>The second method of searching is with the label API. The label API is essentially a quick way to determine if an authorized name exists in {{ name_app_title }}. The only two responses to this API are a 404 Not Found or a 302 Redirect.</p>
             <pre>
     $ curl "{% absolute_url "name:label" "joey-not-here" %}"
     No matching term found - authoritative, or variant - for "joey-not-here"
@@ -133,10 +133,10 @@
             <h3>Label Return Codes</h3>
             <div>
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error">404 Not Found</a> response:
-                <ul><li>User gives an authorized name that does not exist in the Name App database.</li></ul>
+                <ul><li>User gives an authorized name that does not exist in the {{ name_app_title }} database.</li></ul>
                 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#3xx_Redirection">302 Redirect</a> response:
                 <ul>
-                    <li>User gives an authorized name that does exist in the Name App database. The system redirects to the corresponding record.</li>
+                    <li>User gives an authorized name that does exist in the {{ name_app_title }} database. The system redirects to the corresponding record.</li>
                 </ul>
             </div>
         </div>

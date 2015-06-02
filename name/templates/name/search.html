@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-center">
-                    <h3>Search the Name App</h3>
+                    <h3>Search {{ name_app_title }}</h3>
                     <form class="form form-inline" action="{% url "name:search" %}">
                         <select class="form-control" name="q_type" id="large_q_type">
                             {% for k, v in name_types.items %}
