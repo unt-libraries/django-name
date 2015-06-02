@@ -1,5 +1,5 @@
 {% extends "name/base.html" %}
-{% block title %}Name App{% endblock %}
+{% block title %}{{ name_app_title }}{% endblock %}
 {% load humanize %}
 {% load name_extras %}
 
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="jumbotron">
-                <h1>The Name App</h1>
+                <h1>{{ name_app_title }}</h1>
                 <p>is for reference, disambiguation and storage of name records.</p>
             </div>
         </div>

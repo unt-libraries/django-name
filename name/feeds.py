@@ -35,7 +35,7 @@ class NameAtomFeed(Feed):
     """Atom Feed for Name objects."""
     feed_type = NameAtomFeedType
     link = reverse_lazy("name:feed")
-    title = "Name App"
+    title = app_settings.NAME_APP_TITLE
     subtitle = "New Name Records"
 
     author_name = app_settings.NAME_FEED_AUTHOR_NAME
