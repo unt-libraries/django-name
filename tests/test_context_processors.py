@@ -1,7 +1,5 @@
 import pytest
 
-from django.urlconf
-
 from name.context_processors import name_types, branding
 from name.models import Name
 from name import app_settings
