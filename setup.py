@@ -22,7 +22,7 @@ install_requires = [
 setup(
     name='django-name',
     version=version,
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests.*", "tests"]),
     include_package_data=True,
     license='BSD',
     description='Name Authority App for Django.',
