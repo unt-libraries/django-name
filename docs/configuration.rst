@@ -10,7 +10,7 @@ Settings
 Branding
 --------
 
-To add a custom title and contact information add the following to your context processor settings.::
+To add a custom title and contact information add the following to your context processor setting. ::
 
     TEMPLATE_CONTEXT_PROCESSORS += (
         # ...
