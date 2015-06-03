@@ -7,8 +7,8 @@ services:
 env:
     global:
         - DB_HOST=localhost
-        - MYSQL_USER=travis
-        - POSTGRES_USER=postgres
+        - DB_MYSQL_USER=travis
+        - DB_POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
         - TOX_ENV=py27-django16-mysql
@@ -22,7 +22,8 @@ env:
         - TOX_ENV=flake8
         - TOX_ENV=docs
     allow_failures:
-        - TOX_ENV=py27-djangomaster
+        - TOX_ENV=py27-djangomaster-mysql
+        - TOX_ENV=py27-djangomaster-postgres
 install:
     - pip install tox
 before_script:
