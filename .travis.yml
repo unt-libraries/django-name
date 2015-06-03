@@ -27,7 +27,7 @@ env:
 install:
     - pip install tox
 before_script:
-    - mysql -e 'create database test_name;'
-    - psql -c 'create database test_name;' -U postgres
+    - mysql -e 'create database name;'
+    - psql -c 'create database name;' -U postgres
 script:
     - tox -e $TOX_ENV
