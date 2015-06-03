@@ -19,16 +19,16 @@ To add a custom title and contact information add the following to your context 
 
 or for Django 1.8+ ::
 
-    TEMPLATES = [
+    TEMPLATES = [{
         # ...
         'OPTIONS': {
             'context_processors': [
                 # ...
                 'name.context_processors.branding'
             ]
+        },
         # ...
-        ]
-    ]
+    }]
 
 Adding this context processor enables the ``NAME_APP_TITLE`` and ``NAME_ADMIN_EMAIL`` settings.
 
