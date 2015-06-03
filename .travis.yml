@@ -1,17 +1,24 @@
 language: python
 sudo: false
 python: 2.7
-services: mysql
+services:
+    - mysql
+    - postgresql
 env:
     global:
         - DB_HOST=localhost
-        - DB_USER=travis
+        - MYSQL_USER=travis
+        - POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py27-django16
-        - TOX_ENV=py27-django17
-        - TOX_ENV=py27-django18
-        - TOX_ENV=py27-djangomaster
+        - TOX_ENV=py27-django16-mysql
+        - TOX_ENV=py27-django17-mysql
+        - TOX_ENV=py27-django18-mysql
+        - TOX_ENV=py27-djangomaster-mysql
+        - TOX_ENV=py27-django16-postgres
+        - TOX_ENV=py27-django17-postgres
+        - TOX_ENV=py27-django18-postgres
+        - TOX_ENV=py27-djangomaster-postgres
         - TOX_ENV=flake8
         - TOX_ENV=docs
     allow_failures:
@@ -19,6 +26,7 @@ env:
 install:
     - pip install tox
 before_script:
-    - mysql -e 'create database name_test;'
+    - mysql -e 'create database test_name;'
+    - psql -c 'create database test_name;' -U postgres
 script:
     - tox -e $TOX_ENV
