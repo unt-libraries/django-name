@@ -7,6 +7,33 @@ The Name App provides a few configurable settings.
 Settings
 ========
 
+Branding
+--------
+
+To add a custom title and contact information add the following to your ``TEMPLATE_CONTEXT_PROCESSORS``::
+
+    TEMPLATE_CONTEXT_PROCESSORS += (
+        # ...
+        'name.context_processors.branding'
+    )
+
+Adding this context processor enables ``NAME_APP_TITLE`` and ``NAME_ADMIN_EMAIL``
+
+``NAME_APP_TITLE``
+..................
+
+**Default**: ``"Django Name"``
+
+This is displayed in the navbar and throughout the templates.
+
+
+``NAME_ADMIN_EMAIL``
+....................
+
+**Default**: ``None``
+
+When set, this will display on the about page as a point of contact for adding a name record to the app.
+
 Feed
 ----
 
