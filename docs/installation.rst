@@ -20,6 +20,9 @@ Installation
 
 3. Configure ``TEMPLATE_CONTEXT_PROCESSORS``
 
+    The ``request`` context processor is required by the Name app. The built-in templates require access to request parameters.
+    The ``name_types`` processors enables the filter component of the search action.
+
 - For Django 1.6 and 1.7 ::
 
     from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
@@ -46,9 +49,6 @@ Installation
     ]
     
 
-- The ``request`` context processor is required by the Name app. The built-in templates require access to request parameters.
-
-- The ``name_types`` processors enables the filter component of the search action.
 
 4. Include the URLS ::
 
