@@ -25,8 +25,7 @@ ROOT_URLCONF = 'tests.urls'
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
-    'name.context_processors.name_types',
-    'name.context_processors.branding')
+    'name.context_processors.name')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -44,8 +43,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
-                'name.context_processors.name_types',
-                'name.context_processors.branding'
+                'name.context_processors.name'
             ],
         },
     },
