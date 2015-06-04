@@ -69,6 +69,9 @@ Installation
     ]
 
 
+5. Migrate/Sync the database.
+
+
 Django 1.7+ Migrations
 ----------------------
 
