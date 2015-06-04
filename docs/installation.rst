@@ -6,9 +6,9 @@ Installation
 Requirements
 ------------
 
-* Django >= 1.6
-* Postgres or MySQL
-* Django Admin
+- Django >= 1.6
+- Postgres or MySQL
+- Django Admin
 
 
 Installation
@@ -79,7 +79,7 @@ Django 1.7+ Migrations
 .. note:: If using Django 1.6, see :ref:`django-16-migrations-ref`.
 
 
-2. Load the Identifier Type fixtures (Optional)::
+2. Load the Identifier Type fixtures (`Optional`) ::
 
    $ ./manage.py loaddata --app name identifier_types
 
@@ -109,7 +109,7 @@ Django Name includes migrations that are compatible with South >= 1.0. Skip to s
    $ ./manage.py migrate name
 
 
-4. Load the Identifier Type fixtures (Optional)::
+4. Load the Identifier Type fixtures (`Optional`) ::
 
    ./manage.py loaddata identifier_types
 
