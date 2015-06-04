@@ -45,7 +45,7 @@ This is displayed in the navbar and throughout the templates.
 
 **Default**: ``None``
 
-When set, this will display on the about page as a point of contact for adding a name record to the app.
+When set, this will display on the about page as a point of contact for adding name records to the app.
 
 Feed
 ----
