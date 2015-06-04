@@ -37,7 +37,7 @@ Installation
 
     TEMPLATE_CONTEXT_PROCESSORS += (
         'django.core.context_processors.request',
-        'name.context_processors.name_types'
+        'name.context_processors.name'
     )
 
 - For Django 1.8+ ::
@@ -49,7 +49,7 @@ Installation
             'OPTIONS': {
                 'context_processors': [
                     'django.template.context_processors.request',
-                    'name.context_processors.name_types'
+                    'name.context_processors.name'
                 ],
                 # ...
             },
@@ -58,7 +58,7 @@ Installation
     
 
 .. note:: The ``request`` context processor is required by the Name app. The built-in templates require access to request parameters.
-    The ``name_types`` processors enables the filter component of the search action.
+    The ``name`` processor enables the filter component of the search action as well as some optional branding (see :ref:`configuration-branding`).
 
 
 4. Include the URLS ::

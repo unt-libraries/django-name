@@ -7,30 +7,10 @@ The Name App provides a few configurable settings.
 Settings
 ========
 
+.. _configuration-branding:
+
 Branding
 --------
-
-For a custom title and contact information add the following to your context processor setting. ::
-
-    TEMPLATE_CONTEXT_PROCESSORS += (
-        # ...
-        'name.context_processors.branding'
-    )
-
-or for Django 1.8+ ::
-
-    TEMPLATES = [{
-        # ...
-        'OPTIONS': {
-            'context_processors': [
-                # ...
-                'name.context_processors.branding'
-            ]
-        },
-        # ...
-    }]
-
-Adding this context processor enables the ``NAME_APP_TITLE`` and ``NAME_ADMIN_EMAIL`` settings.
 
 ``NAME_APP_TITLE``
 ..................
