@@ -3,6 +3,17 @@
 Installation
 ============
 
+Requirements
+------------
+
+* Django >= 1.6
+* Postgres or MySQL
+* Django Admin
+
+
+Installation
+------------
+
 1. Install the package from Github ::
 
     $ pip install http://github.com/unt-libraries/django-name
