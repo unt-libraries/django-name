@@ -6,7 +6,7 @@ Installation
 Requirements
 ------------
 
-- Django >= 1.6
+- Django 1.6+
 - Postgres or MySQL
 - Django Admin
 
@@ -14,7 +14,7 @@ Requirements
 Installation
 ------------
 
-1. Install the package from Github ::
+1. Install the package from Github. ::
 
     $ pip install http://github.com/unt-libraries/django-name
 
@@ -22,9 +22,10 @@ Installation
     This package is not yet available on PyPI.
     
 
-2. Add it to your ``INSTALLED_APPS`` ::
+2. Add ``name`` to your ``INSTALLED_APPS``. Be sure to add ``django.contrib.admin`` if it is not already present. ::
 
     INSTALLED_APPS = (
+        'django.contrib.admin',
         # ...
         'name',
     )
@@ -61,10 +62,10 @@ Installation
     The ``name`` processor enables the filter component of the search action as well as some optional branding (see :ref:`configuration-branding`).
 
 
-4. Include the URLS ::
+4. Include the URLs. ::
 
     urlpatterns = [
-        ...
+        # ...
         url(r'^name/', include('name.urls', namespace='name'))
     ]
 
@@ -75,17 +76,11 @@ Installation
 Django 1.7+ Migrations
 ----------------------
 
-1. Run the migrations ::
+1. Run the migrations. ::
 
    $ ./manage.py migrate name
 
 .. note:: If using Django 1.6, see :ref:`django-16-migrations-ref`.
-
-
-2. Load the Identifier Type fixtures (`Optional`) ::
-
-   $ ./manage.py loaddata --app name identifier_types
-
 
 .. _django-16-migrations-ref:
 
@@ -112,8 +107,26 @@ Django Name includes migrations that are compatible with South >= 1.0. Skip to s
    $ ./manage.py migrate name
 
 
-4. Load the Identifier Type fixtures (`Optional`) ::
+4. Load the Identifier Type fixtures. (`Optional`) ::
 
-   ./manage.py loaddata identifier_types
+   $ ./manage.py loaddata identifier_types
 
 .. note:: To opt out of migrations for Django 1.6, do not install south, and just run ``$ ./manage.py syncdb``
+
+.. _loading-fixtures-ref:
+
+Loading Fixtures
+----------------
+
+.. note:: This is an optional installation step.
+
+The app comes with a fixture of predefined Indentifier Types. Issue one of the following commands below install them.
+
+.. code-block:: sh
+
+   # Django 1.7+ 
+   $ ./manage.py loaddata --app name identifier_types
+
+   # Django 1.6
+   $ ./manage.py loaddata identifier_types
+

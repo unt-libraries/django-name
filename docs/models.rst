@@ -83,7 +83,7 @@ Fields
 
 ``homepage`` - URL to the homepage of the service or website.
 
-There are 13 ``Identifier Types`` that are provided on install. Those types are
+There are 13 ``Identifier Types`` that are included in a fixture. Those types are
 
 - Academia
 - Facebook
@@ -98,3 +98,5 @@ There are 13 ``Identifier Types`` that are provided on install. Those types are
 - Twitter
 - VIAF
 - Wikipedia
+
+See :ref:`loading-fixtures-ref` for installation information.
