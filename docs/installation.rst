@@ -10,6 +10,9 @@ Requirements
 - Postgres or MySQL
 - Django Admin
 
+.. note:: If you are unfamiliar with installing a Django app to a Django project, check out the docs_.
+
+.. _docs: https://docs.djangoproject.com/en/1.8/
 
 Installation
 ------------
