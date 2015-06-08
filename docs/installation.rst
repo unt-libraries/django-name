@@ -8,7 +8,8 @@ Requirements
 
 - Django 1.6+
 - Postgres or MySQL
-- Django Admin
+- Django Admin - ``django.contrib.admin``
+- Humanize - ``django.contrib.humanize``
 
 .. note:: Django Name is intended to be installed within a Django project. If you are unfamiliar with Django, check out the docs_.
 
@@ -22,10 +23,11 @@ Installation
     $ pip install django-name
 
 
-2. Add ``name`` to your ``INSTALLED_APPS``. Be sure to add ``django.contrib.admin`` if it is not already present. ::
+2. Add ``name`` to your ``INSTALLED_APPS``. Be sure to add ``django.contrib.admin`` and ``django.contrib.humanize`` if they are not already present. ::
 
     INSTALLED_APPS = (
         'django.contrib.admin',
+        'django.contrib.humanize',
         # ...
         'name',
     )
