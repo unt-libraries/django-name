@@ -17,13 +17,10 @@ Requirements
 Installation
 ------------
 
-1. Install the package from Github. ::
+1. Install the package from PyPI. ::
 
-    $ pip install http://github.com/unt-libraries/django-name
+    $ pip install django-name
 
-.. note::
-    This package is not yet available on PyPI.
-    
 
 2. Add ``name`` to your ``INSTALLED_APPS``. Be sure to add ``django.contrib.admin`` if it is not already present. ::
 
