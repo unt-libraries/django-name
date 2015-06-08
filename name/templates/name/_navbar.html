@@ -22,7 +22,10 @@
                 <li><a href="{% url "name:about" %}">About</a></li>
                 <li><a href="{% url "name:feed" %}"><span class="fa fa-rss"></span></a></li>
             </ul>
-            <form class="navbar-form navbar-right" id="search" action="{% url "name:search" %}">
+            <ul class="nav navbar-nav navbar-right hidden-md hidden-lg">
+                <li><a href="{% url "name:search" %}"><span class="fa fa-search"></span></a></li>
+            </ul>
+            <form class="navbar-form navbar-right hidden-xs hidden-sm" id="search" action="{% url "name:search" %}">
                 <div class="form-group">
                     <select class="form-control" name="q_type" id="q_type">
                         {# Show current searched type as the default selection, if it exists #}
