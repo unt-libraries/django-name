@@ -7,6 +7,26 @@ The Name App provides a few configurable settings.
 Settings
 ========
 
+.. _configuration-branding:
+
+Branding
+--------
+
+``NAME_APP_TITLE``
+..................
+
+**Default**: ``"Django Name"``
+
+This is displayed in the navbar and throughout the templates.
+
+
+``NAME_ADMIN_EMAIL``
+....................
+
+**Default**: ``None``
+
+When set, this will display on the about page as a point of contact for adding name records to the app.
+
 Feed
 ----
 

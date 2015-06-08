@@ -1,12 +1,13 @@
 from .base import *
 
+SOUTH_TESTS_MIGRATE = False
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'name_test',
-        'USER': os.getenv('DB_USER', default="root"),
+        'NAME': 'name',
+        'USER': os.getenv('DB_MYSQL_USER', default="root"),
         'PASSWORD': os.getenv('DB_PASSWORD', default="root"),
-        'HOST': os.getenv('DB_HOST', default='db'),
+        'HOST': os.getenv('DB_HOST', default='mysql'),
     }
 }

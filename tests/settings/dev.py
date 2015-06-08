@@ -12,6 +12,6 @@ DATABASES = {
         'NAME': 'name',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'db',
+        'HOST': 'mysql',
     }
 }

@@ -1,8 +1,15 @@
-db:
+mysql:
     image: mysql:latest
     environment:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_DATABASE=name
+
+postgres:
+    image: postgres:latest
+    environment:
+        - POSTGRES_PASSWORD=name
+        - POSTGRES_USER=name
+
 web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000 
@@ -11,4 +18,5 @@ web:
     ports:
         - "8000:8000"
     links:
-        - db
+        - mysql 
+        - postgres 
