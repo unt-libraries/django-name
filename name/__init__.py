@@ -1,2 +1,2 @@
 __title__ = 'Django Name'
-__version__ = 'pre-release'
+__version__ = '1.0.0'
