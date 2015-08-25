@@ -10,7 +10,7 @@ To take advantage of the dev environment that is already configured, you need to
 
 Install Docker_
 
-.. _Docker: https://docs.docker.com/installation/
+.. _Docker: https://docs.docker.com
 
 Install Docker Compose.
 
