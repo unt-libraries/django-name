@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 from name.api import stats
 from name.models import Name
 
@@ -28,8 +29,8 @@ class TestNameStatisticsType:
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
         gen = name_stats.get_queryset_members()
 
-        now = datetime.now()
-        expected_month = datetime(now.year, now.month, 1)
+        expected_month = timezone.now().replace(day=1, hour=0, minute=0,
+                                                second=0, microsecond=0)
 
         result = next(gen)
         assert result['count'] == 1
@@ -40,9 +41,10 @@ class TestNameStatisticsType:
         when the queryset is empty but the generator has not yet raised
         a StopIteration.
         """
-        now = datetime.now()
+        now = timezone.now()
         date_created = now - relativedelta(months=5)
-        current_month = datetime(now.year, now.month, 1)
+        current_month = now.replace(day=1, hour=0, minute=0, second=0,
+                                    microsecond=0)
 
         name = Name.objects.create(name="Test Name", name_type=Name.PERSONAL)
 
