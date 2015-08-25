@@ -2,3 +2,4 @@ include LICENSE
 include *.txt *.md
 recursive-include name/templates * 
 recursive-include name/static * 
+recursive-include name/fixtures *
