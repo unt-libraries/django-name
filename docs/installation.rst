@@ -51,6 +51,8 @@ Installation
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
+                    # ...
+                    'django.contrib.auth.context_processors.auth',
                     'django.template.context_processors.request',
                     'name.context_processors.name'
                 ],
