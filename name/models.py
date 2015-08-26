@@ -121,7 +121,6 @@ class Variant(models.Model):
 
     belong_to_name = models.ForeignKey('Name')
     variant_type = models.IntegerField(
-        max_length=50,
         choices=VARIANT_TYPE_CHOICES,
         help_text='Choose variant type.')
 
@@ -333,7 +332,7 @@ class Name(models.Model):
         editable=False,
         help_text='NACO normalized form of the name')
 
-    name_type = models.IntegerField(max_length=1, choices=NAME_TYPE_CHOICES)
+    name_type = models.IntegerField(choices=NAME_TYPE_CHOICES)
 
     # Date, month or year of birth or incorporation of the name
     begin = models.CharField(
@@ -561,7 +560,6 @@ class Location(models.Model):
         help_text=HELP_TEXT)
 
     status = models.IntegerField(
-        max_length=2,
         choices=LOCATION_STATUS_CHOICES,
         default=CURRENT)
 
