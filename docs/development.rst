@@ -10,7 +10,7 @@ To take advantage of the dev environment that is already configured, you need to
 
 Install Docker_
 
-.. _Docker: https://docs.docker.com/installation/
+.. _Docker: https://docs.docker.com
 
 Install Docker Compose.
 
@@ -68,7 +68,7 @@ To run the tests via Tox, use this command.
 
 The Tox configuration will test this app with Django 1.6 - 1.8.
 
-To run the tests only with the development environment (i.e. with Django 1.7).
+To run the tests only with the development environment (i.e. with Django 1.8).
 
 .. code-block:: sh
 

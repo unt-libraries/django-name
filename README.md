@@ -28,7 +28,7 @@ Contributors:
 
 To take advantage of the dev environment that is already configured, you need to have Docker(>= 1.3) and Docker Compose installed.
 
-Install [Docker](https://docs.docker.com/installation/)
+Install [Docker](https://docs.docker.com)
 
 Install Docker Compose
 ```sh
@@ -78,7 +78,7 @@ $ docker-compose run --rm web tox
 ```
 The Tox configuration will test this app with Django 1.6 - 1.8.
 
-To run the tests only with the development environment (i.e. with Django 1.7)
+To run the tests only with the development environment (i.e. with Django 1.8)
 ```sh
 $ docker-compose run --rm web ./runtests.py
 ```

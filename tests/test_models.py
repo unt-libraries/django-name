@@ -138,7 +138,7 @@ class TestName:
         """Test that has_geocode returns True."""
 
         lat, lng = 33.210241, -97.148857
-        name = Name.objects.create(name="Test Name", name_type=Name.BUILDING)
+        name = Name.objects.create(name="Test Name", name_type=Name.PERSONAL)
         Location.objects.create(belong_to_name=name, longitude=lng,
                                 latitude=lat)
         assert name.has_geocode()
@@ -146,7 +146,7 @@ class TestName:
     @pytest.mark.django_db
     def test_does_not_have_geocode(self):
         """Test that has_geocode returns False."""
-        name = Name.objects.create(name="Test Name", name_type=Name.BUILDING)
+        name = Name.objects.create(name="Test Name", name_type=Name.PERSONAL)
         assert not name.has_geocode()
 
     def test_has_unicode_method(self):
