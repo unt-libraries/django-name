@@ -3,6 +3,7 @@
 *.swo
 *.egg-info
 dist/
+build/
 .tox
 db.sqlite3
 tests/__pycache__
