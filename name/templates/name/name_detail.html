@@ -29,179 +29,179 @@
                 <a class="btn btn-default" href="{% url "admin:name_name_change" name.id %}">Edit</a>
             </div>
         {% endif %}
-    </div>
 
-    <table class="table table-striped">
-        <colgroup><col class="labels"><col class="data"></colgroup>
-        <tr>
-            <th>Authorized:</th>
-            <td >
-                <!-- all schema "Things" have a name property -->
-                <span itemprop="name">{{ name.name }}</span>
-            </td>
-        </tr>
-        <tr>
-            <th>Name Type:</th>
-            <td>{{ name.get_name_type_label }}</td>
-        </tr>
+        <table class="table table-striped">
+            <colgroup><col class="labels"><col class="data"></colgroup>
+            <tr>
+                <th>Authorized:</th>
+                <td >
+                    <!-- all schema "Things" have a name property -->
+                    <span itemprop="name">{{ name.name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Name Type:</th>
+                <td>{{ name.get_name_type_label }}</td>
+            </tr>
 
-        {# Locations #}
-        {% if name.is_building %}
-            {% for l in name.location_set.all %}
+            {# Locations #}
+            {% if name.is_building %}
+                {% for l in name.location_set.all %}
+                    <tr>
+                        <th>Location: <em><small>({% if l.is_current %}current{% else %}former{% endif %})</small></em></th>
+                        <td>{{ l.latitude }}, {{ l.longitude }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
+            <tr>
+                <th>URI:</th>
+                <td>
+                    <a href='{{ request.build_absolute_uri }}'><span itemprop='url'>{{ request.build_absolute_uri }}</span></a>
+                </td>
+            </tr>
+
+            {% if name.disambiguation %}
                 <tr>
-                    <th>Location: <em><small>({% if l.is_current %}current{% else %}former{% endif %})</small></em></th>
-                    <td>{{ l.latitude }}, {{ l.longitude }}</td>
+                   <th>Disambiguation:</th>
+                   <td>
+                        {{ name.disambiguation }}
+                    </td>
                 </tr>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
 
-        <tr>
-            <th>URI:</th>
-            <td>
-                <a href='{{ request.build_absolute_uri }}'><span itemprop='url'>{{ request.build_absolute_uri }}</span></a>
-            </td>
-        </tr>
+            {# FIXME: There is a lot of nesting here #}
 
-        {% if name.disambiguation %}
+            {% if name.begin %}
+                <tr>
+                    <th>{{ name.get_date_display.begin }}: </th>
+                    <td>
+                        {% if name.is_personal %}
+                            <span itemprop="birthDate">{{ name.begin }}</span>
+                        {% elif name.is_organization %}
+                                <span itemprop="foundingDate">{{ name.begin }}</span>
+                        {% elif name.is_building %}
+                            <span itemprop="erectedDate">{{ name.begin }}</span>
+                        {% elif name.is_event %}
+                            <span itemprop="startDate">{{ name.begin }}</span>
+                        {% else %}
+                            {{ name.begin }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% if name.end %}
+                <tr>
+                    <th>{{ name.get_date_display.end }}: </th>
+                    <td>
+                        {% if name.is_personal %}
+                            <span itemprop="deathDate">{{ name.end }}</span>
+                        {% else %}
+                            {{ name.end }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <!-- BIOGRAPHY -->
+            {% if name.biography %}
+                <tr>
+                    <th>
+                        {% if name.is_personal %}
+                            Biographical Info:
+                        {% else %}
+                            History:
+                        {% endif %}
+                    </th>
+                    <td>
+                        {{ name.render_biography|safe }}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <!-- LINKS -->
             <tr>
-               <th>Disambiguation:</th>
-               <td>
-                    {{ name.disambiguation }}
-                </td>
-            </tr>
-        {% endif %}
-
-        {# FIXME: There is a lot of nesting here #}
-
-        {% if name.begin %}
-            <tr>
-                <th>{{ name.get_date_display.begin }}: </th>
-                <td>
-                    {% if name.is_personal %}
-                        <span itemprop="birthDate">{{ name.begin }}</span>
-                    {% elif name.is_organization %}
-                            <span itemprop="foundingDate">{{ name.begin }}</span>
-                    {% elif name.is_building %}
-                        <span itemprop="erectedDate">{{ name.begin }}</span>
-                    {% elif name.is_event %}
-                        <span itemprop="startDate">{{ name.begin }}</span>
-                    {% else %}
-                        {{ name.begin }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endif %}
-
-        {% if name.end %}
-            <tr>
-                <th>{{ name.get_date_display.end }}: </th>
-                <td>
-                    {% if name.is_personal %}
-                        <span itemprop="deathDate">{{ name.end }}</span>
-                    {% else %}
-                        {{ name.end }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endif %}
-
-        <!-- BIOGRAPHY -->
-        {% if name.biography %}
-            <tr>
-                <th>
-                    {% if name.is_personal %}
-                        Biographical Info:
-                    {% else %}
-                        History:
-                    {% endif %}
-                </th>
-                <td>
-                    {{ name.render_biography|safe }}
-                </td>
-            </tr>
-        {% endif %}
-
-        <!-- LINKS -->
-        <tr>
-            <th>Links:</th>
-            <td>
-                <ul class="list-unstyled">
-                    {% if name.identifier_set.exists %}
-                        {% for link in name.identifier_set.all %}
-                            {% if name.is_active and link.visible %}
-                                <li>
-                                    {% if link.type.icon_path %}
-                                        <img alt="icon" src="{% static link.type.icon_path %}" style="max-width: 16px">
-                                    {% else %}
-                                        <span class="fa fa-leaf"></span>
-                                    {% endif %}
-
-                                    {% if "http" in link|escape or ".edu" in link|escape or ".com" in link|escape %}
-                                        <strong>{{ link.type }}:</strong> <a itemprop="sameAs" href="{{ link }}">{{ link }}</a>
-                                    {% else %}
-                                        {% if "@" in link|escape %}
-                                            {{ link.type }}:
-                                            <a href="{{ link }}"><span itemprop="email">{{ link }}</span></a>
-                                        {% else %}
-                                            <strong>{{ link.type }}:</strong> {{ link }}
-                                        {% endif %}
-                                    {% endif %}
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                </ul>
-            </td>
-        </tr>
-
-        <!-- VARIANTS -->
-        {% if name.variant_set.all %}
-            <tr>
-                {% if name.is_organization %}
-                    <th>Variant Name:</th>
-                {% elif name.is_building %}
-                    <th>Also Known As:</th>
-                {% else %}
-                    <th>Publishes As:</th>
-                {% endif %}
-
+                <th>Links:</th>
                 <td>
                     <ul class="list-unstyled">
-                        {% for variant in name.variant_set.all %}
-                            <li>
-                                {% if name.is_personal %}
-                                    <span itemprop="additionalName">{{ variant }}</span>
-                                {% else %}
-                                    <span itemprop="alternateName">{{ variant }}</span>
+                        {% if name.identifier_set.exists %}
+                            {% for link in name.identifier_set.all %}
+                                {% if name.is_active and link.visible %}
+                                    <li>
+                                        {% if link.type.icon_path %}
+                                            <img alt="icon" src="{% static link.type.icon_path %}" style="max-width: 16px">
+                                        {% else %}
+                                            <span class="fa fa-leaf"></span>
+                                        {% endif %}
+
+                                        {% if "http" in link|escape or ".edu" in link|escape or ".com" in link|escape %}
+                                            <strong>{{ link.type }}:</strong> <a itemprop="sameAs" href="{{ link }}">{{ link }}</a>
+                                        {% else %}
+                                            {% if "@" in link|escape %}
+                                                {{ link.type }}:
+                                                <a href="{{ link }}"><span itemprop="email">{{ link }}</span></a>
+                                            {% else %}
+                                                <strong>{{ link.type }}:</strong> {{ link }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
                                 {% endif %}
-                            </li>
-                        {% endfor %}
+                            {% endfor %}
+                        {% endif %}
                     </ul>
                 </td>
             </tr>
-        {% endif %}
 
-        <!-- NOTES -->
-        {% with name.note_set.public_notes as public_notes %}
-            {% if public_notes %}
+            <!-- VARIANTS -->
+            {% if name.variant_set.all %}
                 <tr>
-                    <th>Notes:</th>
-                    <td>{{ public_notes|join:"<br>" }}</td>
+                    {% if name.is_organization %}
+                        <th>Variant Name:</th>
+                    {% elif name.is_building %}
+                        <th>Also Known As:</th>
+                    {% else %}
+                        <th>Publishes As:</th>
+                    {% endif %}
+
+                    <td>
+                        <ul class="list-unstyled">
+                            {% for variant in name.variant_set.all %}
+                                <li>
+                                    {% if name.is_personal %}
+                                        <span itemprop="additionalName">{{ variant }}</span>
+                                    {% else %}
+                                        <span itemprop="alternateName">{{ variant }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
                 </tr>
             {% endif %}
-        {% endwith %}
-    </table>
 
-    {# This will only display if the Name is a Building #}
-    {% if name.is_building and name.has_current_location %}
-        {% with name.location_set.current_location as current_location %}
-            <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{name}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
-        {% endwith %}
-    {% endif %}
+            <!-- NOTES -->
+            {% with name.note_set.public_notes as public_notes %}
+                {% if public_notes %}
+                    <tr>
+                        <th>Notes:</th>
+                        <td>{{ public_notes|join:"<br>" }}</td>
+                    </tr>
+                {% endif %}
+            {% endwith %}
+        </table>
 
-    <h3>Alternate Formats</h3>
-    <div>
-        <a class="btn btn-default" href="{% url "name:mads-serialize" name.name_id %}">MADS/XML</a>
-        <a class="btn btn-default" href="{% url "name:detail-json" name.name_id %}">JSON</a>
+        {# This will only display if the Name is a Building #}
+        {% if name.is_building and name.has_current_location %}
+            {% with name.location_set.current_location as current_location %}
+                <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{name}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
+            {% endwith %}
+        {% endif %}
+
+        <h3>Alternate Formats</h3>
+        <div>
+            <a class="btn btn-default" href="{% url "name:mads-serialize" name.name_id %}">MADS/XML</a>
+            <a class="btn btn-default" href="{% url "name:detail-json" name.name_id %}">JSON</a>
+        </div>
     </div>
 {% endblock content %}
