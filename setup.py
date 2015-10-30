@@ -15,7 +15,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as fd:
 install_requires = [
     'python-dateutil',
     'markdown2',
-    'djangorestframework >= 3.1',
+    'djangorestframework >= 3.1,<3.3.0',
     'pynaco == 0.1.0'
 ]
 
