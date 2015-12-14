@@ -42,6 +42,11 @@ $ git clone https://github.com/unt-libraries/django-name.git
 $ cd django-name
 ```
 
+Warm up the MySQL database. This only needs to be done when the database container doesn't exist yet. This will take ~15 seconds once the image has been pulled.
+```sh
+$ docker-compose up -d mysql
+```
+
 Start the app and run the migrations.
 ```sh
 # start the app
