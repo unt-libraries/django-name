@@ -1,11 +1,13 @@
 import json
+from datetime import datetime
+from itertools import groupby
+
 import markdown2
-
-from django.utils.six.moves.urllib.request import urlopen
-from django.utils.six.moves.urllib.parse import quote
-
 from django.core.urlresolvers import reverse
-from django.db import models, transaction, connection
+from django.db import models, transaction
+from django.utils import timezone
+from django.utils.six.moves.urllib.parse import quote
+from django.utils.six.moves.urllib.request import urlopen
 from pynaco.naco import normalizeSimplified
 
 from .validators import validate_merged_with
@@ -236,20 +238,30 @@ class NameManager(models.Manager):
                month: <Datetime object for first day of the given month>
             }
         """
-        truncate_date = connection.ops.date_trunc_sql('month', date_column)
-        return (self.extra({'month': truncate_date})
-                    .values('month')
-                    .annotate(count=models.Count(date_column))
-                    .order_by(date_column))
+        def grouper(name):
+            return (getattr(name, date_column).year,
+                    getattr(name, date_column).month)
+
+        def convert_key(year, month):
+            datetime_obj = datetime(year=year, month=month, day=1)
+            tzinfo = timezone.get_current_timezone()
+            return timezone.make_aware(datetime_obj, tzinfo)
+
+        results = self.all().order_by(date_column)
+
+        return [
+            dict(month=convert_key(*key), count=len(list(value)))
+            for key, value in groupby(results, grouper)
+        ]
 
     def created_stats(self):
-        """Returns a ValueQuerySet of the number of Names created per
+        """Returns a list of the number of Names created per
         month.
         """
         return self._counts_per_month('date_created')
 
     def modified_stats(self):
-        """Returns a ValueQuerySet of the number of Names modified per
+        """Returns a list of the number of Names modified per
         month.
         """
         return self._counts_per_month('last_modified')
