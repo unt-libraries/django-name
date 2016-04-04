@@ -1,8 +1,13 @@
-import pytest
 import json
+from datetime import datetime
+
+import pytest
+from django.utils import timezone
 from mock import patch, Mock
+
 from name.models import (
     Name,
+    NameManager,
     Note,
     Variant,
     BaseTicketing,
@@ -44,6 +49,41 @@ class TestBaseTicketing:
         ticket_id = 1
         ticket = BaseTicketing(id=ticket_id)
         assert 'nm{:07d}'.format(ticket_id) == unicode(ticket)
+
+
+class TestNameManager(object):
+
+    @pytest.fixture
+    def time_series_names(self):
+        for _ in range(10):
+            name = Name.objects.create(name="John Smith", name_type=Name.PERSONAL)  # noqa
+            name.date_created = datetime(year=2014, month=10, day=11)
+            name.save()
+
+        for _ in range(10):
+            name = Name.objects.create(name="John Smith", name_type=Name.PERSONAL)  # noqa
+
+    @pytest.mark.django_db
+    def test_created_stats(self, time_series_names):
+        manager = NameManager()
+        manager.model = Name
+
+        stats = manager.created_stats()
+
+        assert len(stats) == 2
+        assert all(m['count'] == 10 for m in stats)
+        assert all(timezone.is_aware(m['month']) for m in stats)
+
+    @pytest.mark.django_db
+    def test_modified_stats(self, time_series_names):
+        manager = NameManager()
+        manager.model = Name
+
+        stats = manager.modified_stats()
+
+        assert len(stats) == 1
+        assert all(m['count'] == 20 for m in stats)
+        assert all(timezone.is_aware(m['month']) for m in stats)
 
 
 class TestName:

@@ -18,7 +18,7 @@ class NameStatisticsType(object):
     """Statistics class for calculating the number
     of Name objects in the database using a DateTime field.
 
-    Accepts a ValuesQuerySet of dictionaries in the form of
+    Accepts a list of dictionaries in the form of
         [{ count: <num>, month: <datetime object> }, ...]
 
     This will calculate:
@@ -29,9 +29,9 @@ class NameStatisticsType(object):
            the current month according to the system time.
     """
 
-    def __init__(self, queryset):
+    def __init__(self, raw_stats):
         self.running_total = 0
-        self.queryset = queryset
+        self.raw_stats = raw_stats
         self.stats = []
 
     def calculate(self):
@@ -46,7 +46,7 @@ class NameStatisticsType(object):
 
         # Create a NameStatisticsMonth object for each month since the
         # first Name was created.
-        for u in self.get_queryset_members():
+        for u in self.process_raw_stats():
             stats_month = NameStatisticsMonth(
                 total=u.get('count'), month=u.get('month'))
 
@@ -58,27 +58,23 @@ class NameStatisticsType(object):
             self.stats.append(stats_month)
         return self.stats
 
-    def get_queryset_members(self):
-        """Produces a generator which yields each element in the queryset
+    def process_raw_stats(self):
+        """Produces a generator which yields each element in the list
         in order.
 
-        The queryset used to initialize this object is expected to
+        The list used to initialize this object is expected to
         only contain elements for each month where a name was created
-        or modified (based on the queryset). If there is a month when a
+        or modified (based on the list). If there is a month when a
         Name was not created, this method will instead create an element
         with `count` set to 0 for said month and yield it.
         """
-        # Return early if the queryset is empty.
-        if not len(self.queryset) > 0:
+        # Return early if the list is empty.
+        if not len(self.raw_stats) > 0:
             return
 
-        # Use the month in the first element of the queryset
+        # Use the month in the first element of the list
         # as the starting month.
-        current = self.queryset.first().get('month')
-
-        # Convert the queryset to a list so that we can use the
-        # pop() method.
-        queryset = list(self.queryset)
+        current = self.raw_stats[0].get('month')
 
         # Create a datetime object for the first day of the current
         # month according to the system time.
@@ -90,12 +86,12 @@ class NameStatisticsType(object):
 
         while current <= end:
             # Get the first element of the list, if it exists.
-            elem = queryset[0] if len(queryset) else False
+            elem = self.raw_stats[0] if len(self.raw_stats) else False
 
-            # Yield the first queryset element if the element
+            # Yield the first list element if the element
             # exists and if it's member month is equal to `current`.
             if elem and elem.get('month') == current:
-                yield queryset.pop(0)
+                yield self.raw_stats.pop(0)
             else:
                 yield dict(count=0, month=current)
             current += delta

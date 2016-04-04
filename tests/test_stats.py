@@ -11,23 +11,33 @@ pytestmark = pytest.mark.django_db
 
 class TestNameStatisticsType:
 
-    def test_get_queryset_members_returns_none_with_empty_queryset(self):
-        """Check the behaviour of get_queryset_member when no objects
-        are contained in the queryset passed to NameStatisticsType.
+    def test_process_raw_stats_count(self):
+        for _ in range(20):
+            name = Name(name="John Smith", name_type=Name.PERSONAL)
+            name.save()
+
+        name_stats = stats.NameStatisticsType(Name.objects.created_stats())
+        result = list(name_stats.process_raw_stats())
+
+        assert len(result) == 1
+
+    def test_process_raw_stats_returns_none_with_empty_list(self):
+        """Check the behaviour of process_raw_stats when no objects
+        are contained in the list passed to NameStatisticsType.
 
         The generator is expected to raise a StopIteration upon
         the first call of next().
         """
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
-        result = name_stats.get_queryset_members()
+        result = name_stats.process_raw_stats()
 
         with pytest.raises(StopIteration):
             next(result)
 
-    def test_get_queryset_members_with_names_created_in_current_month(self):
+    def test_process_raw_stats_with_names_created_in_current_month(self):
         Name.objects.create(name="John Smith", name_type=Name.PERSONAL)
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
-        gen = name_stats.get_queryset_members()
+        gen = name_stats.process_raw_stats()
 
         expected_month = timezone.now().replace(day=1, hour=0, minute=0,
                                                 second=0, microsecond=0)
@@ -36,9 +46,9 @@ class TestNameStatisticsType:
         assert result['count'] == 1
         assert result['month'] == expected_month
 
-    def test_get_queryset_members_with_no_names_created_in_current_month(self):
-        """Check that get_queryset_members generates the correct data
-        when the queryset is empty but the generator has not yet raised
+    def test_process_raw_stats_with_no_names_created_in_current_month(self):
+        """Check that process_raw_stats generates the correct data
+        when the list is empty but the generator has not yet raised
         a StopIteration.
         """
         now = timezone.now()
@@ -54,7 +64,7 @@ class TestNameStatisticsType:
         name.save()
 
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
-        gen = name_stats.get_queryset_members()
+        gen = name_stats.process_raw_stats()
 
         # Expand the generator into a list, and get the last element.
         # That element will represent the statistics for the current month,
@@ -65,7 +75,7 @@ class TestNameStatisticsType:
         assert last_result['count'] == 0
         assert last_result['month'] == current_month
 
-    def test_calculate_with_empty_queryset(self):
+    def test_calculate_with_empty_list(self):
         name_stats = stats.NameStatisticsType(Name.objects.created_stats())
         result = name_stats.calculate()
         assert isinstance(result, list)
