@@ -13,7 +13,11 @@ class NameAtomFeedType(Atom1Feed):
     add a georss:point element to any entry that has a current location
     set.
     """
-    mime_type = 'application/xml'
+    # Django still uses mime_type prior to version 1.9
+    # TODO: Remove the `mime_type` attribute after support for Django 1.8
+    #       is dropped.
+    content_type = mime_type = 'application/xml'
+
     GEO_RSS_NS = 'http://www.georss.org/georss'
 
     def root_attributes(self):
