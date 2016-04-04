@@ -42,7 +42,8 @@ def test_building_itemprops(client):
 
     assert 'itemprop=\"name\"' in response.content
     assert 'itemprop=\'url\'' in response.content
-    assert 'itemprop=\"erectedDate\"' in response.content
+    assert 'itemprop=\"additionalProperty\"' in response.content
+    assert 'content=\"erectedDate\"' in response.content
 
 
 def test_organization_itemprops(client):

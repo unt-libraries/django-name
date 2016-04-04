@@ -81,7 +81,10 @@
                         {% elif name.is_organization %}
                                 <span itemprop="foundingDate">{{ name.begin }}</span>
                         {% elif name.is_building %}
-                            <span itemprop="erectedDate">{{ name.begin }}</span>
+                            <span itemprop="additionalProperty" itemscope itemtype="http://schema.org/PropertyValue">
+                                <meta itemprop="name" content="erectedDate">
+                                <span itemprop="value">{{ name.begin }}</span>
+                            </span>
                         {% elif name.is_event %}
                             <span itemprop="startDate">{{ name.begin }}</span>
                         {% else %}
