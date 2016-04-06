@@ -6,7 +6,7 @@ Installation
 Requirements
 ------------
 
-- Django 1.6+
+- Django 1.7+
 - Postgres or MySQL
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
@@ -34,7 +34,7 @@ Installation
 
 3. Configure the context processors. 
 
-- For Django 1.6 and 1.7 ::
+- For Django 1.7 ::
 
     from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
@@ -77,45 +77,7 @@ Installation
 5. Migrate/Sync the database.
 
 
-Django 1.7+ Migrations
-----------------------
-
-1. Run the migrations. ::
-
-   $ ./manage.py migrate name
-
-.. note:: If using Django 1.6, see :ref:`django-16-migrations-ref`.
-
-.. _django-16-migrations-ref:
-
-Django 1.6 Migrations
----------------------
-
-Django Name includes migrations that are compatible with South >= 1.0. Skip to step 3 if South is already installed. 
-
-1. Install South. ::
-
-    INSTALLED_APPS = [
-        # ...
-        south
-    ]
-
-2. Sync the database. ::
-
-   $ ./manage.py syncdb
-
-   
-
-3. Run the migrations. ::
-
-   $ ./manage.py migrate name
-
-
-4. Load the Identifier Type fixtures. (`Optional`) ::
-
-   $ ./manage.py loaddata identifier_types
-
-.. note:: To opt out of migrations for Django 1.6, do not install south, and just run ``$ ./manage.py syncdb``
+6. **Optional**: Load the Identifier Type fixtures. See :ref:`loading-fixtures-ref`.
 
 .. _loading-fixtures-ref:
 
@@ -128,9 +90,4 @@ The app comes with a fixture of predefined Indentifier Types. Issue one of the f
 
 .. code-block:: sh
 
-   # Django 1.7+ 
    $ ./manage.py loaddata --app name identifier_types
-
-   # Django 1.6
-   $ ./manage.py loaddata identifier_types
-

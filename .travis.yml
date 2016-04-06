@@ -11,12 +11,10 @@ env:
         - DB_POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py27-django16-mysql
         - TOX_ENV=py27-django17-mysql
         - TOX_ENV=py27-django18-mysql
         - TOX_ENV=py27-django19-mysql
         - TOX_ENV=py27-djangomaster-mysql
-        - TOX_ENV=py27-django16-postgres
         - TOX_ENV=py27-django17-postgres
         - TOX_ENV=py27-django18-postgres
         - TOX_ENV=py27-django19-postgres
