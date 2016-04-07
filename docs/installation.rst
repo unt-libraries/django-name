@@ -74,7 +74,9 @@ Installation
     ]
 
 
-5. Migrate the database.
+5. Migrate the database. ::
+
+   $ ./manage.py migrate name
 
 
 6. **Optional**: Load the Identifier Type fixtures. See :ref:`loading-fixtures-ref`.
