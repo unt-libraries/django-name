@@ -74,7 +74,7 @@ Installation
     ]
 
 
-5. Migrate/Sync the database.
+5. Migrate the database.
 
 
 6. **Optional**: Load the Identifier Type fixtures. See :ref:`loading-fixtures-ref`.
