@@ -82,7 +82,7 @@ To run the tests via Tox, use this command.
 ```sh
 $ docker-compose run --rm web tox
 ```
-The Tox configuration will test this app with Django 1.6 - 1.8.
+The Tox configuration will test this app with Django 1.7 - 1.9.
 
 To run the tests only with the development environment (i.e. with Django 1.8)
 ```sh
