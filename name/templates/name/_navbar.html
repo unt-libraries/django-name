@@ -30,12 +30,13 @@
                     <select class="form-control" name="q_type" id="q_type">
                         {# Show current searched type as the default selection, if it exists #}
                         {% for k, v in name_types.items %}
-                            {% if q_type == v %}
+                            {% if request.GET.q_type == v %}
                                 <option value="{{ v }}" selected>{{ v }}</option>
                             {% else %}
                                 <option value="{{ v }}">{{ v }}</option>
                             {% endif %}
                         {% endfor %}
+                        <option value="Any Type" {% if not request.GET.q_type or request.GET.q_type == "Any Type" %}selected{% endif %}>Any Type</option>
                     </select>
                     <input class="form-control" type="text" name="q" id="names" value="{{ q }}">
                     <input type="hidden" value="{% url "name:search-json" %}" id="autocomplete">
