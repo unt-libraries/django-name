@@ -23,6 +23,7 @@ Contributors:
 - [Damon Kelley](https://github.com/damonkelley)
 - [Lauren Ko](https://github.com/ldko)
 - [Mark Phillips](https://github.com/vphill)
+- [Gio Gottardi](https://github.com/somexpert)
 
 
 ## Developing

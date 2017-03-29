@@ -30,9 +30,11 @@ Acknowledgements
 - `Damon Kelley`_
 - `Lauren Ko`_
 - `Mark Phillips`_
+- `Gio Gottardi`_
 
 .. _`Joey Liechty`: http://github.com/yeahdef
 .. _`Damon Kelley`: http://github.com/damonkelley
 .. _`Lauren Ko`: http://github.com/ldko
 .. _`Mark Phillips`: http://github.com/vphill
+.. _`Gio Gottardi`: http://github.com/somexpert
 

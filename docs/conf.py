@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Django Name'
-copyright = u'2015, University of North Texas Libraries'
+copyright = u'2017, University of North Texas Libraries'
 author = u'University of North Texas Libraries'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -62,9 +62,12 @@ def resolve_type(q_type):
 
     q_type = q_type.split(',')
 
-    # Iterate through the Name Types and create a list of Name IDs
-    # using the corresponding strings values in q_type
-    return [k for k, v in Name.NAME_TYPE_CHOICES if v in q_type]
+    if "Any Type" in q_type:
+        return [k for k, v in Name.NAME_TYPE_CHOICES]
+    else:
+        # Iterate through the Name Types and create a list of Name IDs
+        # using the corresponding strings values in q_type
+        return [k for k, v in Name.NAME_TYPE_CHOICES if v in q_type]
 
 
 # TODO: Look at reducing the number of queries.
