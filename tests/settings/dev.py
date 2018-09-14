@@ -1,6 +1,4 @@
-from .base import *
-
-INSTALLED_APPS += ['debug_toolbar']
+from .base import *  # noqa
 
 INTERNAL_IPS = (
     '172.17.42.1',
