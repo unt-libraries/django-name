@@ -53,7 +53,7 @@ Start the app and run the migrations.
 # start the app
 $ docker-compose up -d
 
-# run the migrations
+# wait about 2 minutes for the database to initialize, then run the migrations
 $ docker-compose run --rm web ./manage.py migrate
 
 # optional: add a superuser in order to login to the admin interface
@@ -83,9 +83,9 @@ To run the tests via Tox, use this command.
 ```sh
 $ docker-compose run --rm web tox
 ```
-The Tox configuration will test this app with Django 1.7 - 1.9.
+The Tox configuration will test this app with Django 1.10 - 1.11.
 
-To run the tests only with the development environment (i.e. with Django 1.8)
+To run the tests only with the development environment (i.e. with Django 1.11)
 ```sh
 $ docker-compose run --rm web ./runtests.py
 ```
