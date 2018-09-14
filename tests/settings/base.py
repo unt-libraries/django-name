@@ -22,12 +22,7 @@ INSTALLED_APPS = [
 
 ROOT_URLCONF = 'tests.urls'
 
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
-TEMPLATE_CONTEXT_PROCESSORS += (
-    'django.core.context_processors.request',
-    'name.context_processors.name')
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

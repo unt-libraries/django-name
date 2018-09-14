@@ -7,6 +7,7 @@ from .api import views as api
 
 admin.autodiscover()
 
+app_name = 'name'
 urlpatterns = [
     url(r'^$', views.landing, name='landing'),
     url(r'about/$', views.about, name='about'),
