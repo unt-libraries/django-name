@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from name.api import stats
 from name.models import Name
+from .test_models import UTC
 
 # Give all tests access to the database.
 pytestmark = pytest.mark.django_db
@@ -82,7 +83,7 @@ class TestNameStatisticsType:
         assert len(result) == 0
 
     def test_calculate_counts(self):
-        now = datetime.now()
+        now = datetime.now(UTC())
         date_created = now - relativedelta(months=2)
 
         name1 = Name.objects.create(name="John Smith", name_type=Name.PERSONAL)

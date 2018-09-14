@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta, tzinfo
 
 import pytest
 from django.utils import timezone
@@ -14,6 +14,18 @@ from name.models import (
     Location,
     Identifier_Type,
     Identifier)
+
+
+class UTC(tzinfo):
+    """UTC timezone for datetime objects."""
+    def utcoffset(self, dt):
+        return timedelta(0)
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return timedelta(0)
 
 
 class TestIdentifier_Type:
@@ -57,7 +69,7 @@ class TestNameManager(object):
     def time_series_names(self):
         for _ in range(10):
             name = Name.objects.create(name="John Smith", name_type=Name.PERSONAL)  # noqa
-            name.date_created = datetime(year=2014, month=10, day=11)
+            name.date_created = datetime(year=2014, month=10, day=11, tzinfo=UTC())
             name.save()
 
         for _ in range(10):
