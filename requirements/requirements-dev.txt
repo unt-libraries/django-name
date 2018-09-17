@@ -1,5 +1,4 @@
 # Packages that are only used in the dev environments.
 Django==1.11
 # django-debug-toolbar==1.8  # TODO: look into adding this back
-# ipython==5.8.0  # TODO: look into adding this back
 mysql-python==1.2.5
