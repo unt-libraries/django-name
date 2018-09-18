@@ -1,0 +1,7 @@
+[run]
+source = name
+omit = */migrations/*
+branch = true
+
+[report]
+show_missing = true

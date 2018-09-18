@@ -17,17 +17,19 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.humanize',
     'name',
-    'tests']
+    'tests',
+]
 
 
 ROOT_URLCONF = 'tests.urls'
 
-MIDDLEWARE = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware')
+    'django.contrib.messages.middleware.MessageMiddleware',
+]
 
 
 # Minimal template settings for testing Django 1.8.
