@@ -6,14 +6,14 @@ Installation
 Requirements
 ------------
 
-- Django 1.7+
+- Django 1.10 or 1.11
 - Postgres or MySQL
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
 
 .. note:: Django Name is intended to be installed within a Django project. If you are unfamiliar with Django, check out the docs_.
 
-.. _docs: https://docs.djangoproject.com/en/1.8/
+.. _docs: https://docs.djangoproject.com/en/1.11/
 
 Installation
 ------------
@@ -32,18 +32,7 @@ Installation
         'name',
     )
 
-3. Configure the context processors. 
-
-- For Django 1.7 ::
-
-    from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
-
-    TEMPLATE_CONTEXT_PROCESSORS += (
-        'django.core.context_processors.request',
-        'name.context_processors.name'
-    )
-
-- For Django 1.8+ ::
+3. Configure the context processors. ::
 
     TEMPLATES = [
         {
@@ -68,9 +57,11 @@ Installation
 
 4. Include the URLs. ::
 
+    from name import urls as name_urls
+
     urlpatterns = [
         # ...
-        url(r'^name/', include('name.urls', namespace='name'))
+        url(r'^name/', include(name_urls))
     ]
 
 

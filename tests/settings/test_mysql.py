@@ -1,11 +1,11 @@
-from .base import *
+from .base import *  # noqa
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'name',
-        'USER': os.getenv('DB_MYSQL_USER', default="root"),
-        'PASSWORD': os.getenv('DB_PASSWORD', default="root"),
-        'HOST': os.getenv('DB_HOST', default='mysql'),
+        'USER': os.getenv('DB_MYSQL_USER', default='root'),  # noqa
+        'PASSWORD': os.getenv('DB_PASSWORD', default='root'),  # noqa
+        'HOST': os.getenv('DB_HOST', default='mysql'),  # noqa
     }
 }

@@ -43,7 +43,7 @@ $ git clone https://github.com/unt-libraries/django-name.git
 $ cd django-name
 ```
 
-Warm up the MySQL database. This only needs to be done when the database container doesn't exist yet. This will take ~15 seconds once the image has been pulled.
+Warm up the MySQL database. This only needs to be done when the database container doesn't exist yet. This will take about a minute once the image has been pulled.
 ```sh
 $ docker-compose up -d mysql
 ```
@@ -83,9 +83,9 @@ To run the tests via Tox, use this command.
 ```sh
 $ docker-compose run --rm web tox
 ```
-The Tox configuration will test this app with Django 1.7 - 1.9.
+The Tox configuration will test this app with Django 1.10 - 1.11.
 
-To run the tests only with the development environment (i.e. with Django 1.8)
+To run the tests only with the development environment (i.e. with Django 1.11)
 ```sh
 $ docker-compose run --rm web ./runtests.py
 ```

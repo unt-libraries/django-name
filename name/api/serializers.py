@@ -159,6 +159,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Location
+        fields = '__all__'
 
 
 class NameStatisticsMonthSerializer(serializers.Serializer):

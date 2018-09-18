@@ -1,5 +1,4 @@
 import os
-local_path = lambda path: os.path.join(os.path.dirname(__file__), path)
 
 
 APP_ROOT = os.path.abspath(
@@ -17,22 +16,19 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.humanize',
     'name',
-    'tests']
+    'tests',
+]
 
 
 ROOT_URLCONF = 'tests.urls'
 
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
-TEMPLATE_CONTEXT_PROCESSORS += (
-    'django.core.context_processors.request',
-    'name.context_processors.name')
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware')
+    'django.contrib.messages.middleware.MessageMiddleware',
+]
 
 
 # Minimal template settings for testing Django 1.8.

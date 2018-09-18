@@ -66,8 +66,6 @@ class Identifier(models.Model):
 
 class NoteManager(models.Manager):
     """Custom Model Manager for the Note model."""
-    use_for_related_fields = True
-
     def public_notes(self):
         return self.get_queryset().exclude(note_type=self.model.NONPUBLIC)
 
@@ -93,6 +91,9 @@ class Note(models.Model):
     belong_to_name = models.ForeignKey('Name')
 
     objects = NoteManager()
+
+    class Meta:
+        base_manager_name = 'objects'
 
     def get_note_type_label(self):
         """Returns the label associated with an instance's
@@ -527,8 +528,6 @@ class Name(models.Model):
 
 class LocationManager(models.Manager):
     """Custom Manager for the Location model."""
-    use_for_related_fields = True
-
     def _get_current_location(self):
         """Filters through a Name object's related locations and
         returns the one marked as current.
@@ -579,6 +578,7 @@ class Location(models.Model):
 
     class Meta:
         ordering = ['status']
+        base_manager_name = 'objects'
 
     def geo_point(self):
         return '{lat} {lng}'.format(lat=self.latitude, lng=self.longitude)

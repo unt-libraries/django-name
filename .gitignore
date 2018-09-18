@@ -5,9 +5,11 @@
 dist/
 build/
 .tox
+.pytest_cache
 db.sqlite3
 tests/__pycache__
 .coverage
 htmlcov/
 
 docs/_build
+docs/.doctrees

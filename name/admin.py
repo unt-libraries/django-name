@@ -189,5 +189,6 @@ class NameAdmin(admin.ModelAdmin):
         }),
     ]
 
+
 admin.site.register(Name, NameAdmin)
 admin.site.register(Identifier_Type, Identifier_TypeAdmin)
