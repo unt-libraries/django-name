@@ -1,5 +1,4 @@
 import os
-local_path = lambda path: os.path.join(os.path.dirname(__file__), path)  # noqa
 
 
 APP_ROOT = os.path.abspath(

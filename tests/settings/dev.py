@@ -9,7 +9,7 @@ ALLOWED_HOSTS = INTERNAL_IPS = [
 
 # Required for viewing the debug toolbar in docker, since the IP address is unknown.
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda x: True,
+    'SHOW_TOOLBAR_CALLBACK': lambda x: True,
 }
 
 INSTALLED_APPS += ['debug_toolbar']  # noqa
