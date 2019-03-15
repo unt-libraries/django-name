@@ -15,7 +15,7 @@
     <div {% if name.has_schema_url %}itemscope itemtype="{{ name.get_schema_url }}{% endif %}">
         {% with name.location_set.current_location as current_location %}
             {% if name.is_building and current_location %}
-                <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                <div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
                     <meta itemprop="latitude" content="{{ current_location.latitude }}" />
                     <meta itemprop="longitude" content="{{ current_location.longitude }}" />
                 </div>
@@ -81,7 +81,7 @@
                         {% elif name.is_organization %}
                                 <span itemprop="foundingDate">{{ name.begin }}</span>
                         {% elif name.is_building %}
-                            <span itemprop="additionalProperty" itemscope itemtype="http://schema.org/PropertyValue">
+                            <span itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
                                 <meta itemprop="name" content="erectedDate">
                                 <span itemprop="value">{{ name.begin }}</span>
                             </span>
@@ -197,7 +197,7 @@
         {# This will only display if the Name is a Building #}
         {% if name.is_building and name.has_current_location %}
             {% with name.location_set.current_location as current_location %}
-                <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="http://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{name}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
+                <a itemprop="map" href="https://maps.google.com/maps?q={{ current_location.latitude }},{{ current_location.longitude }}&hl=en&sll={{ current_location.latitude }},{{ current_location.longitude }}&sspn=0.498085,0.521851&t=m&z=17"><img alt='Building Location' src="https://maps.googleapis.com/maps/api/staticmap?center={{ current_location.latitude }},{{ current_location.longitude }}&zoom=15&size=300x300&sensor=false&markers=color:blue%7Clabel:{{name}}%7C{{ current_location.latitude }},{{ current_location.longitude }}" class='img-circle img-polaroid pull-right' ></a>
             {% endwith %}
         {% endif %}
 

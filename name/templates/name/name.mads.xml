@@ -1,6 +1,6 @@
 {% load  name_extras %}
 {% spaceless %}
-    <mads xmlns="http://www.loc.gov/mads/v2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mads/mads.xsd">
+    <mads xmlns="https://www.loc.gov/mads/v2" xmlns:mods="https://www.loc.gov/mods/v3" xmlns:xlink="https://www.w3.org/1999/xlink" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.loc.gov/mads/mads.xsd">
         <authority>
             <name{% if name.is_organization %} type="corporate"{% endif %}>
                 <namePart>{{ name.name }}</namePart>
