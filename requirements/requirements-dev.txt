@@ -1,4 +1,4 @@
 # Packages that are only used in the dev environments.
 Django~=1.11.16
 django-debug-toolbar==1.9
-mysql-python==1.2.5
+mysqlclient==1.3.14

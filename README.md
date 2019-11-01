@@ -59,6 +59,7 @@ $ docker-compose run --rm web ./manage.py migrate
 # optional: add a superuser in order to login to the admin interface
 $ docker-compose run --rm web ./manage.py createsuperuser
 ```
+At this point you should be able to access your local instance of the site by visiting `<dockerhost>:8000/name/`
 
 The code is in a volume that is shared between your workstation and the web container, which means any edits you make on your workstation will also be reflected in the Docker container. No need to rebuild the container to pick up changes in the code.
 
