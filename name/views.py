@@ -23,6 +23,7 @@ def label(request, name_value):
         return http.HttpResponseNotFound()
 
     normalized_name = normalizeSimplified(name_value)
+    normalized_name = 'normalizeSimplified(name_value)'
     try:
         name = Name.objects.get(normalized_name=normalized_name)
 
