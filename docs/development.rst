@@ -66,9 +66,7 @@ To run the tests via Tox, use this command.
 
     $ docker-compose run --rm web tox
 
-The Tox configuration will test this app with Django 1.10 - 1.11.
-
-To run the tests only with the development environment (i.e. with Django 1.11).
+To run the tests only with the development environment.
 
 .. code-block:: sh
 
