@@ -59,7 +59,7 @@ def test_label_returns_not_found_without_query(client):
     response = client.get(
         reverse('name:label', args=['']))
     assert 404 == response.status_code
-    assert 'No matching term found' not in response.content
+    assert b'No matching term found' not in response.content
 
 
 def test_label_returns_not_found_with_query(client):
@@ -72,7 +72,7 @@ def test_label_returns_not_found_with_query(client):
     response = client.get(
         reverse('name:label', args=['&&&&&&&&']))
     assert 404 == response.status_code
-    assert 'No matching term found' in response.content
+    assert b'No matching term found' in response.content
 
 
 def test_label_returns_not_found_multiple_names_found(client):
@@ -83,7 +83,7 @@ def test_label_returns_not_found_multiple_names_found(client):
     response = client.get(
         reverse('name:label', args=[name_name]))
     assert 404 == response.status_code
-    assert 'There are multiple Name objects with' in response.content
+    assert b'There are multiple Name objects with' in response.content
 
 
 def test_export(client, name_fixture):
@@ -192,7 +192,7 @@ def test_map_json_xhr_returns_payload(client):
         reverse('name:locations-json'),
         HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-    assert name.name_id in response.content
+    assert name.name_id in response.content.decode()
     assert json.loads(response.content)
 
 

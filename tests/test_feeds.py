@@ -16,7 +16,7 @@ def test_feed_has_georss_namespace(rf):
     request = rf.get(reverse('name:feed'))
     feed = NameAtomFeed()
     response = feed(request)
-    assert 'xmlns:georss' in response.content
+    assert b'xmlns:georss' in response.content
 
 
 def test_feed_response_is_application_xml(rf):
@@ -65,8 +65,8 @@ def test_feed_item_without_location_has_georss_element(rf):
     feed = NameAtomFeed()
     response = feed(request)
 
-    assert '<georss:point>' in response.content
-    assert name.location_set.current_location.geo_point() in response.content
+    assert b'<georss:point>' in response.content
+    assert name.location_set.current_location.geo_point() in response.content.decode()
 
 
 def test_feed_item_without_location_does_not_have_georss_element(rf):
@@ -79,4 +79,4 @@ def test_feed_item_without_location_does_not_have_georss_element(rf):
     feed = NameAtomFeed()
     response = feed(request)
 
-    assert '<georss:point>' not in response.content
+    assert b'<georss:point>' not in response.content
