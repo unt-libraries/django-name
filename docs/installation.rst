@@ -6,7 +6,7 @@ Installation
 Requirements
 ------------
 
-- Django 1.10 or 1.11
+- Django 1.11
 - Postgres or MySQL
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
