@@ -1,4 +1,4 @@
-dist:trusty
+dist: trusty
 language: python
 sudo: false
 python: 3.7
