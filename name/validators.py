@@ -50,12 +50,12 @@ def validate_merged_with(name):
         merge_target = Name.objects.get(id=name.merged_with_id)
     except Name.DoesNotExist:
         raise ValidationError(
-            dict(merged_with=u'The merge target must exist.'))
+            dict(merged_with='The merge target must exist.'))
 
     # Prevent the user from attempting to merge a name with itself.
     if name.merged_with_id == name.id:
         raise ValidationError(
-            dict(merged_with=u'Unable to merge a Name with itself.'))
+            dict(merged_with='Unable to merge a Name with itself.'))
 
     # Iterate through the generator and keep track of the return names.
     # We will find a loop if the return name is already in
@@ -66,7 +66,7 @@ def validate_merged_with(name):
     merge_sequence = [name]
     for name in follow_merged_with(merge_target):
         if name in merge_sequence:
-            msg = (u'The specified merge action completes a merge loop. '
+            msg = ('The specified merge action completes a merge loop. '
                    'Unable to complete merge.')
             raise ValidationError(dict(merged_with=msg))
         merge_sequence.append(name)

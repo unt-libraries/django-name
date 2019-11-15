@@ -2,6 +2,7 @@ import re
 
 from django.db.models import Q
 from .models import Name
+from functools import reduce
 
 
 def normalize_query(query_string):

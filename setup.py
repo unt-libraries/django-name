@@ -16,7 +16,7 @@ install_requires = [
     'python-dateutil==2.7.3',
     'markdown2==2.3.6',
     'djangorestframework==3.9.1',
-    'pynaco==0.1.0'
+    'pynaco @ git+https://github.com/unt-libraries/pynaco@py3',
 ]
 
 setup(
@@ -39,7 +39,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application'
     ]
 )

@@ -24,6 +24,7 @@ Contributors:
 - [Lauren Ko](https://github.com/ldko)
 - [Mark Phillips](https://github.com/vphill)
 - [Gio Gottardi](https://github.com/somexpert)
+- [Madhulika Bayyavarapu](https://github.com/madhulika95b)
 
 
 ## Developing

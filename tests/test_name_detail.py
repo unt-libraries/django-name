@@ -21,9 +21,9 @@ def test_person_itemprops(client):
     response = client.get(
         reverse('name:detail', args=[name.name_id]))
 
-    assert 'itemprop=\"name\"' in response.content
-    assert 'itemprop=\'url\'' in response.content
-    assert 'itemprop=\"birthDate\"' in response.content
+    assert b'itemprop=\"name\"' in response.content
+    assert b'itemprop=\'url\'' in response.content
+    assert b'itemprop=\"birthDate\"' in response.content
 
 
 def test_building_itemprops(client):
@@ -40,10 +40,10 @@ def test_building_itemprops(client):
     response = client.get(
         reverse('name:detail', args=[name.name_id]))
 
-    assert 'itemprop=\"name\"' in response.content
-    assert 'itemprop=\'url\'' in response.content
-    assert 'itemprop=\"additionalProperty\"' in response.content
-    assert 'content=\"erectedDate\"' in response.content
+    assert b'itemprop=\"name\"' in response.content
+    assert b'itemprop=\'url\'' in response.content
+    assert b'itemprop=\"additionalProperty\"' in response.content
+    assert b'content=\"erectedDate\"' in response.content
 
 
 def test_organization_itemprops(client):
@@ -60,9 +60,9 @@ def test_organization_itemprops(client):
     response = client.get(
         reverse('name:detail', args=[name.name_id]))
 
-    assert 'itemprop=\"name\"' in response.content
-    assert 'itemprop=\'url\'' in response.content
-    assert 'itemprop=\"foundingDate\"' in response.content
+    assert b'itemprop=\"name\"' in response.content
+    assert b'itemprop=\'url\'' in response.content
+    assert b'itemprop=\"foundingDate\"' in response.content
 
 
 def test_event_itemprops(client):
@@ -79,6 +79,6 @@ def test_event_itemprops(client):
     response = client.get(
         reverse('name:detail', args=[name.name_id]))
 
-    assert 'itemprop=\"name\"' in response.content
-    assert 'itemprop=\'url\'' in response.content
-    assert 'itemprop=\"startDate\"' in response.content
+    assert b'itemprop=\"name\"' in response.content
+    assert b'itemprop=\'url\'' in response.content
+    assert b'itemprop=\"startDate\"' in response.content

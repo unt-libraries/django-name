@@ -35,7 +35,7 @@ class Identifier_Type(models.Model):
         ordering = ['label']
         verbose_name = 'Identifier Type'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
 
@@ -60,7 +60,7 @@ class Identifier(models.Model):
     class Meta:
         ordering = ['order', 'type']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.value
 
 
@@ -102,7 +102,7 @@ class Note(models.Model):
         id, note_type = self.NOTE_TYPE_CHOICES[self.note_type]
         return note_type
 
-    def __unicode__(self):
+    def __str__(self):
         return self.note
 
 
@@ -147,7 +147,7 @@ class Variant(models.Model):
         self.normalized_variant = normalizeSimplified(self.variant)
         super(Variant, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.variant
 
 
@@ -192,8 +192,8 @@ class BaseTicketing(models.Model):
         """Alias for id"""
         return self.id
 
-    def __unicode__(self):
-        return u'nm{ticket:07d}'.format(ticket=self.ticket)
+    def __str__(self):
+        return 'nm{ticket:07d}'.format(ticket=self.ticket)
 
 
 class NameManager(models.Manager):
@@ -221,11 +221,11 @@ class NameManager(models.Manager):
         names = self.visible()
         return {
             'total': names.count(),
-            'personal': len(filter(lambda n: n.is_personal(), names)),
-            'organization': len(filter(lambda n: n.is_organization(), names)),
-            'event': len(filter(lambda n: n.is_event(), names)),
-            'software': len(filter(lambda n: n.is_software(), names)),
-            'building': len(filter(lambda n: n.is_building(), names))
+            'personal': len([n for n in names if n.is_personal()]),
+            'organization': len([n for n in names if n.is_organization()]),
+            'event': len([n for n in names if n.is_event()]),
+            'software': len([n for n in names if n.is_software()]),
+            'building': len([n for n in names if n.is_building()])
         }
 
     def _counts_per_month(self, date_column):
@@ -503,7 +503,7 @@ class Name(models.Model):
     def __assign_name_id(self):
         """Use the BaseTicketing object to assign a name_id."""
         if not self.name_id:
-            self.name_id = unicode(BaseTicketing.objects.create())
+            self.name_id = str(BaseTicketing.objects.create())
 
     def save(self, **kwargs):
         self.__normalize_name()
@@ -518,7 +518,7 @@ class Name(models.Model):
         validate_merged_with(self)
         super(Name, self).clean(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_id
 
     class Meta:
@@ -597,5 +597,5 @@ class Location(models.Model):
                 l.status = self.FORMER
                 l.save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.geo_point()
