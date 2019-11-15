@@ -37,4 +37,5 @@ Acknowledgements
 .. _`Lauren Ko`: http://github.com/ldko
 .. _`Mark Phillips`: http://github.com/vphill
 .. _`Gio Gottardi`: http://github.com/somexpert
+.. _`Madhulika Bayyavarapu`: http://github.com/madhulika95b
 
