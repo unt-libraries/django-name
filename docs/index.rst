@@ -31,6 +31,7 @@ Acknowledgements
 - `Lauren Ko`_
 - `Mark Phillips`_
 - `Gio Gottardi`_
+- `Madhulika Bayyavarapu`_
 
 .. _`Joey Liechty`: https://github.com/yeahdef
 .. _`Damon Kelley`: https://github.com/damonkelley
