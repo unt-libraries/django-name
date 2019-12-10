@@ -88,6 +88,9 @@ def test_label_returns_not_found_multiple_names_found(client):
 
 def test_export(client, name_fixture):
     response = client.get(reverse('name:export'))
+    expected = 'personal\ttest person\thttp://testserver{}\r\n'.format(
+        name_fixture.get_absolute_url())
+    assert expected == response.content.decode()
     assert 200 == response.status_code
 
 

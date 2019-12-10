@@ -75,7 +75,7 @@ def export(request):
     for n in Name.objects.visible():
         writer.writerow([
             n.get_name_type_label().lower(),
-            n.name.encode('utf-8'),
+            n.name,
             request.build_absolute_uri(n.get_absolute_url())
         ])
 
