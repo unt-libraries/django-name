@@ -3,6 +3,7 @@
 FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
+ENV PYTHONDONTWRITEBYTECODE 1
 RUN apt-get update -qq && apt-get install -y python-mysqldb default-mysql-client
 RUN mkdir /app
 WORKDIR /app
