@@ -1,6 +1,6 @@
 language: python
 sudo: false
-python: 2.7
+python: 3.7
 services:
     - mysql
     - postgresql
@@ -11,9 +11,9 @@ env:
         - DB_POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py27-django111-mysql
-        - TOX_ENV=py27-django111-postgres
-        - TOX_ENV=py27-flake8
+        - TOX_ENV=py37-django111-mysql
+        - TOX_ENV=py37-django111-postgres
+        - TOX_ENV=py37-flake8
         - TOX_ENV=docs
 
 install:

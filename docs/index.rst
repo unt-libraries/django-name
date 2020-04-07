@@ -31,10 +31,12 @@ Acknowledgements
 - `Lauren Ko`_
 - `Mark Phillips`_
 - `Gio Gottardi`_
+- `Madhulika Bayyavarapu`_
 
-.. _`Joey Liechty`: http://github.com/yeahdef
-.. _`Damon Kelley`: http://github.com/damonkelley
-.. _`Lauren Ko`: http://github.com/ldko
-.. _`Mark Phillips`: http://github.com/vphill
-.. _`Gio Gottardi`: http://github.com/somexpert
+.. _`Joey Liechty`: https://github.com/yeahdef
+.. _`Damon Kelley`: https://github.com/damonkelley
+.. _`Lauren Ko`: https://github.com/ldko
+.. _`Mark Phillips`: https://github.com/vphill
+.. _`Gio Gottardi`: https://github.com/somexpert
+.. _`Madhulika Bayyavarapu`: https://github.com/madhulika95b
 

@@ -63,4 +63,4 @@ class NameAtomFeed(Feed):
             return obj.location_set.current_location.geo_point()
 
     def item_extra_kwargs(self, obj):
-        return {u'geo_point': self.item_location(obj)}
+        return {'geo_point': self.item_location(obj)}

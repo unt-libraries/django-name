@@ -29,38 +29,38 @@ class UTC(tzinfo):
 
 
 class TestIdentifier_Type:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         label = "Test Label"
         identifer = Identifier_Type(label=label)
-        assert label == unicode(identifer)
+        assert label == str(identifer)
 
 
 class TestIdentifier:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         value = "Test Value"
         identifer = Identifier(value=value)
-        assert value == unicode(identifer)
+        assert value == str(identifer)
 
 
 class TestNote:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         msg = "Test Note"
         note = Note(note=msg)
-        assert msg == unicode(note)
+        assert msg == str(note)
 
 
 class TestVariant:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         variant_variant = "Test Variant"
         variant = Variant(variant=variant_variant)
-        assert variant_variant == unicode(variant)
+        assert variant_variant == str(variant)
 
 
 class TestBaseTicketing:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         ticket_id = 1
         ticket = BaseTicketing(id=ticket_id)
-        assert 'nm{:07d}'.format(ticket_id) == unicode(ticket)
+        assert 'nm{:07d}'.format(ticket_id) == str(ticket)
 
 
 class TestNameManager(object):
@@ -201,17 +201,17 @@ class TestName:
         name = Name.objects.create(name="Test Name", name_type=Name.PERSONAL)
         assert not name.has_geocode()
 
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         name_id = "0001"
         name = Name(name_id=name_id)
-        assert name_id == unicode(name)
+        assert name_id == str(name)
 
 
 class TestLocation:
-    def test_has_unicode_method(self):
+    def test_has_str_method(self):
         lat_lng = 239
         location = Location(latitude=lat_lng, longitude=lat_lng)
-        assert location.geo_point() == unicode(location)
+        assert location.geo_point() == str(location)
 
     @pytest.fixture
     def location_fixture(self, db, scope="class"):
