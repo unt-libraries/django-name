@@ -82,6 +82,19 @@ def export(request):
     return response
 
 
+def export_json(request):
+    """Exports visible Names to a JSON list."""
+    names = []
+    for n in Name.objects.visible():
+        names.append({
+            'i': n.name_id,
+            'l': request.build_absolute_uri(n.get_absolute_url()),
+            't': n.name,
+        })
+
+    return http.JsonResponse(data=names, safe=False)
+
+
 def opensearch(request):
     """Renders an Opensearch XML file.
 

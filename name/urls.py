@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^$', views.landing, name='landing'),
     url(r'about/$', views.about, name='about'),
     url(r'export/$', views.export, name='export'),
+    url(r'export.json$', views.export_json, name='export_json'),
     url(r'feed/$', feeds.NameAtomFeed(), name='feed'),
     url(r'label/(?P<name_value>.*)$', views.label, name='label'),
     url(r'locations.json$', api.locations_json, name='locations-json'),
