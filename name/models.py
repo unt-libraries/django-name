@@ -551,8 +551,8 @@ class Location(models.Model):
 
     HELP_TEXT = """
     <strong>
-        <a target="_blank" href="http://itouchmap.com/latlong.html">
-            iTouchMap
+        <a target="_blank" href="https://getlatlong.net">
+            getLatLong.net
         </a>
         : this service might be useful for filling in the lat/long data
     </strong>
