@@ -94,6 +94,19 @@ def test_export(client, name_fixture):
     assert 200 == response.status_code
 
 
+def test_export_json(client, name_fixture):
+    response = client.get(reverse('name:export_json'))
+    expected = [
+        {
+            'i': name_fixture.name_id,
+            'l': 'http://testserver{}'.format(name_fixture.get_absolute_url()),
+            't': name_fixture.name,
+        },
+    ]
+    assert expected == json.loads(response.content.decode())
+    assert 200 == response.status_code
+
+
 def test_opensearch(client):
     response = client.get(reverse('name:opensearch'))
     assert 200 == response.status_code
