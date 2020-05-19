@@ -1,5 +1,6 @@
+from datetime import datetime
+
 from ..models import Name
-from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
 
@@ -78,8 +79,8 @@ class NameStatisticsType(object):
 
         # Create a datetime object for the first day of the current
         # month according to the system time.
-        end = timezone.now().replace(day=1, hour=0, minute=0, second=0,
-                                     microsecond=0)
+        end = datetime.now(current.tzinfo).replace(day=1, hour=0, minute=0, second=0,
+                                                   microsecond=0)
 
         # Set up the delta to increment the `current` date in the generator.
         delta = relativedelta(months=1)
