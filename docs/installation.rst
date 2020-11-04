@@ -61,7 +61,7 @@ Installation
 
     urlpatterns = [
         # ...
-        url(r'^name/', include(name_urls))
+        path('name/', include(name_urls))
     ]
 
 
