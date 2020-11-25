@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, tzinfo
 
 import pytest
 from django.utils import timezone
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 
 from name.models import (
     Name,
