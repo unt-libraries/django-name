@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'django.contrib.messages',
     'name',
     'tests',
 ]
@@ -40,6 +41,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
                 'name.context_processors.name'
             ],
         },
