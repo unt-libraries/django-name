@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
                 ('name_id', models.CharField(unique=True, max_length=10, editable=False)),
-                ('merged_with', models.ForeignKey(related_name=b'merged_with_name', blank=True, to='name.Name', null=True)),
+                ('merged_with', models.ForeignKey(related_name='merged_with_name', blank=True, to='name.Name', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['name'],
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('note', models.TextField(help_text=b'Enter notes about this record here')),
                 ('note_type', models.IntegerField(choices=[(0, b'Biographical/Historical'), (1, b'Deletion Information'), (2, b'Nonpublic'), (3, b'Source'), (4, b'Other')])),
-                ('belong_to_name', models.ForeignKey(to='name.Name')),
+                ('belong_to_name', models.ForeignKey(to='name.Name', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
                 ('variant_type', models.IntegerField(help_text=b'Choose variant type.', max_length=50, choices=[(0, b'Acronym'), (1, b'Abbreviation'), (2, b'Translation'), (3, b'Expansion'), (4, b'Other')])),
                 ('variant', models.CharField(help_text=b'Fill in the other name variants, if any.', max_length=255)),
                 ('normalized_variant', models.CharField(help_text=b'NACO normalized variant text', max_length=255, editable=False)),
-                ('belong_to_name', models.ForeignKey(to='name.Name')),
+                ('belong_to_name', models.ForeignKey(to='name.Name', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -114,19 +114,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='location',
             name='belong_to_name',
-            field=models.ForeignKey(to='name.Name'),
+            field=models.ForeignKey(to='name.Name', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='identifier',
             name='belong_to_name',
-            field=models.ForeignKey(to='name.Name'),
+            field=models.ForeignKey(to='name.Name', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='identifier',
             name='type',
-            field=models.ForeignKey(help_text=b"Catagorize this record's identifiers here", to='name.Identifier_Type'),
+            field=models.ForeignKey(help_text=b"Catagorize this record's identifiers here", to='name.Identifier_Type', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]
