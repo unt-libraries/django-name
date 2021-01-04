@@ -11,7 +11,7 @@ env:
         - DB_POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py37-django22-mysql
+        - TOX_ENV=py37-django22-mariadb
         - TOX_ENV=py37-django22-postgres
         - TOX_ENV=py37-flake8
         - TOX_ENV=docs
@@ -19,7 +19,7 @@ env:
 install:
     - pip install tox
 before_script:
-    - mysql -e 'create database name;'
+    - mariadb -e 'create database name;'
     - psql -c 'create database name;' -U postgres
 script:
     - tox -e $TOX_ENV

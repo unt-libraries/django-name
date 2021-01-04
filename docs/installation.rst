@@ -7,7 +7,7 @@ Requirements
 ------------
 
 - Django 2.2
-- Postgres or MySQL
+- Postgres or Mariadb
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
 
