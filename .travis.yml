@@ -19,7 +19,7 @@ env:
 install:
     - pip install tox
 before_script:
-    - mariadb -e 'create database name;'
+    - mysql -e 'create database name;'
     - psql -c 'create database name;' -U postgres
 script:
     - tox -e $TOX_ENV
