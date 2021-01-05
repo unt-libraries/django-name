@@ -2,7 +2,7 @@ language: python
 sudo: false
 python: 3.7
 services:
-    - mariadb
+    - mysql
     - postgresql
 env:
     global:
