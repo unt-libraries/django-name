@@ -44,9 +44,9 @@ $ git clone https://github.com/unt-libraries/django-name.git
 $ cd django-name
 ```
 
-Warm up the MySQL database. This only needs to be done when the database container doesn't exist yet. This will take about a minute once the image has been pulled.
+Warm up the Mariadb database. This only needs to be done when the database container doesn't exist yet. This will take about a minute once the image has been pulled.
 ```sh
-$ docker-compose up -d mysql
+$ docker-compose up -d mariadb
 ```
 
 Start the app and run the migrations.

@@ -1,7 +1,7 @@
 import pytest
 
 from name.models import Name
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Mark all tests in this file as requiring database access.
 pytestmark = pytest.mark.django_db

@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.contrib import admin
 
 from . import views, feeds
@@ -9,20 +9,20 @@ admin.autodiscover()
 
 app_name = 'name'
 urlpatterns = [
-    url(r'^$', views.landing, name='landing'),
-    url(r'about/$', views.about, name='about'),
-    url(r'export/$', views.export, name='export'),
-    url(r'export.json$', views.export_json, name='export_json'),
-    url(r'feed/$', feeds.NameAtomFeed(), name='feed'),
-    url(r'label/(?P<name_value>.*)$', views.label, name='label'),
-    url(r'locations.json$', api.locations_json, name='locations-json'),
-    url(r'map/$', views.locations, name='map'),
-    url(r'opensearch.xml$', views.opensearch, name='opensearch'),
-    url(r'search/$', views.SearchView.as_view(), name='search'),
-    url(r'search.json$', api.search_json, name="search-json"),
-    url(r'stats.json$', api.stats_json, name='stats-json'),
-    url(r'stats/$', views.stats, name='stats'),
-    url(r'(?P<name_id>.*).json$', api.name_json, name='detail-json'),
-    url(r'(?P<name_id>.*).mads.xml$', views.mads_serialize, name='mads-serialize'),
-    url(r'(?P<name_id>[^/]+)/', views.detail, name='detail')
+    path('', views.landing, name='landing'),
+    path('about/', views.about, name='about'),
+    path('export/', views.export, name='export'),
+    path('export.json', views.export_json, name='export_json'),
+    path('feed/', feeds.NameAtomFeed(), name='feed'),
+    re_path(r'label/(?P<name_value>.*)$', views.label, name='label'),
+    path('locations.json', api.locations_json, name='locations-json'),
+    path('map/', views.locations, name='map'),
+    path('opensearch.xml', views.opensearch, name='opensearch'),
+    path('search/', views.SearchView.as_view(), name='search'),
+    path('search.json', api.search_json, name="search-json"),
+    path('stats.json', api.stats_json, name='stats-json'),
+    path('stats/', views.stats, name='stats'),
+    path('(<slug:name_id>).json', api.name_json, name='detail-json'),
+    path('(<slug:name_id>).mads.xml', views.mads_serialize, name='mads-serialize'),
+    path('(<slug:name_id>)/', views.detail, name='detail')
 ]

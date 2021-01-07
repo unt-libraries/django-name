@@ -6,8 +6,8 @@ Installation
 Requirements
 ------------
 
-- Django 1.11
-- Postgres or MySQL
+- Django 2.2
+- Postgres or Mariadb
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
 
@@ -61,7 +61,7 @@ Installation
 
     urlpatterns = [
         # ...
-        url(r'^name/', include(name_urls))
+        path('name/', include(name_urls))
     ]
 
 

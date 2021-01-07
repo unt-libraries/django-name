@@ -5,6 +5,3 @@ tox==3.3.0
 pytest-django==3.4.2
 pytest==3.8.0
 pytest-cov==2.6.0
-
-# Test packages.
-mock==2.0.0

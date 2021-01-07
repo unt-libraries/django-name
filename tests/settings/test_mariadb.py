@@ -6,6 +6,6 @@ DATABASES = {
         'NAME': 'name',
         'USER': os.getenv('DB_MYSQL_USER', default='root'),  # noqa
         'PASSWORD': os.getenv('DB_PASSWORD', default='root'),  # noqa
-        'HOST': os.getenv('DB_HOST', default='mysql'),  # noqa
+        'HOST': os.getenv('DB_HOST', default='mariadb'),  # noqa
     }
 }

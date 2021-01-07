@@ -22,6 +22,6 @@ DATABASES = {
         'NAME': 'name',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'mysql',
+        'HOST': 'mariadb',
     }
 }

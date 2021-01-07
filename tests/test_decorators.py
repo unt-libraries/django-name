@@ -1,5 +1,5 @@
 from name.decorators import jsonp
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 
 def test_jsonp_returns_without_status_code_200():

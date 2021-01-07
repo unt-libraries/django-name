@@ -2,7 +2,7 @@ import csv
 
 from django import http
 from django.views import generic
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.templatetags.static import static
 from django.shortcuts import get_object_or_404, render, redirect
 from pynaco.naco import normalizeSimplified

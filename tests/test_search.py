@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # All test need access to the database in this file.
 pytestmark = pytest.mark.django

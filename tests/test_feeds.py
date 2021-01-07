@@ -1,6 +1,6 @@
 import pytest
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from name.feeds import NameAtomFeed
 from name.models import Name

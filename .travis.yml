@@ -11,8 +11,8 @@ env:
         - DB_POSTGRES_USER=postgres
         - DB_PASSWORD=''
     matrix:
-        - TOX_ENV=py37-django111-mysql
-        - TOX_ENV=py37-django111-postgres
+        - TOX_ENV=py37-django22-mariadb
+        - TOX_ENV=py37-django22-postgres
         - TOX_ENV=py37-flake8
         - TOX_ENV=docs
 
