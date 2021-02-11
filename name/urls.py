@@ -22,7 +22,7 @@ urlpatterns = [
     path('search.json', api.search_json, name="search-json"),
     path('stats.json', api.stats_json, name='stats-json'),
     path('stats/', views.stats, name='stats'),
-    path('(<slug:name_id>).json', api.name_json, name='detail-json'),
-    path('(<slug:name_id>).mads.xml', views.mads_serialize, name='mads-serialize'),
-    path('(<slug:name_id>)/', views.detail, name='detail')
+    path('<slug:name_id>.json', api.name_json, name='detail-json'),
+    path('<slug:name_id>.mads.xml', views.mads_serialize, name='mads-serialize'),
+    path('<slug:name_id>/', views.detail, name='detail')
 ]
