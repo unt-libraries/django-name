@@ -10,31 +10,6 @@ jobs:
       matrix:
         python: ['3.7','3.8']
 
-    services:
-      mysql:
-        image: mariadb:10.3
-        ports: 
-          - 8000
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: name
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=10s
-          --health-retries=10
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: name
-          POSTGRES_USER: name
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd=pg_isready
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
@@ -53,11 +28,9 @@ jobs:
           # flake8 name tests setup.py --count --exit-zero --max-line-length=99 --statistics
       - name: Run the tests on MariaDB
         run: |
-          ./runtests.py --nolint
-        env:
-          MYSQL_HOST: mariadb
+          pip install mysqlclient
+          ./runtests.py --nolint --ds=tests.settings.test_mariadb
       - name: Run the tests on Postgres
         run: |
-          ./runtests.py --nolint
-        env:
-          POSTGRES_HOST: postgres
+          pip install psycopg2==2.8.6
+          ./runtests.py --nolint --ds=tests.settings.test_postgres
