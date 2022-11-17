@@ -16,7 +16,7 @@ def test_json_search_returns_expected_results(client, name_fixtures):
     query = query_template.format('Personal', 'person')
     response = client.get(reverse('name:search-json') + query)
 
-    assert response.status_code is 200
+    assert response.status_code == 200
     assert json.loads(response.content)[0]['name'] == 'test person'
 
 
@@ -26,15 +26,15 @@ def test_json_search_with_multiple_name_types(client, name_fixtures):
         reverse('name:search-json') + query)
     json_results = json.loads(response.content)
 
-    assert response.status_code is 200
-    assert len(json_results) is 2
+    assert response.status_code == 200
+    assert len(json_results) == 2
 
 
 def test_can_search(client, name_fixtures):
     """Test the HTML search returns correctly."""
     query = query_template.format('Personal', 'test')
     response = client.get(reverse('name:search') + query)
-    assert response.status_code is 200
+    assert response.status_code == 200
 
 
 def test_search_multiple_name_types(client, name_fixtures):
@@ -42,7 +42,7 @@ def test_search_multiple_name_types(client, name_fixtures):
     response = client.get(
         reverse('name:search') + query)
 
-    assert response.status_code is 200
+    assert response.status_code == 200
 
 
 def test_search_with_q(client, twenty_name_fixtures):
@@ -74,4 +74,4 @@ def test_search_without_query(client, search_fixtures):
     url = reverse('name:search')
     response = client.get(url)
     name_list = response.context[-1]['name_list']
-    assert len(name_list) is 0
+    assert len(name_list) == 0
