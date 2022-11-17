@@ -53,11 +53,11 @@ jobs:
           # flake8 name tests setup.py --count --exit-zero --max-line-length=99 --statistics
       - name: Run the tests on MariaDB
         run: |
-          ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
+          ./runtests.py --nolint
         env:
           MYSQL_HOST: mariadb
       - name: Run the tests on Postgres
         run: |
-          ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
+          ./runtests.py --nolint
         env:
           POSTGRES_HOST: postgres
