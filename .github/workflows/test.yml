@@ -53,13 +53,11 @@ jobs:
           # flake8 name tests setup.py --count --exit-zero --max-line-length=99 --statistics
       - name: Run the tests on MariaDB
         run: |
-          pip install mysqlclient
           ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
         env:
           MYSQL_HOST: mariadb
       - name: Run the tests on Postgres
         run: |
-          pip install psycopg2==2.8.6
           ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
         env:
           POSTGRES_HOST: postgres
