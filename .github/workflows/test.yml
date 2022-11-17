@@ -3,37 +3,12 @@ name: Test django-name
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  # Label of the container job
-  container-job:
+  build:
+
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         python: ['3.7','3.8']
-
-    services:
-      mysql:
-        image: mariadb:10.3
-        ports: 
-          - 8000
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: name
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=10s
-          --health-retries=10
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: name
-          POSTGRES_USER: name
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd=pg_isready
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - uses: actions/checkout@v3
