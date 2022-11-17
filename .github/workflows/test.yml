@@ -53,7 +53,7 @@ jobs:
           # flake8 name tests setup.py --count --exit-zero --max-line-length=99 --statistics
       - name: Run the tests on MariaDB
         run: |
-          pip install mysqlclinet
+          pip install mysqlclient
           ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
         env:
           MYSQL_HOST: mariadb
