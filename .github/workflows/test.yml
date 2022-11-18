@@ -32,6 +32,19 @@ jobs:
     strategy:
       matrix:
         python: ['3.7','3.8']
+    services:
+      mysql:
+        image: mariadb:10.3
+        ports: 
+          - 8000
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: name
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=10
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -47,6 +60,12 @@ jobs:
       - name: Run the tests on MariaDB
         run: |
           ./runtests.py --nolint --ds=tests.settings.test_mariadb
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_NAME: name
+          DATABASE_USER: root
+          DATABASE_PASS: root
+          DATABASE_PORT: 8000
 
   test-postgres:
     name: Test Postgres
@@ -54,6 +73,19 @@ jobs:
     strategy:
       matrix:
         python: ['3.7','3.8']
+    services:
+      postgres:
+        image: postgres:latest
+        ports: 
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: name
+          POSTGRES_USER: name
+        options: >-
+          --health-cmd=pg_isready
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -67,3 +99,9 @@ jobs:
       - name: Run the tests on Postgres
         run: |
           ./runtests.py --nolint --ds=tests.settings.test_postgres
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_NAME: name
+          DATABASE_USER: name
+          DATABASE_PASS: name
+          DATABASE_PORT: 5432
