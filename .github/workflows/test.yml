@@ -65,5 +65,5 @@ jobs:
           pip install -r requirements.txt
           pip install psycopg2==2.8.6
       - name: Run the tests on Postgres
-      run: |
-        ./runtests.py --nolint --ds=tests.settings.test_postgres
+        run: |
+          ./runtests.py --nolint --ds=tests.settings.test_postgres
