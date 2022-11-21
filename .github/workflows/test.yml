@@ -4,104 +4,14 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
 
-  test-flake8:
-    name: Flake8
+  tests:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python: ['3.7','3.8']
+    
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Lint with flake8
-        run: |
-          # Python syntax errors or undefined names will stop the build completely.
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero will still allow the tests to pass, with these types of errors as warnings.
-          # flake8 name tests setup.py --count --exit-zero --max-line-length=99 --statistics
-
-  test-mariadb:
-    name: Test MariaDB
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python: ['3.7','3.8']
-    services:
-      mysql:
-        image: mariadb:10.3
-        ports: 
-          - 8000
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: name
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=10s
-          --health-retries=10
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install mysqlclient
-      - name: Run the tests on MariaDB
-        run: |
-          ./runtests.py --nolint --ds=tests.settings.test_mariadb
-        env:
-          DATABASE_HOST: mariadb
-          DATABASE_NAME: name
-          DATABASE_USER: root
-          DATABASE_PASS: root
-          DATABASE_PORT: 8000
-
-  test-postgres:
-    name: Test Postgres
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python: ['3.7','3.8']
-    services:
-      postgres:
-        image: postgres:latest
-        ports: 
-          - 5432:5432
-        env:
-          POSTGRES_PASSWORD: name
-          POSTGRES_USER: name
-        options: >-
-          --health-cmd=pg_isready
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install psycopg2==2.8.6
-      - name: Run the tests on Postgres
-        run: |
-          ./runtests.py --nolint --ds=tests.settings.test_postgres
-        env:
-          DATABASE_HOST: postgres
-          DATABASE_NAME: name
-          DATABASE_USER: name
-          DATABASE_PASS: name
-          DATABASE_PORT: 5432
+      - name: Start the app
+        run: docker-compose up -d
+      - name: Run the tests and flake8
+        run: docker-compose run --rm web tox
+        
