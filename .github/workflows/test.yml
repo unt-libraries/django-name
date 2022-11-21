@@ -61,7 +61,7 @@ jobs:
         run: |
           ./runtests.py --nolint --ds=tests.settings.test_mariadb
         env:
-          DATABASE_HOST: localhost
+          DATABASE_HOST: mariadb
           DATABASE_NAME: name
           DATABASE_USER: root
           DATABASE_PASS: root
@@ -100,7 +100,7 @@ jobs:
         run: |
           ./runtests.py --nolint --ds=tests.settings.test_postgres
         env:
-          DATABASE_HOST: localhost
+          DATABASE_HOST: postgres
           DATABASE_NAME: name
           DATABASE_USER: name
           DATABASE_PASS: name
