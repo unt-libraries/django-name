@@ -7,7 +7,7 @@ The Name App is a tool originally developed for documenting names used by the UN
 
 ## Installation
 
-For installation instructions, see the [Installation](http://django-name.readthedocs.org/en/latest/installation.html) page in the docs.
+For installation instructions, see the [Installation](http://django-name.readthedocs.org/en/latest/index.html#installation) page in the docs.
  
 ## License
 
@@ -25,6 +25,7 @@ Contributors:
 - [Mark Phillips](https://github.com/vphill)
 - [Gio Gottardi](https://github.com/somexpert)
 - [Madhulika Bayyavarapu](https://github.com/madhulika95b)
+- [Gracie Flores-Hays](https://github.com/gracieflores)
 
 
 ## Developing
