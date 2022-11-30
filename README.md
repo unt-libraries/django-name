@@ -81,15 +81,57 @@ $ docker-compose build web
 $ docker-compose up -d
 ```
 
+#### Developing with Podman and Podman-Compose
+[Install or Enable Podman](https://podman.io/getting-started/installation).
+
+[Install Podman Compose](https://github.com/containers/podman-compose).
+```sh
+$ sudo dnf install podman-compose
+```
+
+Clone the repository.
+```sh
+$ git clone https://github.com/unt-libraries/django-name.git
+$ cd django-name
+```
+
+Warm up the Mariadb database. 
+```sh
+$ sudo podman-compose up -d mariadb
+```
+
+Start the app and run the migrations.
+```sh
+# start the app
+$ sudo podman-compose up -d
+
+# run the migrations
+$ sudo podman-compose run --rm web ./manage.py migrate
+
+# optional: add a superuser in order to login to the admin interface
+$ sudo podman-compose run --rm web ./manage.py createsuperuser
+```
+
 #### Running the Tests
 To run the tests via Tox, use this command.
 ```sh
 $ docker-compose run --rm web tox
 ```
 
+Or with podman, use this command.
+```sh
+$ sudo podman-compose run --web tox
+```
+
 To run the tests only with the development environment
 ```sh
 $ docker-compose run --rm web ./runtests.py
 ```
+
+Or
+```sh
+$ sudo podman-compose run --rm web ./runtests.py
+```
+
 Note: This is the same command that Tox issues inside each test environment it has defined.
 
