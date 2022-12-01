@@ -4,4 +4,4 @@ build:
   tools:
     python: "3.7"
   apt_packages:
-      - libmysqlclient-dev
+      - default-libmysqlclient-dev
