@@ -1,4 +1,4 @@
-# Django Name [![Build Status](https://github.com/unt-libraries/django-name/actions/workflows/test.yml/badge.svg?branch=master)](https://travis-ci.org/unt-libraries/django-name/actions) [![Docs Status](https://img.shields.io/badge/docs-latest-blue.svg)](https://django-name.readthedocs.org) [![PyPI Version](https://img.shields.io/pypi/v/django-name.svg)](https://pypi.python.org/pypi/django-name)
+# Django Name [![Build Status](https://github.com/unt-libraries/django-name/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/unt-libraries/django-name/actions) [![Docs Status](https://img.shields.io/badge/docs-latest-blue.svg)](https://django-name.readthedocs.org) [![PyPI Version](https://img.shields.io/pypi/v/django-name.svg)](https://pypi.python.org/pypi/django-name)
 Python Implementation of NACO Normalization Rules
 
 The Name App is a tool originally developed for documenting names used by the UNT Libraries in its various digital library systems and collections. The app provides a consistent way of communicating the authorized version of a name and information about the name that is useful for reuse. The Name App generates a unique URL for each name that can be used to unambiguously refer to a person, organization, event, building or piece of software. In addition to an HTML page for each name there are a number of other formats available for each record including a MADS XML version and a simple JSON representation. A key feature of the UNT Name App is the ability to link to other vocabularies such as the Virtual International Authority File (VIAF), the Library of Congress Name Authority File, or Wikipedia.  
@@ -89,48 +89,19 @@ $ docker-compose up -d
 $ sudo dnf install podman-compose
 ```
 
-Clone the repository.
-```sh
-$ git clone https://github.com/unt-libraries/django-name.git
-$ cd django-name
-```
+You will follow the same steps as above, starting with `Clone the repository`. For all of the docker steps, you will have to replace the word `docker` with `podman`.
 
-Warm up the Mariadb database. 
-```sh
-$ sudo podman-compose up -d mariadb
-```
-
-Start the app and run the migrations.
-```sh
-# start the app
-$ sudo podman-compose up -d
-
-# run the migrations
-$ sudo podman-compose run --rm web ./manage.py migrate
-
-# optional: add a superuser in order to login to the admin interface
-$ sudo podman-compose run --rm web ./manage.py createsuperuser
-```
+If you have SELinux, you may need to temporarily add `:Z` to the web volumes in the docker-compose.yml. It will look like `.:/app/:Z`. You may also need to use `sudo` for your podman-compose commands.
 
 #### Running the Tests
-To run the tests via Tox, use this command.
+To run the tests via Tox, use this command. If you are using podman-compose, swap the word `docker` with `podman` for the commands below.
 ```sh
 $ docker-compose run --rm web tox
-```
-
-Or with podman, use this command.
-```sh
-$ sudo podman-compose run --web tox
 ```
 
 To run the tests only with the development environment
 ```sh
 $ docker-compose run --rm web ./runtests.py
-```
-
-Or
-```sh
-$ sudo podman-compose run --rm web ./runtests.py
 ```
 
 Note: This is the same command that Tox issues inside each test environment it has defined.
