@@ -595,9 +595,9 @@ class Location(models.Model):
         # related the belong_to_name, and set the status to FORMER.
         if self.is_current():
             former_locs = self.belong_to_name.location_set.exclude(id=self.id)
-            for l in former_locs:
-                l.status = self.FORMER
-                l.save()
+            for locs in former_locs:
+                locs.status = self.FORMER
+                locs.save()
 
     def __str__(self):
         return self.geo_point()

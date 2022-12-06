@@ -70,7 +70,7 @@ def test_compose_query_with_single_term():
 def test_compose_query_with_multiple_terms():
     result = utils.compose_query('foo bar baz bub')
     assert 'AND' in result.connector
-    assert len(result.children) is 4
+    assert len(result.children) == 4
 
 
 @pytest.mark.parametrize('query,expected', [
