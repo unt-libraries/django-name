@@ -15,7 +15,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as fd:
 install_requires = [
     'python-dateutil==2.7.3',
     'markdown2>=2.4.0',
-    'djangorestframework==3.11.2',
+    'djangorestframework~=3.14.0',
     'pynaco @ git+https://github.com/unt-libraries/pynaco',
 ]
 
@@ -39,7 +39,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application'
     ]
 )
