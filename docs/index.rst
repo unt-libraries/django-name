@@ -32,6 +32,7 @@ Acknowledgements
 - `Mark Phillips`_
 - `Gio Gottardi`_
 - `Madhulika Bayyavarapu`_
+- `Gracie Flores-Hays`_
 
 .. _`Joey Liechty`: https://github.com/yeahdef
 .. _`Damon Kelley`: https://github.com/damonkelley
@@ -39,4 +40,5 @@ Acknowledgements
 .. _`Mark Phillips`: https://github.com/vphill
 .. _`Gio Gottardi`: https://github.com/somexpert
 .. _`Madhulika Bayyavarapu`: https://github.com/madhulika95b
+.. _`Gracie Flores-Hays`: https://github.com/gracieflores
 
