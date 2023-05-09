@@ -53,3 +53,5 @@ STATIC_URL = '/static/'
 TIME_ZONE = 'UTC'
 
 USE_TZ = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

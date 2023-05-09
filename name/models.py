@@ -1,13 +1,13 @@
 import json
 from datetime import datetime
 from itertools import groupby
+from urllib.parse import quote
+from urllib.request import urlopen
 
 import markdown2
 from django.urls import reverse
 from django.db import models, transaction
 from django.utils import timezone
-from django.utils.six.moves.urllib.parse import quote
-from django.utils.six.moves.urllib.request import urlopen
 from pynaco.naco import normalizeSimplified
 
 from .validators import validate_merged_with

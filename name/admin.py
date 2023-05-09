@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from name.models import (
     Name,
@@ -150,11 +150,11 @@ class NameAdmin(admin.ModelAdmin):
         for inline_class in inlines:
             inline = inline_class(self.model, self.admin_site)
             if request:
-                if not (inline.has_add_permission(request) or
+                if not (inline.has_add_permission(request, obj=obj) or
                         inline.has_change_permission(request) or
                         inline.has_delete_permission(request)):
                     continue
-                if not inline.has_add_permission(request):
+                if not inline.has_add_permission(request, obj=obj):
                     inline.max_num = 0
             inline_instances.append(inline)
         return inline_instances

@@ -43,7 +43,7 @@ def search_json(request):
 
     # If the request is AJAX, then it is most likely for autocompletion,
     # so we will only return first 10 names.
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         names = names[:10]
 
     data = serializers.NameSearchSerializer(
@@ -58,7 +58,7 @@ def search_json(request):
 
 def locations_json(request):
     """Presents the Locations and related Names serialized into JSON."""
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         locations = Location.objects.filter(status=0)
 
         data = serializers.LocationSerializer(
