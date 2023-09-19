@@ -6,14 +6,14 @@ Installation
 Requirements
 ------------
 
-- Django 4.1
+- Django 4.2
 - Postgres or Mariadb
 - Django Admin - ``django.contrib.admin``
 - Humanize - ``django.contrib.humanize``
 
 .. note:: Django Name is intended to be installed within a Django project. If you are unfamiliar with Django, check out the docs_.
 
-.. _docs: https://docs.djangoproject.com/en/4.1/
+.. _docs: https://docs.djangoproject.com/en/4.2/
 
 Installation
 ------------

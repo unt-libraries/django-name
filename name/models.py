@@ -144,9 +144,11 @@ class Variant(models.Model):
         id, variant_type = self.VARIANT_TYPE_CHOICES[self.variant_type]
         return variant_type
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.normalized_variant = normalizeSimplified(self.variant)
-        super(Variant, self).save()
+        if 'update_fields' in kwargs:
+            kwargs['update_fields'] = {'normalized_variant'}.union(kwargs['update_fields'])
+        super(Variant, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.variant
@@ -507,10 +509,12 @@ class Name(models.Model):
         if not self.name_id:
             self.name_id = str(BaseTicketing.objects.create())
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         self.__normalize_name()
         self.__assign_name_id()
-        super(Name, self).save()
+        if 'update_fields' in kwargs:
+            kwargs['update_fields'] = {'normalized_name', 'name_id', 'last_modified'}.union(kwargs['update_fields'])
+        super(Name, self).save(*args, **kwargs)
         if self.is_building() and not self.location_set.count():
             self.__find_location()
 
@@ -589,8 +593,8 @@ class Location(models.Model):
         """True if the Location has a status of Current."""
         return self.CURRENT == self.status
 
-    def save(self, **kwargs):
-        super(Location, self).save()
+    def save(self, *args, **kwargs):
+        super(Location, self).save(*args, **kwargs)
         # When this instance's status is CURRENT, get all other locations
         # related the belong_to_name, and set the status to FORMER.
         if self.is_current():
