@@ -28,9 +28,12 @@ Contributors:
 - [Gracie Flores-Hays](https://github.com/gracieflores)
 
 
-## Developing
+## Requirements
+- Docker(>= 1.3) 
+- Docker Compose
 
-To take advantage of the dev environment that is already configured, you need to have Docker(>= 1.3) and Docker Compose installed.
+
+## Development
 
 Install [Docker](https://docs.docker.com)
 
@@ -98,11 +101,3 @@ To run the tests via Tox, use this command. If you are using podman-compose, swa
 ```sh
 $ docker-compose run --rm web tox
 ```
-
-To run the tests only with the development environment
-```sh
-$ docker-compose run --rm web ./runtests.py
-```
-
-Note: This is the same command that Tox issues inside each test environment it has defined.
-

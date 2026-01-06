@@ -27,9 +27,12 @@ classifiers = [
 homepage = "https://github.com/unt-libraries/django-name"
 
 [tool.poetry]
-include = ["*.txt", "name/templates/*", "name/static/*", "name/fixtures/*"]
-packages = [
-    { include = "name", from = "." }
+packages = [{ include = "name" }]
+include = [
+    "*.txt",
+    "name/templates/**",
+    "name/static/**",
+    "name/fixtures/**"
 ]
 
 [tool.poetry.dependencies]
