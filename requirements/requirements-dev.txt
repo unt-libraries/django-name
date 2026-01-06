@@ -1,4 +1,0 @@
-# Packages that are only used in the dev environments.
-Django==4.2.27
-django-debug-toolbar==3.8.1
-mysqlclient==2.0.1

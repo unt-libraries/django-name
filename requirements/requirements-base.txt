@@ -1,6 +1,0 @@
-# Packages that are required by the app.
-python-dateutil~=2.7.3
-markdown2~=2.4.0
-djangorestframework~=3.15.2
-
-git+https://github.com/unt-libraries/pynaco@master

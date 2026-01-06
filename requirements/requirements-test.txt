@@ -1,7 +1,0 @@
-# Tox to make it available in the Docker container.
-tox>=3.3.0
-
-# Pytest packages.
-pytest-django>=4.6.2
-pytest>=7.1.0
-pytest-cov>=7.0.0
