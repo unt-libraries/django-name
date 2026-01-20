@@ -6,7 +6,7 @@ version = "3.11.0"
 description = "ASGI specs, helper code, and adapters"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "asgiref-3.11.0-py3-none-any.whl", hash = "sha256:1db9021efadb0d9512ce8ffaf72fcef601c7b73a8807a1bb2ef143dc6b14846d"},
     {file = "asgiref-3.11.0.tar.gz", hash = "sha256:13acff32519542a1736223fb79a715acdebe24286d98e8b164a73085f40da2c4"},
@@ -22,9 +22,10 @@ tests = ["mypy (>=1.14.0)", "pytest", "pytest-asyncio"]
 name = "cachetools"
 version = "6.2.4"
 description = "Extensible memoizing collections and decorators"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "cachetools-6.2.4-py3-none-any.whl", hash = "sha256:69a7a52634fed8b8bf6e24a050fb60bff1c9bd8f6d24572b99c32d4e71e62a51"},
     {file = "cachetools-6.2.4.tar.gz", hash = "sha256:82c5c05585e70b6ba2d3ae09ea60b79548872185d2f24ae1f2709d37299fd607"},
@@ -34,9 +35,10 @@ files = [
 name = "chardet"
 version = "5.2.0"
 description = "Universal encoding detector for Python 3"
-optional = false
+optional = true
 python-versions = ">=3.7"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970"},
     {file = "chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7"},
@@ -46,9 +48,10 @@ files = [
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
-optional = false
+optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -58,10 +61,10 @@ files = [
 name = "coverage"
 version = "7.10.7"
 description = "Code coverage measurement for Python"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "coverage-7.10.7-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:fc04cc7a3db33664e0c2d10eb8990ff6b3536f6842c9590ae8da4c614b9ed05a"},
     {file = "coverage-7.10.7-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:e201e015644e207139f7e2351980feb7040e6f4b2c2978892f3e3789d1c125e5"},
@@ -179,10 +182,10 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 name = "coverage"
 version = "7.13.1"
 description = "Code coverage measurement for Python"
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "coverage-7.13.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:e1fa280b3ad78eea5be86f94f461c04943d942697e0dac889fa18fff8f5f9147"},
     {file = "coverage-7.13.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:c3d8c679607220979434f494b139dfb00131ebf70bb406553d69c1ff01a5c33d"},
@@ -288,9 +291,10 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 name = "distlib"
 version = "0.4.0"
 description = "Distribution utilities"
-optional = false
+optional = true
 python-versions = "*"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "distlib-0.4.0-py2.py3-none-any.whl", hash = "sha256:9659f7d87e46584a30b5780e43ac7a2143098441670ff0a49d5f9034c54a6c16"},
     {file = "distlib-0.4.0.tar.gz", hash = "sha256:feec40075be03a04501a973d81f633735b4b69f98b05450592310c0f401a4e0d"},
@@ -302,7 +306,7 @@ version = "4.2.27"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.8"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "django-4.2.27-py3-none-any.whl", hash = "sha256:f393a394053713e7d213984555c5b7d3caeee78b2ccb729888a0774dff6c11a8"},
     {file = "django-4.2.27.tar.gz", hash = "sha256:b865fbe0f4a3d1ee36594c5efa42b20db3c8bbb10dff0736face1c6e4bda5b92"},
@@ -321,9 +325,10 @@ bcrypt = ["bcrypt"]
 name = "django-debug-toolbar"
 version = "3.8.1"
 description = "A configurable set of panels that display various debug information about the current request/response."
-optional = false
+optional = true
 python-versions = ">=3.7"
-groups = ["dev"]
+groups = ["main"]
+markers = "extra == \"dev\""
 files = [
     {file = "django_debug_toolbar-3.8.1-py3-none-any.whl", hash = "sha256:879f8a4672d41621c06a4d322dcffa630fc4df056cada6e417ed01db0e5e0478"},
     {file = "django_debug_toolbar-3.8.1.tar.gz", hash = "sha256:24ef1a7d44d25e60d7951e378454c6509bf536dce7e7d9d36e7c387db499bc27"},
@@ -352,10 +357,10 @@ django = ">=4.2"
 name = "exceptiongroup"
 version = "1.3.1"
 description = "Backport of PEP 654 (exception groups)"
-optional = false
+optional = true
 python-versions = ">=3.7"
-groups = ["test"]
-markers = "python_version < \"3.11\""
+groups = ["main"]
+markers = "extra == \"test\" and python_version < \"3.11\""
 files = [
     {file = "exceptiongroup-1.3.1-py3-none-any.whl", hash = "sha256:a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598"},
     {file = "exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219"},
@@ -371,10 +376,10 @@ test = ["pytest (>=6)"]
 name = "filelock"
 version = "3.19.1"
 description = "A platform independent file lock."
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "filelock-3.19.1-py3-none-any.whl", hash = "sha256:d38e30481def20772f5baf097c122c3babc4fcdb7e14e57049eb9d88c6dc017d"},
     {file = "filelock-3.19.1.tar.gz", hash = "sha256:66eda1888b0171c998b35be2bcc0f6d75c388a7ce20c3f3f37aa8e96c2dddf58"},
@@ -384,10 +389,10 @@ files = [
 name = "filelock"
 version = "3.20.3"
 description = "A platform independent file lock."
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "filelock-3.20.3-py3-none-any.whl", hash = "sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1"},
     {file = "filelock-3.20.3.tar.gz", hash = "sha256:18c57ee915c7ec61cff0ecf7f0f869936c7c30191bb0cf406f1341778d0834e1"},
@@ -397,9 +402,10 @@ files = [
 name = "flake8"
 version = "7.3.0"
 description = "the modular source code checker: pep8 pyflakes and co"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["codestyle"]
+groups = ["main"]
+markers = "extra == \"codestyle\""
 files = [
     {file = "flake8-7.3.0-py2.py3-none-any.whl", hash = "sha256:b9696257b9ce8beb888cdbe31cf885c90d31928fe202be0889a7cdafad32f01e"},
     {file = "flake8-7.3.0.tar.gz", hash = "sha256:fe044858146b9fc69b551a4b490d69cf960fcb78ad1edcb84e7fbb1b4a8e3872"},
@@ -414,10 +420,10 @@ pyflakes = ">=3.4.0,<3.5.0"
 name = "iniconfig"
 version = "2.1.0"
 description = "brain-dead simple config-ini parsing"
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "iniconfig-2.1.0-py3-none-any.whl", hash = "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760"},
     {file = "iniconfig-2.1.0.tar.gz", hash = "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7"},
@@ -427,10 +433,10 @@ files = [
 name = "iniconfig"
 version = "2.3.0"
 description = "brain-dead simple config-ini parsing"
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "iniconfig-2.3.0-py3-none-any.whl", hash = "sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12"},
     {file = "iniconfig-2.3.0.tar.gz", hash = "sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730"},
@@ -442,7 +448,7 @@ version = "2.5.4"
 description = "A fast and complete Python implementation of Markdown"
 optional = false
 python-versions = "<4,>=3.9"
-groups = ["main", "test"]
+groups = ["main"]
 files = [
     {file = "markdown2-2.5.4-py3-none-any.whl", hash = "sha256:3c4b2934e677be7fec0e6f2de4410e116681f4ad50ec8e5ba7557be506d3f439"},
     {file = "markdown2-2.5.4.tar.gz", hash = "sha256:a09873f0b3c23dbfae589b0080587df52ad75bb09a5fa6559147554736676889"},
@@ -458,9 +464,10 @@ wavedrom = ["wavedrom"]
 name = "mccabe"
 version = "0.7.0"
 description = "McCabe checker, plugin for flake8"
-optional = false
+optional = true
 python-versions = ">=3.6"
-groups = ["codestyle"]
+groups = ["main"]
+markers = "extra == \"codestyle\""
 files = [
     {file = "mccabe-0.7.0-py2.py3-none-any.whl", hash = "sha256:6c2d30ab6be0e4a46919781807b4f0d834ebdd6c6e3dca0bda5a15f863427b6e"},
     {file = "mccabe-0.7.0.tar.gz", hash = "sha256:348e0240c33b60bbdf4e523192ef919f28cb2c3d7d5c7794f74009290f236325"},
@@ -470,9 +477,10 @@ files = [
 name = "mysqlclient"
 version = "2.0.1"
 description = "Python interface to MySQL"
-optional = false
+optional = true
 python-versions = ">=3.5"
-groups = ["dev"]
+groups = ["main"]
+markers = "extra == \"dev\""
 files = [
     {file = "mysqlclient-2.0.1-cp36-cp36m-win_amd64.whl", hash = "sha256:edd42ccaa444b00702d5374b2f5f7585c9d0ce201917f15339f1c3cf91c1b1ed"},
     {file = "mysqlclient-2.0.1-cp37-cp37m-win_amd64.whl", hash = "sha256:3f39855a4ad22805361e782cc4d1010ac74796225fa2d1c03cc16673ccdc983a"},
@@ -484,9 +492,10 @@ files = [
 name = "packaging"
 version = "25.0"
 description = "Core utilities for Python packages"
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
     {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
@@ -496,10 +505,10 @@ files = [
 name = "platformdirs"
 version = "4.4.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "platformdirs-4.4.0-py3-none-any.whl", hash = "sha256:abd01743f24e5287cd7a5db3752faf1a2d65353f38ec26d98e25a6db65958c85"},
     {file = "platformdirs-4.4.0.tar.gz", hash = "sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf"},
@@ -514,10 +523,10 @@ type = ["mypy (>=1.14.1)"]
 name = "platformdirs"
 version = "4.5.1"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "platformdirs-4.5.1-py3-none-any.whl", hash = "sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31"},
     {file = "platformdirs-4.5.1.tar.gz", hash = "sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda"},
@@ -532,9 +541,10 @@ type = ["mypy (>=1.18.2)"]
 name = "pluggy"
 version = "1.6.0"
 description = "plugin and hook calling mechanisms for python"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746"},
     {file = "pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3"},
@@ -548,9 +558,10 @@ testing = ["coverage", "pytest", "pytest-benchmark"]
 name = "psycopg2-binary"
 version = "2.9.11"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "psycopg2-binary-2.9.11.tar.gz", hash = "sha256:b6aed9e096bf63f9e75edf2581aa9a7e7186d97ab5c177aa6c87797cd591236c"},
     {file = "psycopg2_binary-2.9.11-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d6fe6b47d0b42ce1c9f1fa3e35bb365011ca22e39db37074458f27921dca40f2"},
@@ -625,9 +636,10 @@ files = [
 name = "pycodestyle"
 version = "2.14.0"
 description = "Python style guide checker"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["codestyle"]
+groups = ["main"]
+markers = "extra == \"codestyle\""
 files = [
     {file = "pycodestyle-2.14.0-py2.py3-none-any.whl", hash = "sha256:dd6bf7cb4ee77f8e016f9c8e74a35ddd9f67e1d5fd4184d86c3b98e07099f42d"},
     {file = "pycodestyle-2.14.0.tar.gz", hash = "sha256:c4b5b517d278089ff9d0abdec919cd97262a3367449ea1c8b49b91529167b783"},
@@ -637,9 +649,10 @@ files = [
 name = "pyflakes"
 version = "3.4.0"
 description = "passive checker of Python programs"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["codestyle"]
+groups = ["main"]
+markers = "extra == \"codestyle\""
 files = [
     {file = "pyflakes-3.4.0-py2.py3-none-any.whl", hash = "sha256:f742a7dbd0d9cb9ea41e9a24a918996e8170c799fa528688d40dd582c8265f4f"},
     {file = "pyflakes-3.4.0.tar.gz", hash = "sha256:b24f96fafb7d2ab0ec5075b7350b3d2d2218eab42003821c06344973d3ea2f58"},
@@ -649,9 +662,10 @@ files = [
 name = "pygments"
 version = "2.19.2"
 description = "Pygments is a syntax highlighting package written in Python."
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b"},
     {file = "pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887"},
@@ -680,10 +694,10 @@ resolved_reference = "32f671068975490da58eac91fc8e869f945fb988"
 name = "pyproject-api"
 version = "1.9.1"
 description = "API to interact with the python pyproject.toml based projects"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "pyproject_api-1.9.1-py3-none-any.whl", hash = "sha256:7d6238d92f8962773dd75b5f0c4a6a27cce092a14b623b811dba656f3b628948"},
     {file = "pyproject_api-1.9.1.tar.gz", hash = "sha256:43c9918f49daab37e302038fc1aed54a8c7a91a9fa935d00b9a485f37e0f5335"},
@@ -701,10 +715,10 @@ testing = ["covdefaults (>=2.3)", "pytest (>=8.3.5)", "pytest-cov (>=6.1.1)", "p
 name = "pyproject-api"
 version = "1.10.0"
 description = "API to interact with the python pyproject.toml based projects"
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "pyproject_api-1.10.0-py3-none-any.whl", hash = "sha256:8757c41a79c0f4ab71b99abed52b97ecf66bd20b04fa59da43b5840bac105a09"},
     {file = "pyproject_api-1.10.0.tar.gz", hash = "sha256:40c6f2d82eebdc4afee61c773ed208c04c19db4c4a60d97f8d7be3ebc0bbb330"},
@@ -722,10 +736,10 @@ testing = ["covdefaults (>=2.3)", "pytest (>=8.4.2)", "pytest-cov (>=7)", "pytes
 name = "pytest"
 version = "8.4.2"
 description = "pytest: simple powerful testing with Python"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79"},
     {file = "pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01"},
@@ -747,10 +761,10 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests
 name = "pytest"
 version = "9.0.2"
 description = "pytest: simple powerful testing with Python"
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "pytest-9.0.2-py3-none-any.whl", hash = "sha256:711ffd45bf766d5264d487b917733b453d917afd2b0ad65223959f59089f875b"},
     {file = "pytest-9.0.2.tar.gz", hash = "sha256:75186651a92bd89611d1d9fc20f0b4345fd827c41ccd5c299a868a05d70edf11"},
@@ -772,9 +786,10 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests
 name = "pytest-cov"
 version = "7.0.0"
 description = "Pytest plugin for measuring coverage."
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "pytest_cov-7.0.0-py3-none-any.whl", hash = "sha256:3b8e9558b16cc1479da72058bdecf8073661c7f57f7d3c5f22a1c23507f2d861"},
     {file = "pytest_cov-7.0.0.tar.gz", hash = "sha256:33c97eda2e049a0c5298e91f519302a1334c26ac65c1a483d6206fd458361af1"},
@@ -792,9 +807,10 @@ testing = ["process-tests", "pytest-xdist", "virtualenv"]
 name = "pytest-django"
 version = "4.11.1"
 description = "A Django plugin for pytest."
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "pytest_django-4.11.1-py3-none-any.whl", hash = "sha256:1b63773f648aa3d8541000c26929c1ea63934be1cfa674c76436966d73fe6a10"},
     {file = "pytest_django-4.11.1.tar.gz", hash = "sha256:a949141a1ee103cb0e7a20f1451d355f83f5e4a5d07bdd4dcfdd1fd0ff227991"},
@@ -840,7 +856,7 @@ version = "0.5.5"
 description = "A non-validating SQL parser."
 optional = false
 python-versions = ">=3.8"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "sqlparse-0.5.5-py3-none-any.whl", hash = "sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba"},
     {file = "sqlparse-0.5.5.tar.gz", hash = "sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e"},
@@ -854,10 +870,10 @@ doc = ["sphinx"]
 name = "tomli"
 version = "2.4.0"
 description = "A lil' TOML parser"
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
-markers = "python_full_version <= \"3.11.0a6\""
+groups = ["main"]
+markers = "extra == \"test\" and python_full_version <= \"3.11.0a6\""
 files = [
     {file = "tomli-2.4.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:b5ef256a3fd497d4973c11bf142e9ed78b150d36f5773f1ca6088c230ffc5867"},
     {file = "tomli-2.4.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:5572e41282d5268eb09a697c89a7bee84fae66511f87533a6f88bd2f7b652da9"},
@@ -912,10 +928,10 @@ files = [
 name = "tox"
 version = "4.30.3"
 description = "tox is a generic virtualenv management and test command line tool"
-optional = false
+optional = true
 python-versions = ">=3.9"
-groups = ["test"]
-markers = "python_version == \"3.9\""
+groups = ["main"]
+markers = "python_version == \"3.9\" and extra == \"test\""
 files = [
     {file = "tox-4.30.3-py3-none-any.whl", hash = "sha256:a9f17b4b2d0f74fe0d76207236925a119095011e5c2e661a133115a8061178c9"},
     {file = "tox-4.30.3.tar.gz", hash = "sha256:f3dd0735f1cd4e8fbea5a3661b77f517456b5f0031a6256432533900e34b90bf"},
@@ -938,10 +954,10 @@ virtualenv = ">=20.31.2"
 name = "tox"
 version = "4.34.1"
 description = "tox is a generic virtualenv management and test command line tool"
-optional = false
+optional = true
 python-versions = ">=3.10"
-groups = ["test"]
-markers = "python_version >= \"3.10\""
+groups = ["main"]
+markers = "python_version >= \"3.10\" and extra == \"test\""
 files = [
     {file = "tox-4.34.1-py3-none-any.whl", hash = "sha256:5610d69708bab578d618959b023f8d7d5d3386ed14a2392aeebf9c583615af60"},
     {file = "tox-4.34.1.tar.gz", hash = "sha256:ef1e82974c2f5ea02954d590ee0b967fad500c3879b264ea19efb9a554f3cc60"},
@@ -966,7 +982,7 @@ version = "4.15.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev", "test"]
+groups = ["main"]
 markers = "python_version < \"3.11\""
 files = [
     {file = "typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548"},
@@ -979,7 +995,7 @@ version = "2025.3"
 description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
-groups = ["main", "dev"]
+groups = ["main"]
 markers = "sys_platform == \"win32\""
 files = [
     {file = "tzdata-2025.3-py2.py3-none-any.whl", hash = "sha256:06a47e5700f3081aab02b2e513160914ff0694bce9947d6b76ebd6bf57cfc5d1"},
@@ -990,9 +1006,10 @@ files = [
 name = "virtualenv"
 version = "20.36.1"
 description = "Virtual Python Environment builder"
-optional = false
+optional = true
 python-versions = ">=3.8"
-groups = ["test"]
+groups = ["main"]
+markers = "extra == \"test\""
 files = [
     {file = "virtualenv-20.36.1-py3-none-any.whl", hash = "sha256:575a8d6b124ef88f6f51d56d656132389f961062a9177016a50e4f507bbcc19f"},
     {file = "virtualenv-20.36.1.tar.gz", hash = "sha256:8befb5c81842c641f8ee658481e42641c68b5eab3521d8e092d18320902466ba"},
@@ -1011,7 +1028,12 @@ typing-extensions = {version = ">=4.13.2", markers = "python_version < \"3.11\""
 docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2,!=7.3)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=23.6)"]
 test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.4)", "pytest-env (>=0.8.2)", "pytest-freezer (>=0.4.8) ; platform_python_implementation == \"PyPy\" or platform_python_implementation == \"GraalVM\" or platform_python_implementation == \"CPython\" and sys_platform == \"win32\" and python_version >= \"3.13\"", "pytest-mock (>=3.11.1)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=68)", "time-machine (>=2.10) ; platform_python_implementation == \"CPython\""]
 
+[extras]
+codestyle = ["flake8"]
+dev = ["Django", "django-debug-toolbar", "mysqlclient"]
+test = ["markdown2", "psycopg2-binary", "pytest", "pytest-cov", "pytest-django", "tox"]
+
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "3e3d89fd18a66b40681f004085795d731373fdc138a29cae13631c2cceb1cc4c"
+content-hash = "ed1d20417dba2becd8dd57fa0be7fa2ec8d16b944796a841ebe28983c2ce4e29"
