@@ -1,15 +1,15 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-name"
 description = "Name Authority App for Django."
 readme = "README.md"
 version = "1.0.0"
-license = { text = "BSD" }
+license = {file = 'LICENSE'}
 keywords = ["django", "name", "citation"]
-requires-python = ">=3.9,<4"
+requires-python = ">=3.9,<4.0"
 authors = [
   { name = "University of North Texas Libraries", email = "mark.phillips@unt.edu" }
 ]
@@ -22,41 +22,33 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"
 ]
-
-[project.urls]
-homepage = "https://github.com/unt-libraries/django-name"
-
-[tool.poetry]
-packages = [{ include = "name" }]
-include = [
-    "*.txt",
-    "name/templates/**",
-    "name/static/**",
-    "name/fixtures/**"
+dependencies = [
+    "python-dateutil==2.7.3",
+    "markdown2>=2.4.0",
+    "djangorestframework~=3.15.2",
+    "pynaco @ git+https://github.com/unt-libraries/pynaco",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-python-dateutil = "==2.7.3"
-markdown2 = ">=2.4.0"
-djangorestframework = "~3.15.2"
-pynaco = { git = "https://github.com/unt-libraries/pynaco" }
+[project.urls]
+Homepage = "https://github.com/unt-libraries/django-name"
+Repository = "https://github.com/unt-libraries/django-name"
 
-[tool.poetry.group.codestyle.dependencies]
-flake8 = "*"
 
-[tool.poetry.group.dev.dependencies]
-Django = "4.2.27"
-django-debug-toolbar = "3.8.1"
-mysqlclient = "2.0.1"
-
-[tool.poetry.group.test.dependencies]
-tox = ">=3.3.0"
-markdown2 = ">=2.4.0"
-pytest-django = ">=4.6.2"
-pytest = ">=7.1.0"
-pytest-cov = "*"
-psycopg2-binary = ">=2.9.9"
+[project.optional-dependencies]
+codestyle = ["flake8"]
+dev = [
+    "Django==4.2.27",
+    "django-debug-toolbar==3.8.1",
+    "mysqlclient==2.0.1",
+]
+test = [
+    "tox>=3.3.0",
+    "markdown2>=2.4.0",
+    "pytest>=7.1.0",
+    "pytest-django>=4.6.2",
+    "pytest-cov",
+    "psycopg2-binary>=2.9.9",
+]
 
 [tool.tox]
 legacy_tox_ini ='''
@@ -68,24 +60,22 @@ legacy_tox_ini ='''
 
     [testenv]
     passenv = DB_*
-    deps = poetry
     allowlist_externals = ./runtests.py
+    dependency_groups =
+        dev
+        test
+        codestyle
     commands =
-        poetry install --no-root --with test
         mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
         postgres: ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
 
     [testenv:py39-django42-mariadb]
-    deps = poetry
     commands = 
-        poetry install --no-root --with test
         ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
 
     [testenv:py39-flake8]
-    deps = poetry
     commands =
-        poetry install --no-root --with codestyle
         ./runtests.py --lintonly
     allowlist_externals = ./runtests.py
 

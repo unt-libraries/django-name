@@ -1,0 +1,4 @@
+include *.txt
+recursive-include name/templates *
+recursive-include name/static *
+recursive-include name/fixtures *

@@ -29,18 +29,16 @@ Contributors:
 
 
 ## Requirements
-- Docker(>= 1.3) 
-- Docker Compose
+- Python 3.9 or later 
 
 
 ## Development
 
-Install [Docker](https://docs.docker.com)
+There are three ways to set up this environment locally. Only use the traditional setup IF you absolutely cannot use Docker or Podman.
 
-Install Docker Compose
-```sh
-$ pip install docker-compose
-```
+## Docker
+
+Install [Docker](https://docs.docker.com). Instructions differ based on installation method. 
 
 Clone the repository.
 ```sh
@@ -50,19 +48,19 @@ $ cd django-name
 
 Warm up the Mariadb database. This only needs to be done when the database container doesn't exist yet. This will take about a minute once the image has been pulled.
 ```sh
-$ docker-compose up -d mariadb
+$ docker compose up -d mariadb
 ```
 
 Start the app and run the migrations.
 ```sh
 # start the app
-$ docker-compose up -d
+$ docker compose up -d
 
 # run the migrations
-$ docker-compose run --rm web ./manage.py migrate
+$ docker compose run --rm web ./manage.py migrate
 
 # optional: add a superuser in order to login to the admin interface
-$ docker-compose run --rm web ./manage.py createsuperuser
+$ docker compose run --rm web ./manage.py createsuperuser
 ```
 At this point you should be able to access your local instance of the site by visiting `<dockerhost>:8000/name/`
 
@@ -72,19 +70,19 @@ However, if the requirements files change, it is important that you rebuild the 
 
 ```sh
 # stop the app
-$ docker-compose stop
+$ docker compose stop
 
 # remove the web container
-$ docker-compose rm web
+$ docker compose rm web
 
 # rebuild the web container
-$ docker-compose build web
+$ docker compose build web
 
 # start the app
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-#### Developing with Podman and Podman-Compose
+## Developing with Podman and Podman-Compose
 [Install or Enable Podman](https://podman.io/getting-started/installation).
 
 [Install Podman Compose](https://github.com/containers/podman-compose).
@@ -94,10 +92,75 @@ $ sudo dnf install podman-compose
 
 You will follow the same steps as above, starting with `Clone the repository`. For all of the docker steps, you will have to replace the word `docker` with `podman`.
 
-If you have SELinux, you may need to temporarily add `:Z` to the web volumes in the docker-compose.yml. It will look like `.:/app/:Z`. You may also need to use `sudo` for your podman-compose commands.
+If you have SELinux, you may need to temporarily add `:Z` to the web volumes in the docker compose.yml. It will look like `.:/app/:Z`. You may also need to use `sudo` for your podman-compose commands.
 
-#### Running the Tests
+## Traditional Setup
+
+
+Clone the repository.
+```sh
+$ git clone https://github.com/unt-libraries/django-name.git
+$ cd django-name
+```
+
+Create a virtual environment and activate it
+```sh
+$ python -m venv env
+$ source env/bin/activate
+```
+
+Install the dev dependencies
+```sh
+$ pip install .'[dev,test,codestyle]'
+```
+
+Replace the `DATABASES` Django setting in `./tests/settings/dev.py` with
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': './db.sqlite3', 
+    }
+}
+```
+Add table data
+```sh
+$ python manage.py migrate
+```
+
+Start dev instance
+```sh
+$ python manage.py runserver
+```
+
+The app should be available at `http://localhost:8000/name/`
+
+## Running the Tests
+NOTE: tests will not pass without the mariadb and postgres databases available. 
+
 To run the tests via Tox, use this command. If you are using podman-compose, swap the word `docker` with `podman` for the commands below.
 ```sh
-$ docker-compose run --rm web tox
+$ docker compose run --rm web tox
+```
+
+## Generate Lock file
+Additionally there is support for generating [Poetry](https://python-poetry.org/) style lock files.
+
+The containers have Poetry already installed and ready to use.
+```sh
+$ docker compose run --rm web poetry lock
+```
+
+To generate a lock file in the traditional environment you must install Poetry to the global environment first.
+```sh
+    # Linux, macOS, Windows(WSL)
+    $ curl -sSL https://install.python-poetry.org | python3 -
+
+    # Windows Powershell
+    $ (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+``` 
+
+Generate the lock file.
+```sh
+$ poetry lock
 ```
