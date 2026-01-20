@@ -13,9 +13,6 @@ RUN apt-get update -qq && \
 
 WORKDIR /app
 
-# install poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - --version 2.0.0
-
 # copy project files
 COPY pyproject.toml poetry.lock /app/
 COPY . /app/
