@@ -26,6 +26,7 @@ Contributors:
 - [Gio Gottardi](https://github.com/somexpert)
 - [Madhulika Bayyavarapu](https://github.com/madhulika95b)
 - [Gracie Flores-Hays](https://github.com/gracieflores)
+- [Trey Clark](https://github.com/clarktr1)
 
 
 ## Requirements
