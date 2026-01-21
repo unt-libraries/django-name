@@ -14,10 +14,8 @@ RUN apt-get update -qq && \
 WORKDIR /app
 
 # copy project files
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml /app/
 COPY . /app/
 
 # install dependencies
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install ".[test,dev,codestyle]"
-
+RUN pip install .'[dev,test,codestyle]'

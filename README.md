@@ -96,7 +96,6 @@ If you have SELinux, you may need to temporarily add `:Z` to the web volumes in 
 
 ## Traditional Setup
 
-
 Clone the repository.
 ```sh
 $ git clone https://github.com/unt-libraries/django-name.git
@@ -141,26 +140,4 @@ NOTE: tests will not pass without the mariadb and postgres databases available.
 To run the tests via Tox, use this command. If you are using podman-compose, swap the word `docker` with `podman` for the commands below.
 ```sh
 $ docker compose run --rm web tox
-```
-
-## Generate Lock file
-Additionally there is support for generating [Poetry](https://python-poetry.org/) style lock files.
-
-The containers have Poetry already installed and ready to use.
-```sh
-$ docker compose run --rm web poetry lock
-```
-
-To generate a lock file in the traditional environment you must install Poetry to the global environment first.
-```sh
-    # Linux, macOS, Windows(WSL)
-    $ curl -sSL https://install.python-poetry.org | python3 -
-
-    # Windows Powershell
-    $ (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
-``` 
-
-Generate the lock file.
-```sh
-$ poetry lock
 ```
