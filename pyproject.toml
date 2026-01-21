@@ -61,9 +61,9 @@ legacy_tox_ini ='''
     [testenv]
     passenv = DB_*
     allowlist_externals = ./runtests.py
-    dependency_groups =
-        dev
+    extras =
         test
+        dev
         codestyle
     commands =
         mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
