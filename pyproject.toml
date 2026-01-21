@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "django-name"
 description = "Name Authority App for Django."
 readme = "README.md"
-version = "1.0.0"
 license = {file = 'LICENSE'}
 keywords = ["django", "name", "citation"]
 requires-python = ">=3.9,<4.0"

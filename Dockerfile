@@ -19,4 +19,5 @@ COPY . /app/
 
 # install dependencies
 RUN pip install --upgrade pip setuptools wheel
-RUN pip install .
+RUN pip install ".[test,dev,codestyle]"
+
