@@ -11,8 +11,8 @@ RUN apt-get update -qq && \
 
 WORKDIR /app
 
-# copy project files
+# Copy project files
 COPY . /app/
 
-# install dependencies
+# Install dependencies
 RUN pip install .'[dev,test,codestyle]'
