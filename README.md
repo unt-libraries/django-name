@@ -35,7 +35,7 @@ Contributors:
 
 ## Development
 
-There are three ways to set up this environment locally. Only use the traditional setup IF you absolutely cannot use Docker or Podman.
+There are three ways to set up this environment locally.
 
 ## Docker
 
@@ -93,7 +93,7 @@ $ sudo dnf install podman-compose
 
 You will follow the same steps as above, starting with `Clone the repository`. For all of the docker steps, you will have to replace the word `docker` with `podman`.
 
-If you have SELinux, you may need to temporarily add `:Z` to the web volumes in the docker compose.yml. It will look like `.:/app/:Z`. You may also need to use `sudo` for your podman-compose commands.
+If you have SELinux, you may need to temporarily add `:Z` to the web volumes in the docker-compose.yml. It will look like `.:/app/:Z`. You may also need to use `sudo` for your podman-compose commands.
 
 ## Traditional Setup
 
@@ -101,6 +101,18 @@ Clone the repository.
 ```sh
 $ git clone https://github.com/unt-libraries/django-name.git
 $ cd django-name
+```
+
+Install the mysql development kit. The command depends on your system:
+```sh
+#Red Hat
+sudo dnf install mysql-devel
+
+#Ubuntu / Windows (WSL)
+sudo apt install libmysqlclient-dev
+
+#macOS via Homebrew
+brew install mysql-client
 ```
 
 Create a virtual environment and activate it

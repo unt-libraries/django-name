@@ -12,7 +12,6 @@ RUN apt-get update -qq && \
 WORKDIR /app
 
 # copy project files
-COPY pyproject.toml /app/
 COPY . /app/
 
 # install dependencies
