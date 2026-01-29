@@ -103,15 +103,15 @@ $ git clone https://github.com/unt-libraries/django-name.git
 $ cd django-name
 ```
 
-Install the mysql development kit. The command depends on your system:
+Install the mysql development package. The command depends on your system:
 ```sh
-#Red Hat
+# Red Hat
 sudo dnf install mysql-devel
 
-#Ubuntu / Windows (WSL)
+# Ubuntu / Windows (WSL)
 sudo apt install libmysqlclient-dev
 
-#macOS via Homebrew
+# macOS via Homebrew
 brew install mysql-client
 ```
 
