@@ -1,4 +1,4 @@
-# Django Name [![Build Status](https://github.com/unt-libraries/django-name/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/unt-libraries/django-name/actions) [![Docs Status](https://img.shields.io/badge/docs-latest-blue.svg)](https://django-name.readthedocs.org) [![PyPI Version](https://img.shields.io/pypi/v/django-name.svg)](https://pypi.python.org/pypi/django-name)
+# Django Name [![Build Status](https://github.com/unt-libraries/django-name/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/unt-libraries/django-name/actions) [![Docs Status](https://img.shields.io/badge/docs-latest-blue.svg)](https://django-name.readthedocs.io) [![PyPI Version](https://img.shields.io/pypi/v/django-name.svg)](https://pypi.python.org/pypi/django-name)
 Python Implementation of NACO Normalization Rules
 
 The Name App is a tool originally developed for documenting names used by the UNT Libraries in its various digital library systems and collections. The app provides a consistent way of communicating the authorized version of a name and information about the name that is useful for reuse. The Name App generates a unique URL for each name that can be used to unambiguously refer to a person, organization, event, building or piece of software. In addition to an HTML page for each name there are a number of other formats available for each record including a MADS XML version and a simple JSON representation. A key feature of the UNT Name App is the ability to link to other vocabularies such as the Virtual International Authority File (VIAF), the Library of Congress Name Authority File, or Wikipedia.  
@@ -7,7 +7,7 @@ The Name App is a tool originally developed for documenting names used by the UN
 
 ## Installation
 
-For installation instructions, see the [Installation](http://django-name.readthedocs.org/en/latest/installation.html) page in the docs.
+For installation instructions, see the [Installation](https://django-name.readthedocs.io/en/latest/installation.html) page in the docs.
  
 ## License
 

@@ -46,7 +46,7 @@ test = [
     "markdown2>=2.4.0",
     "pytest>=7.1.0",
     "pytest-django>=4.6.2",
-    "pytest-cov",
+    "pytest-cov>=7.0.0",
     "psycopg2-binary>=2.9.9",
     "tomli>=2.0.1",
 ]
