@@ -1,4 +1,0 @@
--r requirements/requirements-base.txt
--r requirements/requirements-dev.txt
--r requirements/requirements-codestyle.txt
--r requirements/requirements-test.txt

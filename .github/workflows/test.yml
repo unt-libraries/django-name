@@ -5,13 +5,13 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
 
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
       - name: Start the app
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Run the tests and flake8
-        run: docker-compose run --rm web tox
+        run: docker compose run --rm web tox
         

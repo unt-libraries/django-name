@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-name"
+description = "Name Authority App for Django."
+readme = "README.md"
+version = "5.0.0"
+license = {file = 'LICENSE'}
+keywords = ["django", "name", "citation"]
+requires-python = ">=3.9,<4.0"
+authors = [
+  { name = "University of North Texas Libraries", email = "mark.phillips@unt.edu" }
+]
+classifiers = [
+  "Environment :: Web Environment",
+  "Framework :: Django",
+  "Intended Audience :: End Users/Desktop",
+  "Natural Language :: English",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"
+]
+dependencies = [
+    "python-dateutil==2.7.3",
+    "markdown2>=2.4.0",
+    "djangorestframework~=3.15.2",
+    "pynaco @ git+https://github.com/unt-libraries/pynaco",
+]
+
+[project.urls]
+Homepage = "https://github.com/unt-libraries/django-name"
+Repository = "https://github.com/unt-libraries/django-name"
+
+
+[project.optional-dependencies]
+codestyle = ["flake8"]
+dev = [
+    "Django==4.2.27",
+    "django-debug-toolbar==3.8.1",
+    "mysqlclient==2.0.1",
+]
+test = [
+    "tox>=3.3.0",
+    "markdown2>=2.4.0",
+    "pytest>=7.1.0",
+    "pytest-django>=4.6.2",
+    "pytest-cov>=7.0.0",
+    "psycopg2-binary>=2.9.9",
+    "tomli>=2.0.1",
+]
+
+[tool.tox]
+legacy_tox_ini ='''
+    [tox]
+    envlist =
+        py39-django42-{postgres,mariadb},
+        py39-flake8,
+        docs
+
+    [testenv]
+    passenv = DB_*
+    allowlist_externals = ./runtests.py
+    extras =
+        test
+        dev
+        codestyle
+    commands =
+        mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
+        postgres: ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
+
+    [testenv:py39-django42-mariadb]
+    commands = 
+        ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb --cov=name
+    allowlist_externals = ./runtests.py
+
+    [testenv:py39-flake8]
+    commands =
+        ./runtests.py --lintonly
+    allowlist_externals = ./runtests.py
+
+    [testenv:docs]
+    deps = Sphinx>=4.0
+    changedir = docs
+    commands = {envbindir}/sphinx-build -W -b html . {envtmpdir}/html
+'''
