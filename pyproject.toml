@@ -26,7 +26,7 @@ dependencies = [
     "python-dateutil==2.7.3",
     "markdown2>=2.4.0",
     "djangorestframework~=3.15.2",
-    "pynaco @ git+https://github.com/unt-libraries/pynaco",
+    "pynaco==1.0.1",
 ]
 
 [project.urls]
