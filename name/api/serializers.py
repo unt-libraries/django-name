@@ -144,7 +144,7 @@ class NameSearchSerializer(serializers.ModelSerializer):
             "<name.name> (<name.disambiguation>)"
         """
         if obj.disambiguation:
-            return '{0} ({1})'.format(obj.name, obj.disambiguation)
+            return f'{obj.name} ({obj.disambiguation})'
         return obj.name
 
 

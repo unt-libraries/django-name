@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "django-name"
 description = "Name Authority App for Django."
 readme = "README.md"
-version = "5.0.0"
+version = "6.0.0"
 license = {file = 'LICENSE'}
 keywords = ["django", "name", "citation"]
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.12"
 authors = [
   { name = "University of North Texas Libraries", email = "mark.phillips@unt.edu" }
 ]
@@ -19,7 +19,9 @@ classifiers = [
   "Intended Audience :: End Users/Desktop",
   "Natural Language :: English",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"
 ]
 dependencies = [
@@ -35,28 +37,38 @@ Repository = "https://github.com/unt-libraries/django-name"
 
 
 [project.optional-dependencies]
-codestyle = ["flake8"]
 dev = [
-    "Django==4.2.27",
+    "Django~=6.1",
     "django-debug-toolbar==3.8.1",
-    "mysqlclient==2.0.1",
+    "mysqlclient~=2.3.0",
 ]
 test = [
-    "tox>=3.3.0",
     "markdown2>=2.4.0",
     "pytest>=7.1.0",
     "pytest-django>=4.6.2",
     "pytest-cov>=7.0.0",
     "psycopg2-binary>=2.9.9",
     "tomli>=2.0.1",
+    "ruff~=0.15.9",
 ]
+
+[tool.ruff]
+line-length = 99
+target-version = "py314"
+extend-exclude = ['migrations']
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
 
 [tool.tox]
 legacy_tox_ini ='''
     [tox]
     envlist =
-        py39-django42-{postgres,mariadb},
-        py39-flake8,
+        py314-django61-{postgres,mariadb},
+        ruff
         docs
 
     [testenv]
@@ -65,20 +77,20 @@ legacy_tox_ini ='''
     extras =
         test
         dev
-        codestyle
     commands =
         mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
         postgres: ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
 
-    [testenv:py39-django42-mariadb]
+    [testenv:py3{12,13,14}-django61-mariadb]
     commands = 
         ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
 
-    [testenv:py39-flake8]
+    [testenv:ruff]
+    skip_install = true
+    deps = ruff
     commands =
-        ./runtests.py --lintonly
-    allowlist_externals = ./runtests.py
+        ruff check .
 
     [testenv:docs]
     deps = Sphinx>=4.0
