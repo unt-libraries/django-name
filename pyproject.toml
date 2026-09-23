@@ -81,7 +81,7 @@ legacy_tox_ini ='''
         mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
         postgres: ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
 
-    [testenv:py3{12,13,14}-django61-mariadb]
+    [testenv:py314-django61-mariadb]
     commands = 
         ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
@@ -93,6 +93,7 @@ legacy_tox_ini ='''
         ruff check .
 
     [testenv:docs]
+    skip_install = true
     deps = Sphinx>=4.0
     changedir = docs
     commands = {envbindir}/sphinx-build -W -b html . {envtmpdir}/html
