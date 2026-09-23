@@ -16,4 +16,4 @@ COPY . /app/
 
 # Install dependencies
 RUN pip install tox
-RUN pip install .'[dev,test,codestyle]'
+RUN pip install .'[dev,test]'

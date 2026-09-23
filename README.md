@@ -123,7 +123,7 @@ $ source env/bin/activate
 
 Install the dev dependencies
 ```sh
-$ pip install .'[dev,test,codestyle]'
+$ pip install .'[dev,test]'
 ```
 
 Replace the `DATABASES` Django setting in `./tests/settings/dev.py` with
