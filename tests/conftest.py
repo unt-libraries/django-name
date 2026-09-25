@@ -36,7 +36,7 @@ def twenty_name_fixtures(db, scope="session"):
     """
     for x in range(21):
         Name.objects.create(
-            name='Name {x}',
+            name=f'Name {x}',
             name_type=random.randint(0, 4),
             begin='2012-01-12')
     return Name.objects.all()
