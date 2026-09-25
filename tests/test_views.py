@@ -88,8 +88,7 @@ def test_label_returns_not_found_multiple_names_found(client):
 
 def test_export(client, name_fixture):
     response = client.get(reverse('name:export'))
-    expected = 'personal\ttest person\thttp://testserver{}\r\n'.format(
-        name_fixture.get_absolute_url())
+    expected = f'personal\ttest person\thttp://testserver{name_fixture.get_absolute_url()}\r\n'
     assert expected == response.content.decode()
     assert 200 == response.status_code
 
@@ -99,7 +98,7 @@ def test_export_json(client, name_fixture):
     expected = [
         {
             'i': name_fixture.name_id,
-            'l': 'http://testserver{}'.format(name_fixture.get_absolute_url()),
+            'l': f'http://testserver{name_fixture.get_absolute_url()}',
             't': name_fixture.name,
         },
     ]
