@@ -11,7 +11,7 @@ PYTEST_ARGS = {
     'fast': ['tests', '-q'],
 }
 
-FLAKE8_ARGS = ['name', 'tests', '--ignore=F403,E501,F999,W504']
+RUFF_ARGS = ['check', '.']
 
 
 sys.path.append(os.path.dirname(__file__))
@@ -22,10 +22,10 @@ def exit_on_failure(ret, message=None):
         sys.exit(ret)
 
 
-def flake8_main(args):
-    print('Running flake8 code linting')
-    ret = subprocess.call(['flake8'] + args)
-    print('flake8 failed' if ret else 'flake8 passed')
+def ruff_main(args):
+    print('Running ruff code linting')
+    ret = subprocess.call(['ruff'] + args)
+    print('ruff failed' if ret else 'ruff passed')
     return ret
 
 
@@ -48,9 +48,9 @@ if __name__ == "__main__":
     try:
         sys.argv.remove('--nolint')
     except ValueError:
-        run_flake8 = True
+        run_ruff = True
     else:
-        run_flake8 = False
+        run_ruff = False
 
     try:
         sys.argv.remove('--lintonly')
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         style = 'default'
     else:
         style = 'fast'
-        run_flake8 = False
+        run_ruff = False
 
     if len(sys.argv) > 1:
         pytest_args = sys.argv[1:]
@@ -86,5 +86,5 @@ if __name__ == "__main__":
 
     if run_tests:
         exit_on_failure(pytest.main(pytest_args))
-    if run_flake8:
-        exit_on_failure(flake8_main(FLAKE8_ARGS))
+    if run_ruff:
+        exit_on_failure(ruff_main(RUFF_ARGS))

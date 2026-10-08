@@ -30,7 +30,7 @@ Contributors:
 
 
 ## Requirements
-- Python 3.12 or later 
+- Python 3.12 - 3.14
 
 
 ## Development

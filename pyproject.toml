@@ -9,7 +9,7 @@ readme = "README.md"
 version = "6.0.0"
 license = {file = 'LICENSE'}
 keywords = ["django", "name", "citation"]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.15"
 authors = [
   { name = "University of North Texas Libraries", email = "mark.phillips@unt.edu" }
 ]
@@ -38,8 +38,8 @@ Repository = "https://github.com/unt-libraries/django-name"
 
 [project.optional-dependencies]
 dev = [
-    "Django~=6.1",
-    "django-debug-toolbar==3.8.1",
+    "Django~=6.1.0",
+    "django-debug-toolbar~=7.1.0",
     "mysqlclient~=2.3.0",
 ]
 test = [
@@ -55,13 +55,21 @@ test = [
 [tool.ruff]
 line-length = 99
 target-version = "py314"
-extend-exclude = ['migrations']
+extend-exclude = ["migrations"]
 
 [tool.ruff.format]
 quote-style = "single"
 
 [tool.ruff.lint]
 select = ["E", "F", "W"]
+
+[tool.coverage.run]
+source = ["name"]
+omit = ["*/migrations/*"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
 
 [tool.tox]
 legacy_tox_ini ='''
@@ -78,19 +86,19 @@ legacy_tox_ini ='''
         test
         dev
     commands =
-        mariadb: ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb
-        postgres: ./runtests.py {posargs} --nolint --ds=tests.settings.test_postgres
+        mariadb: ./runtests.py {posargs} --ds=tests.settings.test_mariadb
+        postgres: ./runtests.py {posargs} --ds=tests.settings.test_postgres
 
     [testenv:py314-django61-mariadb]
     commands = 
-        ./runtests.py {posargs} --nolint --ds=tests.settings.test_mariadb --cov=name
+        ./runtests.py {posargs} --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
 
     [testenv:ruff]
     skip_install = true
-    deps = ruff
     commands =
         ruff check .
+    allowlist_externals = ruff
 
     [testenv:docs]
     skip_install = true
