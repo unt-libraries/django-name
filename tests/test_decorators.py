@@ -38,7 +38,7 @@ def test_jsonp_returns_with_callback():
 
     result = decorated_f(request)
 
-    expected = 'init({0})'.format(json)
+    expected = f'init({json})'
     assert expected == result.content
 
 

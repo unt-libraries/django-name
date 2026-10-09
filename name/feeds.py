@@ -18,12 +18,12 @@ class NameAtomFeedType(Atom1Feed):
     GEO_RSS_NS = 'http://www.georss.org/georss'
 
     def root_attributes(self):
-        attrs = super(NameAtomFeedType, self).root_attributes()
+        attrs = super().root_attributes()
         attrs['xmlns:georss'] = self.GEO_RSS_NS
         return attrs
 
     def add_item_elements(self, handler, item):
-        super(NameAtomFeedType, self).add_item_elements(handler, item)
+        super().add_item_elements(handler, item)
 
         # Add the georss:point element if the item has a geo_point
         # attribute.
@@ -50,7 +50,7 @@ class NameAtomFeed(Feed):
         return obj.name
 
     def item_description(self, obj):
-        return 'Name Type: {0}'.format(obj.get_name_type_label())
+        return f'Name Type: {obj.get_name_type_label()}'
 
     def item_link(self, obj):
         return obj.get_absolute_url()

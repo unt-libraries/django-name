@@ -60,10 +60,10 @@ class TestBaseTicketing:
     def test_has_str_method(self):
         ticket_id = 1
         ticket = BaseTicketing(id=ticket_id)
-        assert 'nm{:07d}'.format(ticket_id) == str(ticket)
+        assert f'nm{ticket_id:07d}' == str(ticket)
 
 
-class TestNameManager(object):
+class TestNameManager:
 
     @pytest.fixture
     def time_series_names(self):

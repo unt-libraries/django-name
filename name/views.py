@@ -31,13 +31,13 @@ def label(request, name_value):
 
     except Name.DoesNotExist:
         return http.HttpResponseNotFound(
-            'No matching term found - authoritative or variant - for "{0}"'
-            .format(name_value))
+            f'No matching term found - authoritative or variant - for "{name_value}"'
+            )
 
     except Name.MultipleObjectsReturned:
         return http.HttpResponseNotFound(
-            'There are multiple Name objects with the same name: "{0}".'
-            .format(normalized_name))
+            f'There are multiple Name objects with the same name: "{normalized_name}".'
+            )
 
 
 def detail(request, name_id):

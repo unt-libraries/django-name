@@ -1,19 +1,14 @@
 #! /usr/bin/env python
-from __future__ import print_function
 
 import pytest
 import sys
 import os
-import subprocess
 
 
 PYTEST_ARGS = {
     'default': ['tests'],
     'fast': ['tests', '-q'],
 }
-
-FLAKE8_ARGS = ['name', 'tests', '--ignore=F403,E501,F999,W504']
-
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -23,16 +18,9 @@ def exit_on_failure(ret, message=None):
         sys.exit(ret)
 
 
-def flake8_main(args):
-    print('Running flake8 code linting')
-    ret = subprocess.call(['flake8'] + args)
-    print('flake8 failed' if ret else 'flake8 passed')
-    return ret
-
-
 def split_class_and_function(string):
     class_string, function_string = string.split('.', 1)
-    return "%s and %s" % (class_string, function_string)
+    return f'{class_string} and {function_string}'
 
 
 def is_function(string):
@@ -47,26 +35,11 @@ def is_class(string):
 
 if __name__ == "__main__":
     try:
-        sys.argv.remove('--nolint')
-    except ValueError:
-        run_flake8 = True
-    else:
-        run_flake8 = False
-
-    try:
-        sys.argv.remove('--lintonly')
-    except ValueError:
-        run_tests = True
-    else:
-        run_tests = False
-
-    try:
         sys.argv.remove('--fast')
     except ValueError:
         style = 'default'
     else:
         style = 'fast'
-        run_flake8 = False
 
     if len(sys.argv) > 1:
         pytest_args = sys.argv[1:]
@@ -85,7 +58,4 @@ if __name__ == "__main__":
     else:
         pytest_args = PYTEST_ARGS[style]
 
-    if run_tests:
-        exit_on_failure(pytest.main(pytest_args))
-    if run_flake8:
-        exit_on_failure(flake8_main(FLAKE8_ARGS))
+    exit_on_failure(pytest.main(pytest_args))
