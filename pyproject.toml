@@ -76,7 +76,7 @@ legacy_tox_ini ='''
     [tox]
     envlist =
         py314-django61-{postgres,mariadb}
-        ruff
+        py314-ruff
         docs
 
     [testenv]
@@ -94,11 +94,9 @@ legacy_tox_ini ='''
         ./runtests.py {posargs} --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
 
-    [testenv:ruff]
-    skip_install = true
+    [testenv:py314-ruff]
     commands =
         ruff check .
-    allowlist_externals = ruff
 
     [testenv:docs]
     skip_install = true
