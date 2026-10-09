@@ -3,7 +3,6 @@
 import pytest
 import sys
 import os
-import subprocess
 
 
 PYTEST_ARGS = {
@@ -11,22 +10,12 @@ PYTEST_ARGS = {
     'fast': ['tests', '-q'],
 }
 
-RUFF_ARGS = ['check', '.']
-
-
 sys.path.append(os.path.dirname(__file__))
 
 
 def exit_on_failure(ret, message=None):
     if ret:
         sys.exit(ret)
-
-
-def ruff_main(args):
-    print('Running ruff code linting')
-    ret = subprocess.call(['ruff'] + args)
-    print('ruff failed' if ret else 'ruff passed')
-    return ret
 
 
 def split_class_and_function(string):
@@ -46,26 +35,11 @@ def is_class(string):
 
 if __name__ == "__main__":
     try:
-        sys.argv.remove('--nolint')
-    except ValueError:
-        run_ruff = True
-    else:
-        run_ruff = False
-
-    try:
-        sys.argv.remove('--lintonly')
-    except ValueError:
-        run_tests = True
-    else:
-        run_tests = False
-
-    try:
         sys.argv.remove('--fast')
     except ValueError:
         style = 'default'
     else:
         style = 'fast'
-        run_ruff = False
 
     if len(sys.argv) > 1:
         pytest_args = sys.argv[1:]
@@ -84,7 +58,4 @@ if __name__ == "__main__":
     else:
         pytest_args = PYTEST_ARGS[style]
 
-    if run_tests:
-        exit_on_failure(pytest.main(pytest_args))
-    if run_ruff:
-        exit_on_failure(ruff_main(RUFF_ARGS))
+    exit_on_failure(pytest.main(pytest_args))

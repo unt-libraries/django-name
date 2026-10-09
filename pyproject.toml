@@ -33,7 +33,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/unt-libraries/django-name"
-Repository = "https://github.com/unt-libraries/django-name"
+Repository = "https://github.com/unt-libraries/django-name.git"
 
 
 [project.optional-dependencies]
@@ -75,7 +75,7 @@ show_missing = true
 legacy_tox_ini ='''
     [tox]
     envlist =
-        py314-django61-{postgres,mariadb},
+        py314-django61-{postgres,mariadb}
         ruff
         docs
 
@@ -90,7 +90,7 @@ legacy_tox_ini ='''
         postgres: ./runtests.py {posargs} --ds=tests.settings.test_postgres
 
     [testenv:py314-django61-mariadb]
-    commands = 
+    commands =
         ./runtests.py {posargs} --ds=tests.settings.test_mariadb --cov=name
     allowlist_externals = ./runtests.py
 
