@@ -148,7 +148,7 @@ class Variant(models.Model):
         self.normalized_variant = normalizeSimplified(self.variant)
         if 'update_fields' in kwargs:
             kwargs['update_fields'] = {'normalized_variant'}.union(kwargs['update_fields'])
-        super(Variant, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.variant
@@ -196,7 +196,7 @@ class BaseTicketing(models.Model):
         return self.id
 
     def __str__(self):
-        return 'nm{ticket:07d}'.format(ticket=self.ticket)
+        return f'nm{self.ticket:07d}'
 
 
 class NameManager(models.Manager):
@@ -513,8 +513,9 @@ class Name(models.Model):
         self.__normalize_name()
         self.__assign_name_id()
         if 'update_fields' in kwargs:
-            kwargs['update_fields'] = {'normalized_name', 'name_id', 'last_modified'}.union(kwargs['update_fields'])
-        super(Name, self).save(*args, **kwargs)
+            kwargs['update_fields'] = ({'normalized_name', 'name_id', 'last_modified'}
+                                       .union(kwargs['update_fields']))
+        super().save(*args, **kwargs)
         if self.is_building() and not self.location_set.count():
             self.__find_location()
 
@@ -522,7 +523,7 @@ class Name(models.Model):
         # Call merged_with_validator here so that we can pass in
         # the model instance.
         validate_merged_with(self)
-        super(Name, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
     def __str__(self):
         return self.name_id
@@ -587,14 +588,14 @@ class Location(models.Model):
         base_manager_name = 'objects'
 
     def geo_point(self):
-        return '{lat} {lng}'.format(lat=self.latitude, lng=self.longitude)
+        return f'{self.latitude} {self.longitude}'
 
     def is_current(self):
         """True if the Location has a status of Current."""
         return self.CURRENT == self.status
 
     def save(self, *args, **kwargs):
-        super(Location, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         # When this instance's status is CURRENT, get all other locations
         # related the belong_to_name, and set the status to FORMER.
         if self.is_current():

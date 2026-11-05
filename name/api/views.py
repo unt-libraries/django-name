@@ -14,7 +14,7 @@ class JSONResponse(http.HttpResponse):
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data, renderer_context={'indent': 4})
         kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
+        super().__init__(content, **kwargs)
 
 
 def name_json(request, name_id):

@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.14
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
@@ -15,4 +15,5 @@ WORKDIR /app
 COPY . /app/
 
 # Install dependencies
-RUN pip install .'[dev,test,codestyle]'
+RUN pip install tox
+RUN pip install .'[dev,test]'

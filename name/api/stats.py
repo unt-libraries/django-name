@@ -4,7 +4,7 @@ from ..models import Name
 from dateutil.relativedelta import relativedelta
 
 
-class NameStatisticsMonth(object):
+class NameStatisticsMonth:
     """A simple datatype to represent Name statistics for a
     single month.
     """
@@ -15,7 +15,7 @@ class NameStatisticsMonth(object):
         self.month = kwargs.get('month', None)
 
 
-class NameStatisticsType(object):
+class NameStatisticsType:
     """Statistics class for calculating the number
     of Name objects in the database using a DateTime field.
 
@@ -98,7 +98,7 @@ class NameStatisticsType(object):
             current += delta
 
 
-class NameStatistics(object):
+class NameStatistics:
     """Container class for all statistics gathered on
     Name objects.
     """

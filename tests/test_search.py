@@ -4,7 +4,7 @@ import json
 from django.urls import reverse
 
 # All test need access to the database in this file.
-pytestmark = pytest.mark.django
+pytestmark = pytest.mark.django_db
 
 query_template = '?q_type={0}&q={1}'
 

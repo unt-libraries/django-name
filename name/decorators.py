@@ -22,7 +22,7 @@ def jsonp(f):
         if 'callback' in request.GET:
             callback = request.GET['callback']
             resp['Content-Type'] = 'application/javascript; charset=utf-8'
-            resp.content = "%s(%s)" % (callback, resp.content)
+            resp.content = f'{callback}({resp.content})'
             return resp
         else:
             return resp
